@@ -1,0 +1,40 @@
+<Window x:Class="DateToday.Views.WidgetWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:DateToday.ViewModels"
+        Title="Date Today"
+        x:DataType="vm:WidgetViewModel"
+        Background="Transparent"
+        Focusable="False"
+        Icon="/Assets/jd-logo.ico"
+        ShowInTaskbar="False"
+        SizeToContent="WidthAndHeight"
+        SystemDecorations="None"
+        WindowStartupLocation="Manual">
+
+    <Window.Styles>
+        <StyleInclude Source="/Styles/WidgetStyles.axaml" />
+    </Window.Styles>
+
+    <Design.DataContext>
+        <!--
+            This only sets the DataContext for the previewer in an IDE,
+            to set the actual DataContext for runtime, set the DataContext property in code
+            (look at App.axaml.cs)
+        -->
+    </Design.DataContext>
+
+    <Window.ContextMenu>
+        <ContextMenu>
+            <MenuItem Command="{Binding CommandReceiveNewSettings}"
+                      Header="Widget Settings" />
+            <MenuItem Command="{Binding CommandExitApplication}"
+                      Header="Exit" />
+        </ContextMenu>
+    </Window.ContextMenu>
+
+    <TextBlock Classes="WidgetDisplayText"
+               FontFamily="{Binding WidgetFontFamily}"
+               Text="{Binding DateText}" />
+
+</Window>

@@ -1,0 +1,83 @@
+<Window x:Class="DateToday.Views.SettingsWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:DateToday.ViewModels"
+        Title="Settings"
+        x:DataType="vm:SettingsViewModel"
+        Background="Transparent"
+        CanResize="False"
+        Icon="/Assets/jd-logo.ico"
+        ShowInTaskbar="False"
+        SizeToContent="WidthAndHeight"
+        SystemDecorations="None"
+        WindowStartupLocation="CenterOwner">
+
+    <Window.Styles>
+        <StyleInclude Source="/Styles/SettingsStyles.axaml" />
+    </Window.Styles>
+
+    <Design.DataContext />
+
+    <Border Classes="SettingsOuterBorder">
+
+        <StackPanel Orientation="Vertical">
+
+            <Button Classes="Close"
+                    Command="{Binding CommandCloseSettingsView}"
+                    CommandParameter="{x:False}">
+                🗙
+            </Button>
+
+            <Border Classes="SettingsInnerBorder">
+
+                <StackPanel>
+
+                    <TextBlock Text="Widget Position" />
+
+                    <StackPanel Classes="SettingsGroupBox">
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center"
+                                       Text="X:" />
+                            <NumericUpDown Classes="WidgetPositionUserInput"
+                                           Value="{Binding WidgetPositionX}" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center"
+                                       Text="Y:" />
+                            <NumericUpDown Classes="WidgetPositionUserInput"
+                                           Value="{Binding WidgetPositionY}" />
+                        </StackPanel>
+
+                    </StackPanel>
+
+                </StackPanel>
+
+            </Border>
+
+            <Border Classes="SettingsInnerBorder">
+
+                <StackPanel>
+
+                    <TextBlock Text="Font" />
+
+                    <StackPanel Classes="SettingsGroupBox">
+
+                        <TextBox Classes="WidgetFontFamilyNameUserInput"
+                                 Text="{Binding WidgetFontFamilyName,
+                                                UpdateSourceTrigger=LostFocus}"
+                                 Watermark="{Binding FontFamilyExampleWatermark,
+                                                     StringFormat='{}Example: {0}'}" />
+
+                    </StackPanel>
+
+                </StackPanel>
+
+            </Border>
+
+        </StackPanel>
+
+    </Border>
+
+</Window>
