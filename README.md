@@ -10,6 +10,10 @@ You will need to install as a prerequisite the [x64 .NET Desktop Runtime 8.0](ht
 
 ---
 
+![Screenshot](https://github.com/user-attachments/assets/b65bb8d5-ca72-4070-8e96-0f724f11c899)
+
+![Screenshot](https://github.com/user-attachments/assets/7c39f31c-9ac6-448a-a6e5-41cb816f10ca)
+
 Do you take pride in your gorgeous, overly customised Windows desktop? Perhaps you use tools like [ExplorerPatcher](https://github.com/valinet/ExplorerPatcher), or [TranslucentTB](https://github.com/TranslucentTB/TranslucentTB)?
 
 Put a cherry on top of your ['rice'](https://www.reddit.com/r/unixporn/comments/45l5if/what_is_the_etymology_of_the_word_rice/): a date display widget for the modern minimalist. Just run the executable; no bullshit.
