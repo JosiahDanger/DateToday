@@ -26,7 +26,7 @@ Do you take pride in your gorgeous, excessively customised Windows desktop? Perh
   
     1. Make a shortcut to 'DateToday.exe'.
     2. Launch 'Run'.
-    3. Enter `shell:startup`. This will open an instance of File Explorer, and navigate to a folder named 'Startup'.
+    3. Enter `shell:startup`. This will open an instance of File Explorer inside a folder named 'Startup'.
     4. Move your shortcut into this folder.
 
 # Planned Features
