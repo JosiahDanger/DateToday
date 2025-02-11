@@ -12,7 +12,7 @@ public partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
         InitializeComponent();
 
         this.WhenActivated(action => action(
-            ViewModel!.CommandCloseSettingsView.Subscribe(dialogResult => Close(dialogResult))     
+            ViewModel!.CommandCloseSettingsView.Subscribe(dialogResult => Close(dialogResult))
         ));
     }
 }

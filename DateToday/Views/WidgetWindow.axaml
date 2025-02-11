@@ -12,10 +12,6 @@
         SystemDecorations="None"
         WindowStartupLocation="Manual">
 
-    <Window.Styles>
-        <StyleInclude Source="/Styles/WidgetStyles.axaml" />
-    </Window.Styles>
-
     <Design.DataContext>
         <!--
             This only sets the DataContext for the previewer in an IDE,
@@ -35,6 +31,8 @@
 
     <TextBlock Classes="WidgetDisplayText"
                FontFamily="{Binding WidgetFontFamily}"
+               FontSize="{Binding WidgetFontSize}"
+               FontWeight="{Binding WidgetFontWeight}"
                Text="{Binding DateText}" />
 
 </Window>

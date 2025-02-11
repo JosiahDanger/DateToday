@@ -32,31 +32,71 @@
 
     <Style Selector="Border.SettingsInnerBorder">
         <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColorDark1}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="2" />
         <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="Margin" Value="10" />
         <Setter Property="Padding" Value="15" />
     </Style>
 
-    <Style Selector="StackPanel.SettingsGroupBox">
+    <Style Selector="Border.FieldGroupBorder">
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColorDark2}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Margin" Value="10 15 10 10" />
+        <Setter Property="Padding" Value="10" />
+    </Style>
+
+    <Style Selector="StackPanel.GroupBox">
         <Setter Property="Margin" Value="25 15" />
         <Setter Property="Orientation" Value="Horizontal" />
     </Style>
 
-    <Style Selector="NumericUpDown.WidgetPositionUserInput">
+    <Style Selector="TextBlock.FieldGroupLabel">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Margin" Value="5 0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="TextBlock.FieldLabel">
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="NumericUpDown.WidgetPositionField">
+        <Setter Property="HorizontalAlignment" Value="Right" />
         <Setter Property="Increment" Value="10" />
-        <Setter Property="Margin" Value="5 0 15 0" />
+        <Setter Property="Margin" Value="10 5" />
         <Setter Property="Maximum" Value="9999" />
         <Setter Property="Minimum" Value="0" />
         <Setter Property="ParsingNumberStyle" Value="Integer" />
-        <Setter Property="Width" Value="122" />
+        <Setter Property="Width" Value="125" />
     </Style>
 
-    <Style Selector="TextBox.WidgetFontFamilyNameUserInput">
+    <Style Selector="NumericUpDown.WidgetFontSizeField">
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="Increment" Value="10" />
+        <Setter Property="Margin" Value="10 5" />
+        <Setter Property="Maximum" Value="999" />
+        <Setter Property="Minimum" Value="8" />
+        <Setter Property="MinWidth" Value="103" />
+        <Setter Property="ParsingNumberStyle" Value="Integer" />
+    </Style>
+
+    <Style Selector="TextBox.WidgetFontFamilyNameField">
         <Setter Property="AcceptsReturn" Value="False" />
         <Setter Property="AcceptsTab" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="Margin" Value="10 5" />
         <Setter Property="TextWrapping" Value="NoWrap" />
-        <Setter Property="Width" Value="295" />
+        <Setter Property="Width" Value="300" />
+    </Style>
+
+    <Style Selector="ComboBox.StringSelector">
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="Margin" Value="10 5" />
+        <Setter Property="VerticalContentAlignment" Value="Bottom" />
     </Style>
 
 </Styles>

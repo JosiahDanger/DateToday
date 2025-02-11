@@ -28,53 +28,129 @@
                 🗙
             </Button>
 
-            <Border Classes="SettingsInnerBorder">
+            <StackPanel Orientation="Horizontal">
 
-                <StackPanel>
+                <Border Classes="SettingsInnerBorder">
 
-                    <TextBlock Text="Widget Position" />
+                    <StackPanel>
 
-                    <StackPanel Classes="SettingsGroupBox">
+                        <TextBlock Classes="FieldGroupLabel"
+                                   Text="Font" />
 
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock VerticalAlignment="Center"
-                                       Text="X:" />
-                            <NumericUpDown Classes="WidgetPositionUserInput"
-                                           Value="{Binding WidgetPositionX}" />
-                        </StackPanel>
+                        <Border Classes="FieldGroupBorder">
 
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock VerticalAlignment="Center"
-                                       Text="Y:" />
-                            <NumericUpDown Classes="WidgetPositionUserInput"
-                                           Value="{Binding WidgetPositionY}" />
-                        </StackPanel>
+                            <Grid ColumnDefinitions="Auto, Auto, Auto, Auto"
+                                  RowDefinitions="Auto, Auto">
+
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="0"
+                                           Classes="FieldLabel"
+                                           Text="Name:" />
+
+                                <ComboBox Grid.Row="0"
+                                          Grid.Column="1"
+                                          Grid.ColumnSpan="3"
+                                          Width="300"
+                                          Classes="StringSelector"
+                                          ItemsSource="{Binding ListInstalledFonts}"
+                                          SelectedItem="{Binding WidgetFontFamily}">
+
+                                    <ComboBox.ItemTemplate>
+
+                                        <DataTemplate>
+
+                                            <TextBlock FontFamily="{Binding}"
+                                                       Text="{Binding Name}" />
+
+                                        </DataTemplate>
+
+                                    </ComboBox.ItemTemplate>
+
+                                </ComboBox>
+
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="0"
+                                           Classes="FieldLabel"
+                                           Text="Size:" />
+
+                                <NumericUpDown Grid.Row="1"
+                                               Grid.Column="1"
+                                               Classes="WidgetFontSizeField"
+                                               Value="{Binding WidgetFontSize}" />
+
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="2"
+                                           Classes="FieldLabel"
+                                           Text="Weight:" />
+
+                                <ComboBox Grid.Row="1"
+                                          Grid.Column="3"
+                                          Width="126"
+                                          Classes="StringSelector"
+                                          ItemsSource="{Binding ListLookupKeysFontWeight}"
+                                          SelectedItem="{Binding LookupKeyWidgetFontWeight}">
+
+                                    <ComboBox.ItemTemplate>
+
+                                        <DataTemplate>
+
+                                            <TextBlock Text="{Binding}" />
+
+                                        </DataTemplate>
+
+                                    </ComboBox.ItemTemplate>
+
+                                </ComboBox>
+
+                            </Grid>
+
+                        </Border>
 
                     </StackPanel>
 
-                </StackPanel>
+                </Border>
 
-            </Border>
+                <Border Classes="SettingsInnerBorder">
 
-            <Border Classes="SettingsInnerBorder">
+                    <StackPanel>
 
-                <StackPanel>
+                        <TextBlock Classes="FieldGroupLabel"
+                                   Text="Widget Position" />
 
-                    <TextBlock Text="Font" />
+                        <Border Classes="FieldGroupBorder">
 
-                    <StackPanel Classes="SettingsGroupBox">
+                            <Grid ColumnDefinitions="Auto, Auto"
+                                  RowDefinitions="Auto, Auto">
 
-                        <TextBox Classes="WidgetFontFamilyNameUserInput"
-                                 Text="{Binding WidgetFontFamilyName,
-                                                UpdateSourceTrigger=LostFocus}"
-                                 Watermark="{Binding FontFamilyExampleWatermark,
-                                                     StringFormat='{}Example: {0}'}" />
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="0"
+                                           Classes="FieldLabel"
+                                           Text="X:" />
+
+                                <NumericUpDown Grid.Row="0"
+                                               Grid.Column="1"
+                                               Classes="WidgetPositionField"
+                                               Value="{Binding WidgetPositionX}" />
+
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="0"
+                                           Classes="FieldLabel"
+                                           Text="Y:" />
+
+                                <NumericUpDown Grid.Row="1"
+                                               Grid.Column="1"
+                                               Classes="WidgetPositionField"
+                                               Value="{Binding WidgetPositionY}" />
+
+                            </Grid>
+
+                        </Border>
 
                     </StackPanel>
 
-                </StackPanel>
+                </Border>
 
-            </Border>
+            </StackPanel>
 
         </StackPanel>
 
