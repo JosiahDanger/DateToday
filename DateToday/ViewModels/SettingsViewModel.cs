@@ -41,8 +41,6 @@ namespace DateToday.ViewModels
             set => _widgetViewModel.WidgetFontFamilyName = value.Name;
         }
 
-        public string WidgetFontFamilyName => WidgetFontFamily.Name;
-
         public int? WidgetFontSize
         {
             get => _widgetViewModel.WidgetFontSize;
