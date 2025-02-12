@@ -14,9 +14,9 @@ Do you take pride in your gorgeous, excessively customised Windows desktop? Perh
 
 &nbsp;
 
-![Screenshot](https://github.com/user-attachments/assets/b65bb8d5-ca72-4070-8e96-0f724f11c899)
+![Widget](https://github.com/user-attachments/assets/bcc8fd52-9cb6-4692-bd91-9771678e192f)
 
-![Screenshot](https://github.com/user-attachments/assets/7c39f31c-9ac6-448a-a6e5-41cb816f10ca)
+![Settings](https://github.com/user-attachments/assets/a6656357-0f7d-4d10-a345-0addd5d01d4c)
 
 &nbsp;
 
@@ -32,8 +32,8 @@ Do you take pride in your gorgeous, excessively customised Windows desktop? Perh
 # Planned Features
 - Additional configuration options:
   - Custom date format string
-  - Font size and weight
   - Option to override automatic black / white font colour with a custom colour
+  - Text shadow
 - Multi-monitor support
 - Linux support
     
