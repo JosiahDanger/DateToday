@@ -23,9 +23,6 @@ namespace DateToday.Views
             };
 
             InitializeComponent();
-
-            Position = PixelPoint.Origin;
-
             this.WhenActivated(disposables => HandleActivation());
         }
 
@@ -40,7 +37,8 @@ namespace DateToday.Views
             set => Position = value;
         }
 
-        private async Task DoShowDialogAsync(IInteractionContext<SettingsViewModel, bool> interaction)
+        private async Task DoShowDialogAsync(
+            IInteractionContext<SettingsViewModel, bool> interaction)
         {
             SettingsWindow dialog = new() { DataContext = interaction.Input };
 

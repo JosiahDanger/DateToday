@@ -53,17 +53,17 @@ namespace DateToday.ViewModels
             }
         }
 
-        public string LookupKeyWidgetFontWeight
+        public string WidgetFontWeightLookupKey
         {
-            get => _widgetViewModel.LookupKeyWidgetFontWeight;
-            set => _widgetViewModel.LookupKeyWidgetFontWeight = value;
+            get => _widgetViewModel.WidgetFontWeightLookupKey;
+            set => _widgetViewModel.WidgetFontWeightLookupKey = value;
         }
 
-        public static List<FontFamily> ListInstalledFonts =>
+        public static List<FontFamily> InstalledFontsList =>
             [.. FontManager.Current.SystemFonts.OrderBy(x => x.Name)];
 
-        public static List<string> ListLookupKeysFontWeight =>
-            [.. WidgetViewModel.DictionaryFontWeightNames.Keys];
+        public List<string> FontWeightLookupKeysList =>
+            [.. _widgetViewModel.FontWeightDictionary.Keys];
 
         public ReactiveCommand<bool, bool> CommandCloseSettingsView { get; } =
             ReactiveCommand.Create<bool, bool>(dialogResult =>

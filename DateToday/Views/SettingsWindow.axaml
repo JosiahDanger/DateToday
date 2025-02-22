@@ -52,7 +52,8 @@
                                           Grid.ColumnSpan="3"
                                           Width="300"
                                           Classes="StringSelector"
-                                          ItemsSource="{Binding ListInstalledFonts}"
+                                          ItemsSource="{Binding InstalledFontsList,
+                                                                Mode=OneTime}"
                                           SelectedItem="{Binding WidgetFontFamily}">
 
                                     <ComboBox.ItemTemplate>
@@ -87,8 +88,9 @@
                                           Grid.Column="3"
                                           Width="126"
                                           Classes="StringSelector"
-                                          ItemsSource="{Binding ListLookupKeysFontWeight}"
-                                          SelectedItem="{Binding LookupKeyWidgetFontWeight}">
+                                          ItemsSource="{Binding FontWeightLookupKeysList,
+                                                                Mode=OneTime}"
+                                          SelectedItem="{Binding WidgetFontWeightLookupKey}">
 
                                     <ComboBox.ItemTemplate>
 
@@ -125,7 +127,7 @@
                                 <TextBlock Grid.Row="0"
                                            Grid.Column="0"
                                            Classes="FieldLabel"
-                                           Text="X:" />
+                                           Text="𝑥:" />
 
                                 <NumericUpDown Grid.Row="0"
                                                Grid.Column="1"
@@ -135,7 +137,7 @@
                                 <TextBlock Grid.Row="1"
                                            Grid.Column="0"
                                            Classes="FieldLabel"
-                                           Text="Y:" />
+                                           Text="𝑦:" />
 
                                 <NumericUpDown Grid.Row="1"
                                                Grid.Column="1"

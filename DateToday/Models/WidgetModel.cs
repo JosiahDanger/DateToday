@@ -9,7 +9,7 @@ namespace DateToday.Models
     {
         private readonly Timer _newMinuteEventGenerator;
         public IObservable<System.Reactive.EventPattern<ElapsedEventArgs>>? 
-            ObservableNewMinuteEvent;
+            NewMinuteEventObservable;
 
         public WidgetModel()
         {
@@ -25,7 +25,7 @@ namespace DateToday.Models
             /* I have converted the Timer Elapsed event into a Rx.NET observable.
              * See: https://www.reactiveui.net/docs/handbook/events.html#how-do-i-convert-my-own-c-events-into-observables */
 
-            ObservableNewMinuteEvent = 
+            NewMinuteEventObservable = 
                 Observable.FromEventPattern<ElapsedEventHandler, ElapsedEventArgs>(
                     handler => _newMinuteEventGenerator.Elapsed += handler,
                     handler => _newMinuteEventGenerator.Elapsed -= handler

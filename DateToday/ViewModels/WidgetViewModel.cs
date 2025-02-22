@@ -2,11 +2,14 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media;
 using DateToday.Models;
+using DateToday.Structs;
 using DateToday.Views;
+using Newtonsoft.Json;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Reactive.Linq;
 using System.Runtime.Serialization;
 using System.Windows.Input;
@@ -29,69 +32,39 @@ namespace DateToday.ViewModels
         private FontFamily _widgetFontFamily = FontManager.Current.DefaultFontFamily;
 
         [IgnoreDataMember]
-        private PixelPoint _widgetPosition = PixelPoint.Origin;
+        private WidgetSettings _activeWidgetSettings;
 
         [IgnoreDataMember]
-        private int _widgetFontSize = 75;
-
-        [IgnoreDataMember]
-        private string _lookupKeyWidgetFontWeight = FontWeight.Normal.ToString();
-
-        [IgnoreDataMember]
-        private FontWeight _widgetFontWeight = FontWeight.Normal;
-
-        private static readonly Dictionary<string, FontWeight> _dictionaryFontWeightNames = new()
-        {
-            /* There are a number of ways to implement a drop-down FontWeight selector. I first
-             * attempted simply to use a custom data binding converter such that the FontWeight enum
-             * would be bound to, and each name converted to a string for presentation to the user.
-             * The problem in this approach becomes apparent when one looks at the definition for
-             * this enum, and notices that there are multiple names referring to the same values, 
-             * such as ExtraLight and UltraLight, which both refer to the value 200. Therefore,
-             * when Enum.GetValues() is called in order to populate a ComboBox with the names
-             * corresponding to each FontWeight value, the computer simply chooses the first 
-             * FontWeight name corresponding to each value, resulting in duplicate names being 
-             * displayed. Furthermore, the user would be able to choose a FontWeight such as 
-             * UltraLight, close and reopen the application, and then experience frustration when
-             * the ExtraLight FontWeight was instead applied.
-             * 
-             * An alternative I considered would be to populate the ComboBox with a list of strings,
-             * and use a custom data binding converter to parse the selected string as a FontWeight
-             * enum, probably via Enum.Parse(). It is my opinion as a software developer that a 
-             * string should never be cast to any other data type, and that doing so would 
-             * constitute a code smell. But this is a conversation for another day.
-             * 
-             * Therefore, I settled on an approach in which a dictionary provides a mapping between 
-             * a string key, and a FontWeight value. One of the benefits of this approach is that 
-             * the displayed strings can be neatly formatted with spaces. */
-
-            { "Thin", FontWeight.Thin },
-            { "Extra Light", FontWeight.ExtraLight },
-            { "Ultra Light", FontWeight.UltraLight },
-            { "Light", FontWeight.Light },
-            { "Semi Light", FontWeight.SemiLight },
-            { "Normal", FontWeight.Normal },
-            { "Regular", FontWeight.Regular },
-            { "Medium", FontWeight.Medium },
-            { "Demi Bold", FontWeight.DemiBold },
-            { "Semi Bold", FontWeight.SemiBold },
-            { "Bold", FontWeight.Bold },
-            { "Extra Bold", FontWeight.ExtraBold },
-            { "Ultra Bold", FontWeight.UltraBold },
-            { "Black", FontWeight.Black },
-            { "Heavy", FontWeight.Heavy },
-            { "Solid", FontWeight.Solid },
-            { "Extra Black", FontWeight.ExtraBlack },
-            { "Ultra Black", FontWeight.UltraBlack }
-
-            /* TODO: 
-             *  I should probably move this dictionary somewhere else in order to better
-             *  organise the codebase. Perhaps in AppSettings? */
-        };
+        private readonly Dictionary<string, FontWeight> _fontWeightDictionary;
 
         public WidgetViewModel()
         {
-            _model.ObservableNewMinuteEvent?
+            static WidgetSettings GetDeserialisedDefaultWidgetSettings(string filepath)
+            {
+                string jsonBuffer = File.ReadAllText(filepath);
+                return JsonConvert.DeserializeObject<WidgetSettings>(jsonBuffer);
+            }
+
+            static Dictionary<string, FontWeight> GetDeserialisedFontWeightDictionary(
+                string filepath)
+            {
+                string jsonBuffer = File.ReadAllText(filepath);
+
+                Dictionary<string, FontWeight>? dictionaryBuffer = 
+                    JsonConvert.DeserializeObject<Dictionary<string, FontWeight>>(jsonBuffer);
+
+                if (dictionaryBuffer != null)
+                {
+                    return dictionaryBuffer;
+                }
+                else
+                {
+                    // TODO: Error handling.
+                    return [];
+                }
+            }
+
+            _model.NewMinuteEventObservable?
                 .Subscribe
                 (
                     _ => HandleNewMinuteEvent()
@@ -113,12 +86,29 @@ namespace DateToday.ViewModels
                         desktopApp.Shutdown();
                     }
                 });
+
+            _activeWidgetSettings =
+                GetDeserialisedDefaultWidgetSettings("DefaultWidgetSettings.json");
+
+            _fontWeightDictionary = 
+                GetDeserialisedFontWeightDictionary("FontWeightDictionary.json");
         }
 
         public void AttachViewInterface(IWidgetView newViewInterface)
         {
             _viewInterface = newViewInterface;
-            newViewInterface.WidgetPosition = _widgetPosition;
+            newViewInterface.WidgetPosition = _activeWidgetSettings.WidgetPosition;
+        }
+
+        private void HandleNewMinuteEvent()
+        {
+            /* TODO: 
+             * This behaviour should be altered such that the Model resets its tick generator 
+             * interval independently of the View Model. I think that this is an example of business
+             * logic, which should be encapsulated within the Model. */
+
+            _model.ResetTickGeneratorInterval();
+            DateText = GetNewWidgetText();
         }
 
         private static string GetNewWidgetText()
@@ -134,6 +124,7 @@ namespace DateToday.ViewModels
                 };
             }
 
+            // TODO: Make this configurable.
             const string DATE_TEXT_FORMAT = "dddd', the 'd'{0} of 'MMMM";
 
             DateTime currentDateTime = DateTime.Now;
@@ -147,15 +138,21 @@ namespace DateToday.ViewModels
             return string.Format(dateTextBuffer, daySuffix);
         }
 
-        private void HandleNewMinuteEvent()
+        private static FontWeight? AttemptFontWeightLookup(
+            Dictionary<string, FontWeight>? fontWeightDictionary, string lookupKey)
         {
-            /* TODO: 
-             * This behaviour should be altered such that the Model resets its tick generator 
-             * interval independently of the View Model. I think that this is an example of business
-             * logic, which should be encapsulated within the model. */
+            if (fontWeightDictionary != null)
+            {
+                bool isFontWeightValueFound =
+                    fontWeightDictionary.TryGetValue(lookupKey, out FontWeight newFontWeightValue);
 
-            _model.ResetTickGeneratorInterval();
-            DateText = GetNewWidgetText();
+                if (isFontWeightValueFound)
+                {
+                    return newFontWeightValue;
+                }
+            }
+
+            return null;
         }
 
         [IgnoreDataMember]
@@ -172,10 +169,10 @@ namespace DateToday.ViewModels
              * data persistence functionality: it is apparently very stupid, in that it refuses to 
              * save the current Position value when I access it via the IWidgetView interface. */
 
-            get => _widgetPosition;
+            get => _activeWidgetSettings.WidgetPosition;
             set
             {
-                _widgetPosition = value;
+                _activeWidgetSettings.WidgetPosition = value;
 
                 /* By design, Avalonia does not permit the developer to bind to a property on its 
                  * View Model the Position of a given Window. 
@@ -198,7 +195,7 @@ namespace DateToday.ViewModels
             get => _widgetFontFamily;
             set => this.RaiseAndSetIfChanged(ref _widgetFontFamily, value);
 
-            // TODO: Upon changing font, discard from memory the font selected previously.
+            // TODO: Upon changing font, consider discarding from memory the font selected previously.
         }
 
         [DataMember]
@@ -214,10 +211,10 @@ namespace DateToday.ViewModels
         [DataMember]
         public int WidgetFontSize
         {
-            get => _widgetFontSize;
+            get => _activeWidgetSettings.FontSize;
             set 
             {
-                this.RaiseAndSetIfChanged(ref _widgetFontSize, value);
+                this.RaiseAndSetIfChanged(ref _activeWidgetSettings.FontSize, value);
 
                 /* I have discovered a minor visual bug in Avalonia. I have configured the 
                  * WidgetWindow with a SizeToContent setting of WidthAndHeight. The bug occurs upon
@@ -225,49 +222,52 @@ namespace DateToday.ViewModels
                  * changes such that the window is lowered vertically relative to its previous 
                  * position.
                  * 
-                 * TODO: Raise this bug with Avalonia.
-                 * 
-                 * Until this bug is resolved, I will manually reset the position of the 
-                 * WidgetWindow upon reducing the WidgetFontSize. */
-
-                WidgetPosition = WidgetPosition.WithY(_widgetPosition.Y);
+                 * TODO: Raise this bug with Avalonia. */
             }
         }
 
         [DataMember]
-        public string LookupKeyWidgetFontWeight
+        public string WidgetFontWeightLookupKey
         {
-            get => _lookupKeyWidgetFontWeight;
+            get => _activeWidgetSettings.FontWeightLookupKey;
             set 
             {
-                _lookupKeyWidgetFontWeight = value;
+                _activeWidgetSettings.FontWeightLookupKey = value;
 
-                bool isFontWeightValueFound = 
-                    _dictionaryFontWeightNames.TryGetValue(
-                        _lookupKeyWidgetFontWeight, out FontWeight newFontWeightValue
-                    );
+                FontWeight? fontWeightBuffer = 
+                    AttemptFontWeightLookup(_fontWeightDictionary, value);
 
-                if (isFontWeightValueFound)
+                if (fontWeightBuffer != null)
                 {
-                    WidgetFontWeight = newFontWeightValue;
+                    WidgetFontWeight = fontWeightBuffer;
                 }
             }
         }
 
         [IgnoreDataMember]
-        public FontWeight WidgetFontWeight
+        public FontWeight? WidgetFontWeight
         {
-            get => _widgetFontWeight;
-            set
+            get
             {
-                this.RaiseAndSetIfChanged(ref _widgetFontWeight, value);
-                WidgetPosition = WidgetPosition.WithY(_widgetPosition.Y);
+                FontWeight? fontWeightBuffer =
+                    AttemptFontWeightLookup(
+                        _fontWeightDictionary, _activeWidgetSettings.FontWeightLookupKey
+                    );
+
+                if (fontWeightBuffer != null)
+                {
+                    return fontWeightBuffer;
+                }
+
+                // TODO: Error handling.
+                return null;
             }
+
+            set => this.RaisePropertyChanged();
         }
 
         [IgnoreDataMember]
-        public static Dictionary<string, FontWeight> DictionaryFontWeightNames => 
-            _dictionaryFontWeightNames;
+        public Dictionary<string, FontWeight> FontWeightDictionary => _fontWeightDictionary;
 
         [IgnoreDataMember]
         public string DateText 
