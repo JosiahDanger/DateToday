@@ -9,7 +9,7 @@ You will need to install as a prerequisite the [x64 .NET Desktop Runtime 8.0](ht
 
 ---
 
-DataToday is a desktop widget that displays the current date in a configurable format, featuring gorgeous text rendering. Settings may be adjusted through an intuitive GUI. Recommended for users of [ExplorerPatcher](https://github.com/valinet/ExplorerPatcher), [TranslucentTB](https://github.com/TranslucentTB/TranslucentTB), and [Wallpaper Engine](https://www.wallpaperengine.io/). Open-source under the MIT Licence, and free forever.
+DataToday is a desktop widget that displays the current date in a configurable format, featuring gorgeous text rendering. Settings may be adjusted through an intuitive GUI. Recommended for users of [ExplorerPatcher](https://github.com/valinet/ExplorerPatcher), [TranslucentTB](https://github.com/TranslucentTB/TranslucentTB), and [Wallpaper Engine](https://www.wallpaperengine.io/). The app's theme will adapt automatically to that of your operating system. Open-source under the MIT Licence, and free forever.
 
 &nbsp;
 
@@ -22,8 +22,9 @@ DataToday is a desktop widget that displays the current date in a configurable f
 # Get Started
 
 1. Ensure that the [x64 .NET Desktop Runtime 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) is installed on your computer.
-2. Run 'DateToday.exe'. The widget will be displayed. You may right-click the widget to open a context menu. Select 'Widget Settings' to customise its font and position on your desktop. The app's theme will adapt automatically to that of your Windows installation.
-3. (Optional) Configure DateToday to run upon signing in to Windows:
+2. Run 'DateToday.exe'. The widget will be displayed. You may right-click the widget to open a context menu. Select 'Widget Settings' for configuration options.
+3. To customise the format in which the date is displayed, you may enter a valid date format string. See [this Microsoft Learn page](https://learn.microsoft.com/dotnet/standard/base-types/custom-date-and-time-format-strings).
+4. (Optional) Configure DateToday to run upon signing in to Windows:
   
     1. Make a shortcut to 'DateToday.exe'.
     2. Launch 'Run'.
