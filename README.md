@@ -13,7 +13,7 @@ DataToday is a desktop widget that displays the current date in a configurable f
 
 &nbsp;
 
-![Widget Screenshot](https://github.com/user-attachments/assets/525f2c08-3557-40b5-a44a-c110decd5f09)
+![Widget Screenshot](https://github.com/user-attachments/assets/299c8b35-1e6f-4203-8727-83968fa59c94)
 
 ![Settings Screenshot](https://github.com/user-attachments/assets/5e984148-0cd7-4915-9420-658080a0bd57)
 
