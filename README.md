@@ -13,9 +13,9 @@ DataToday is a desktop widget that displays the current date in a configurable f
 
 &nbsp;
 
-![Widget](https://github.com/user-attachments/assets/bcc8fd52-9cb6-4692-bd91-9771678e192f)
+![Widget Screenshot](https://github.com/user-attachments/assets/525f2c08-3557-40b5-a44a-c110decd5f09)
 
-![Settings](https://github.com/user-attachments/assets/a6656357-0f7d-4d10-a345-0addd5d01d4c)
+![Settings Screenshot](https://github.com/user-attachments/assets/5e984148-0cd7-4915-9420-658080a0bd57)
 
 &nbsp;
 
@@ -41,5 +41,6 @@ DataToday is a desktop widget that displays the current date in a configurable f
 - This is a .NET 8.0 application built with Avalonia and ReactiveUI.
 - The app follows the MVVM architechtural pattern.
 - Persistence of settings is achieved through the ReactiveUI 'AutoSuspendHelper' class.
+- Widget text is refreshed every minute, on the minute.
 
 I am keen to receive feedback on this application, particularly on its codebase. Please let me know if you have any suggestions.
