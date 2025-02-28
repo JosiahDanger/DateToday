@@ -37,8 +37,8 @@ namespace DateToday.ViewModels
 
         public FontFamily WidgetFontFamily
         {
-            get => _widgetViewModel.WidgetFontFamilyName;
-            set => _widgetViewModel.WidgetFontFamilyName = value.Name;
+            get => _widgetViewModel.WidgetFontFamily;
+            set => _widgetViewModel.WidgetFontFamily = value.Name;
         }
 
         public int? WidgetFontSize
@@ -56,14 +56,36 @@ namespace DateToday.ViewModels
         public string WidgetFontWeightLookupKey
         {
             get => _widgetViewModel.WidgetFontWeightLookupKey;
-            set => _widgetViewModel.WidgetFontWeightLookupKey = value;
+            set 
+            { 
+                /* TODO: 
+                 *  Why does the XAML binding sometimes try to set this value to null?
+                 *  Do I need to fix this? */
+
+                if (!string.IsNullOrEmpty(value))
+                { 
+                    _widgetViewModel.WidgetFontWeightLookupKey = value;
+                }  
+            }
+        }
+
+        public string WidgetDateFormat
+        {
+            get => _widgetViewModel.WidgetDateFormatUserInput;
+            set => _widgetViewModel.WidgetDateFormatUserInput = value;
         }
 
         public static List<FontFamily> InstalledFontsList =>
             [.. FontManager.Current.SystemFonts.OrderBy(x => x.Name)];
 
-        public List<string> FontWeightLookupKeysList =>
-            [.. _widgetViewModel.FontWeightDictionary.Keys];
+        public Dictionary<string, FontWeight> FontWeightDictionary =>
+            _widgetViewModel.FontWeightDictionary;
+
+        public byte? OrdinalDaySuffixPosition
+        {
+            get => _widgetViewModel.OrdinalDaySuffixPosition;
+            set => _widgetViewModel.OrdinalDaySuffixPosition = value;
+        }
 
         public ReactiveCommand<bool, bool> CommandCloseSettingsView { get; } =
             ReactiveCommand.Create<bool, bool>(dialogResult =>

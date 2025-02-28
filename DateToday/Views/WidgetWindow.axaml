@@ -29,7 +29,8 @@
         </ContextMenu>
     </Window.ContextMenu>
 
-    <TextBlock Classes="WidgetDisplayText"
+    <TextBlock Name="WidgetDateText"
+               Classes="WidgetDisplayText"
                FontFamily="{Binding WidgetFontFamily}"
                FontSize="{Binding WidgetFontSize}"
                FontWeight="{Binding WidgetFontWeight}"

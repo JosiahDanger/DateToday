@@ -10,8 +10,14 @@
     <ApplicationIcon>Assets\jd-logo.ico</ApplicationIcon>
     <PlatformTarget>x64</PlatformTarget>
 	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-	  
+	<EnableNETAnalyzers>True</EnableNETAnalyzers>
+	<AnalysisLevel>latest-recommended</AnalysisLevel>
   </PropertyGroup>
+
+	<PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+		<!-- See: https://stackoverflow.com/a/74437276 -->
+		<DefineConstants>OS_WINDOWS</DefineConstants>
+	</PropertyGroup>
 
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
@@ -42,7 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="DefaultWidgetSettings.json">
+    <None Update="DefaultWidgetConfiguration.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="FontWeightDictionary.json">

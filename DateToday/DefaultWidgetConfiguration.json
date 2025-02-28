@@ -1,0 +1,11 @@
+{
+	"Position":
+	{
+		X: 100,
+		Y: 100
+	},
+	"FontSize": 70,
+	"FontWeightLookupKey": "Normal",
+	"DateFormat": "dddd, \"the\" d \"of\" MMMM",
+	"OrdinalDaySuffixPosition": 13
+}

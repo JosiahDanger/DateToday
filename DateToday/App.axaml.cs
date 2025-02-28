@@ -26,6 +26,7 @@ namespace DateToday
 
             WidgetWindow view = new() { DataContext = viewModel };
             viewModel.AttachViewInterface(view);
+            viewModel.OnViewModelInitialised();
             
             return view;
         }

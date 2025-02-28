@@ -18,7 +18,8 @@
 
     <Design.DataContext />
 
-    <Border Classes="SettingsOuterBorder">
+    <Border x:Name="WindowDragHandle"
+            Classes="SettingsOuterBorder">
 
         <StackPanel Orientation="Vertical">
 
@@ -32,7 +33,7 @@
 
                 <Border Classes="SettingsInnerBorder">
 
-                    <StackPanel>
+                    <StackPanel Orientation="Vertical">
 
                         <TextBlock Classes="FieldGroupLabel"
                                    Text="Font" />
@@ -50,7 +51,6 @@
                                 <ComboBox Grid.Row="0"
                                           Grid.Column="1"
                                           Grid.ColumnSpan="3"
-                                          Width="300"
                                           Classes="StringSelector"
                                           ItemsSource="{Binding InstalledFontsList,
                                                                 Mode=OneTime}"
@@ -88,15 +88,33 @@
                                           Grid.Column="3"
                                           Width="126"
                                           Classes="StringSelector"
-                                          ItemsSource="{Binding FontWeightLookupKeysList,
+                                          ItemsSource="{Binding FontWeightDictionary,
                                                                 Mode=OneTime}"
-                                          SelectedItem="{Binding WidgetFontWeightLookupKey}">
+                                          MaxDropDownHeight="532"
+                                          SelectedValue="{Binding WidgetFontWeightLookupKey}"
+                                          SelectedValueBinding="{Binding Key,
+                                                                         Mode=OneTime}">
 
                                     <ComboBox.ItemTemplate>
 
                                         <DataTemplate>
 
-                                            <TextBlock Text="{Binding}" />
+                                            <!--
+                                                TODO:
+                                                Why can't I bind the TextBlock FontFamily property
+                                                to WidgetFontFamily?
+                                            -->
+
+                                            <!--
+                                                FontWeight="{Binding Value}"
+                                                
+                                                No fonts installed on my machine support every font
+                                                weight. Will leave this commented out until I can
+                                                render the font weight names in the user's selected
+                                                font.
+                                            -->
+
+                                            <TextBlock Text="{Binding Key}" />
 
                                         </DataTemplate>
 
@@ -114,7 +132,7 @@
 
                 <Border Classes="SettingsInnerBorder">
 
-                    <StackPanel>
+                    <StackPanel Orientation="Vertical">
 
                         <TextBlock Classes="FieldGroupLabel"
                                    Text="Position" />
@@ -143,6 +161,58 @@
                                                Grid.Column="1"
                                                Classes="WidgetPositionField"
                                                Value="{Binding WidgetPositionY}" />
+
+                            </Grid>
+
+                        </Border>
+
+                    </StackPanel>
+
+                </Border>
+
+            </StackPanel>
+
+            <StackPanel HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+
+                <Border Classes="SettingsInnerBorder">
+
+                    <StackPanel Orientation="Vertical">
+
+                        <TextBlock Classes="FieldGroupLabel"
+                                   Text="Date Display" />
+
+                        <Border Classes="FieldGroupBorder">
+
+                            <Grid ColumnDefinitions="Auto, Auto, Auto"
+                                  RowDefinitions="Auto, Auto">
+
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="0"
+                                           Classes="FieldLabel"
+                                           Text="Format:" />
+
+                                <TextBox Grid.Row="0"
+                                         Grid.Column="1"
+                                         Grid.ColumnSpan="2"
+                                         Classes="TextField"
+                                         Text="{Binding WidgetDateFormat}" />
+
+                                <!--
+                                    TODO:
+                                    Make the data source update when the Enter key is pressed.
+                                -->
+
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="1"
+                                           Classes="FieldLabel"
+                                           Text="(Optional) Append ordinal suffix to day of month at position:" />
+
+                                <NumericUpDown Grid.Row="1"
+                                               Grid.Column="2"
+                                               Classes="WidgetOrdinalDaySuffixPositionField"
+                                               Maximum="{Binding WidgetDateFormat.Length}"
+                                               Value="{Binding OrdinalDaySuffixPosition}" />
 
                             </Grid>
 

@@ -26,7 +26,6 @@
         <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
         <Setter Property="BorderThickness" Value="3" />
         <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-        <Setter Property="Margin" Value="10" />
         <Setter Property="Padding" Value="15" />
     </Style>
 
@@ -43,7 +42,7 @@
         <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColorDark2}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="Margin" Value="10 15 10 10" />
         <Setter Property="Padding" Value="10" />
     </Style>
@@ -64,6 +63,14 @@
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
 
+    <Style Selector="TextBox.TextField">
+        <Setter Property="AcceptsReturn" Value="False" />
+        <Setter Property="AcceptsTab" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Margin" Value="10 5" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+    </Style>
+
     <Style Selector="NumericUpDown.WidgetPositionField">
         <Setter Property="HorizontalAlignment" Value="Right" />
         <Setter Property="Increment" Value="10" />
@@ -74,27 +81,30 @@
         <Setter Property="Width" Value="125" />
     </Style>
 
+    <Style Selector="NumericUpDown.WidgetOrdinalDaySuffixPositionField">
+        <Setter Property="ClipValueToMinMax" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="Increment" Value="1" />
+        <Setter Property="Margin" Value="10 5" />
+        <Setter Property="Maximum" Value="99" />
+        <Setter Property="Minimum" Value="0" />
+        <Setter Property="ParsingNumberStyle" Value="Integer" />
+        <Setter Property="Width" Value="103" />
+    </Style>
+
     <Style Selector="NumericUpDown.WidgetFontSizeField">
         <Setter Property="HorizontalAlignment" Value="Right" />
         <Setter Property="Increment" Value="10" />
         <Setter Property="Margin" Value="10 5" />
         <Setter Property="Maximum" Value="999" />
-        <Setter Property="Minimum" Value="8" />
+        <Setter Property="Minimum" Value="10" />
         <Setter Property="MinWidth" Value="103" />
         <Setter Property="ParsingNumberStyle" Value="Integer" />
     </Style>
 
-    <Style Selector="TextBox.WidgetFontFamilyNameField">
-        <Setter Property="AcceptsReturn" Value="False" />
-        <Setter Property="AcceptsTab" Value="False" />
-        <Setter Property="HorizontalAlignment" Value="Right" />
-        <Setter Property="Margin" Value="10 5" />
-        <Setter Property="TextWrapping" Value="NoWrap" />
-        <Setter Property="Width" Value="300" />
-    </Style>
-
     <Style Selector="ComboBox.StringSelector">
-        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="Margin" Value="10 5" />
         <Setter Property="VerticalContentAlignment" Value="Bottom" />
     </Style>

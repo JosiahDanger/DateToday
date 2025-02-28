@@ -1,5 +1,6 @@
 ﻿using ReactiveUI;
 using System;
+using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Timers;
 
@@ -29,12 +30,13 @@ namespace DateToday.Models
                 Observable.FromEventPattern<ElapsedEventHandler, ElapsedEventArgs>(
                     handler => _newMinuteEventGenerator.Elapsed += handler,
                     handler => _newMinuteEventGenerator.Elapsed -= handler
-                );
+                )
+                .Do(_ => ResetTickGeneratorInterval());
 
             _newMinuteEventGenerator.Start();
         }
 
-        public void ResetTickGeneratorInterval()
+        private void ResetTickGeneratorInterval()
         {
             /* This function has been adapted from code posted to Stack Overflow by Jared. 
              * Thanks Jared!
@@ -42,7 +44,9 @@ namespace DateToday.Models
 
             DateTime currentDateTime = DateTime.Now;
             _newMinuteEventGenerator.Interval = 
-                1000 * (60 - currentDateTime.Second) - currentDateTime.Millisecond;
+                -1000 * currentDateTime.Second - currentDateTime.Millisecond + 60000;
+
+            Debug.WriteLine($"Reset tick generator interval at {currentDateTime}");
         }
     }
 }

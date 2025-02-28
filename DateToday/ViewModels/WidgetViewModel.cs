@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Data;
 using Avalonia.Media;
 using DateToday.Models;
 using DateToday.Structs;
@@ -10,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Runtime.Serialization;
 using System.Windows.Input;
@@ -20,29 +22,35 @@ namespace DateToday.ViewModels
     public class WidgetViewModel : ViewModelBase
     {
         [IgnoreDataMember]
-        private IWidgetView? _viewInterface;
+        private IWidgetView? _viewInterface = null;
 
         [IgnoreDataMember]
         private readonly WidgetModel _model = new();
 
         [IgnoreDataMember]
-        private string _dateText = GetNewWidgetText();
+        private bool _isViewModelInitialised = false;
+
+        [IgnoreDataMember]
+        private string _dateText = string.Empty;
 
         [IgnoreDataMember]
         private FontFamily _widgetFontFamily = FontManager.Current.DefaultFontFamily;
 
         [IgnoreDataMember]
-        private WidgetSettings _activeWidgetSettings;
+        private int? _widgetFontWeightValue = null;
+
+        [IgnoreDataMember]
+        private WidgetConfiguration _activeWidgetConfiguration;
 
         [IgnoreDataMember]
         private readonly Dictionary<string, FontWeight> _fontWeightDictionary;
 
         public WidgetViewModel()
         {
-            static WidgetSettings GetDeserialisedDefaultWidgetSettings(string filepath)
+            static WidgetConfiguration GetDeserialisedDefaultWidgetConfiguration(string filepath)
             {
                 string jsonBuffer = File.ReadAllText(filepath);
-                return JsonConvert.DeserializeObject<WidgetSettings>(jsonBuffer);
+                return JsonConvert.DeserializeObject<WidgetConfiguration>(jsonBuffer);
             }
 
             static Dictionary<string, FontWeight> GetDeserialisedFontWeightDictionary(
@@ -65,10 +73,8 @@ namespace DateToday.ViewModels
             }
 
             _model.NewMinuteEventObservable?
-                .Subscribe
-                (
-                    _ => HandleNewMinuteEvent()
-                );
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(_ => RefreshDateText());
 
             CommandReceiveNewSettings = ReactiveCommand.CreateFromTask(async () =>
                 {
@@ -87,33 +93,40 @@ namespace DateToday.ViewModels
                     }
                 });
 
-            _activeWidgetSettings =
-                GetDeserialisedDefaultWidgetSettings("DefaultWidgetSettings.json");
+            _activeWidgetConfiguration =
+                GetDeserialisedDefaultWidgetConfiguration("DefaultWidgetConfiguration.json");
 
             _fontWeightDictionary = 
                 GetDeserialisedFontWeightDictionary("FontWeightDictionary.json");
+
+            _widgetFontWeightValue =
+                AttemptFontWeightLookup(
+                    _fontWeightDictionary, _activeWidgetConfiguration.FontWeightLookupKey);
         }
 
         public void AttachViewInterface(IWidgetView newViewInterface)
         {
             _viewInterface = newViewInterface;
-            newViewInterface.WidgetPosition = _activeWidgetSettings.WidgetPosition;
+            newViewInterface.WidgetPosition = WidgetPosition;
         }
 
-        private void HandleNewMinuteEvent()
+        public void OnViewModelInitialised()
         {
-            /* TODO: 
-             * This behaviour should be altered such that the Model resets its tick generator 
-             * interval independently of the View Model. I think that this is an example of business
-             * logic, which should be encapsulated within the Model. */
-
-            _model.ResetTickGeneratorInterval();
-            DateText = GetNewWidgetText();
+            _isViewModelInitialised = true;
+            RefreshDateText();
         }
 
-        private static string GetNewWidgetText()
+        private void RefreshDateText()
         {
-            static string GetDaySuffix(int dayNumberInWeek)
+            if (_isViewModelInitialised)
+            {
+                DateText = GetNewDateText(WidgetDateFormat, OrdinalDaySuffixPosition);
+            }
+        }
+
+        private static string GetNewDateText(string dateFormat, byte? ordinalDaySuffixPosition)
+        {
+            static string GetOrdinalDaySuffix(int dayNumberInWeek)
             {
                 return dayNumberInWeek switch
                 {
@@ -124,21 +137,28 @@ namespace DateToday.ViewModels
                 };
             }
 
-            // TODO: Make this configurable.
-            const string DATE_TEXT_FORMAT = "dddd', the 'd'{0} of 'MMMM";
-
             DateTime currentDateTime = DateTime.Now;
-            Byte dayOfMonth = (byte)currentDateTime.Day;
-            string daySuffix = GetDaySuffix(dayOfMonth);
-
-            string dateTextBuffer = currentDateTime.ToString(DATE_TEXT_FORMAT);
-
             Debug.WriteLine($"Refreshed widget text at {currentDateTime}");
 
-            return string.Format(dateTextBuffer, daySuffix);
+            if (ordinalDaySuffixPosition != null)
+            {
+                Byte dayOfMonth = (byte)currentDateTime.Day;
+                string ordinalDaySuffix = GetOrdinalDaySuffix(dayOfMonth);
+
+                string finalDateFormat = 
+                    dateFormat.Insert((int) ordinalDaySuffixPosition, "{0}");
+
+                return
+                    string.Format(
+                        currentDateTime.ToString(finalDateFormat), 
+                        ordinalDaySuffix
+                    );
+            }
+
+            return currentDateTime.ToString(dateFormat);
         }
 
-        private static FontWeight? AttemptFontWeightLookup(
+        private static int? AttemptFontWeightLookup(
             Dictionary<string, FontWeight>? fontWeightDictionary, string lookupKey)
         {
             if (fontWeightDictionary != null)
@@ -148,18 +168,48 @@ namespace DateToday.ViewModels
 
                 if (isFontWeightValueFound)
                 {
-                    return newFontWeightValue;
+                    return (int) newFontWeightValue;
                 }
             }
 
             return null;
         }
 
-        [IgnoreDataMember]
-        public IWidgetView? ViewInterface
+        private static string AttemptToGetNewDateTextFromDateFormatUserInput(
+            string newDateFormat, byte? ordinalDaySuffixPosition)
         {
-            set => _viewInterface = value;
+            // TODO: Put all validation message strings in a new JSON file.
+
+            if (string.IsNullOrEmpty(newDateFormat))
+            {
+                throw new DataValidationException("Please enter a date format");
+            }
+
+            if (ordinalDaySuffixPosition != null && ordinalDaySuffixPosition > newDateFormat.Length)
+            {
+                throw new DataValidationException(
+                    "Ordinal day suffifx position exceeds length of new date format");
+            }
+
+            string[] curlyBraces = ["{", "}"];
+
+            if (curlyBraces.Any(newDateFormat.Contains))
+            {
+                throw new DataValidationException("Curly braces are not permitted");
+            }
+
+            try
+            {
+                return GetNewDateText(newDateFormat, ordinalDaySuffixPosition);
+            }
+            catch (System.FormatException)
+            {
+                throw new DataValidationException("Invalid date format");
+            }
         }
+
+        [IgnoreDataMember]
+        public IWidgetView? ViewInterface { set => _viewInterface = value; }
 
         [DataMember]
         public PixelPoint WidgetPosition
@@ -169,10 +219,10 @@ namespace DateToday.ViewModels
              * data persistence functionality: it is apparently very stupid, in that it refuses to 
              * save the current Position value when I access it via the IWidgetView interface. */
 
-            get => _activeWidgetSettings.WidgetPosition;
+            get => _activeWidgetConfiguration.Position;
             set
             {
-                _activeWidgetSettings.WidgetPosition = value;
+                _activeWidgetConfiguration.Position = value;
 
                 /* By design, Avalonia does not permit the developer to bind to a property on its 
                  * View Model the Position of a given Window. 
@@ -189,36 +239,34 @@ namespace DateToday.ViewModels
             }
         }
 
-        [IgnoreDataMember]
-        public FontFamily WidgetFontFamily
-        {
-            get => _widgetFontFamily;
-            set => this.RaiseAndSetIfChanged(ref _widgetFontFamily, value);
-
-            // TODO: Upon changing font, consider discarding from memory the font selected previously.
-        }
-
         [DataMember]
-        public string WidgetFontFamilyName
+        private string WidgetFontFamilyName
         {
-            /* This property exists because the ReactiveUI data persistence functionality doesn't
-             * seem to be compatible with Avalonia's FontFamily class. */
+            /* This property exists because the ReactiveUI data persistence functionality doesn't 
+             * support Avalonia's FontFamily data type. */
 
             get => _widgetFontFamily.Name;
             set => WidgetFontFamily = value;
         }
 
+        [IgnoreDataMember]
+        public FontFamily WidgetFontFamily
+        {
+            get => _widgetFontFamily;
+            set => this.RaiseAndSetIfChanged(ref _widgetFontFamily, value);
+        }
+
         [DataMember]
         public int WidgetFontSize
         {
-            get => _activeWidgetSettings.FontSize;
+            get => _activeWidgetConfiguration.FontSize;
             set 
             {
-                this.RaiseAndSetIfChanged(ref _activeWidgetSettings.FontSize, value);
+                this.RaiseAndSetIfChanged(ref _activeWidgetConfiguration.FontSize, value);
 
                 /* I have discovered a minor visual bug in Avalonia. I have configured the 
                  * WidgetWindow with a SizeToContent setting of WidthAndHeight. The bug occurs upon
-                 * triggering a change in window size: the position of the window on-screen
+                 * triggering a change in window size: the on-screen position of the window 
                  * changes such that the window is lowered vertically relative to its previous 
                  * position.
                  * 
@@ -229,41 +277,63 @@ namespace DateToday.ViewModels
         [DataMember]
         public string WidgetFontWeightLookupKey
         {
-            get => _activeWidgetSettings.FontWeightLookupKey;
+            get => _activeWidgetConfiguration.FontWeightLookupKey;
             set 
             {
-                _activeWidgetSettings.FontWeightLookupKey = value;
+                this.RaiseAndSetIfChanged(
+                    ref _activeWidgetConfiguration.FontWeightLookupKey, value);
 
-                FontWeight? fontWeightBuffer = 
-                    AttemptFontWeightLookup(_fontWeightDictionary, value);
+                int? newFontWeightValue = AttemptFontWeightLookup(_fontWeightDictionary, value);
 
-                if (fontWeightBuffer != null)
+                if (newFontWeightValue != null)
                 {
-                    WidgetFontWeight = fontWeightBuffer;
+                    WidgetFontWeight = newFontWeightValue;
                 }
             }
         }
 
         [IgnoreDataMember]
-        public FontWeight? WidgetFontWeight
+        public int? WidgetFontWeight
         {
-            get
-            {
-                FontWeight? fontWeightBuffer =
-                    AttemptFontWeightLookup(
-                        _fontWeightDictionary, _activeWidgetSettings.FontWeightLookupKey
-                    );
+            get => _widgetFontWeightValue;
+            set => this.RaiseAndSetIfChanged(ref _widgetFontWeightValue, value);
+        }
 
-                if (fontWeightBuffer != null)
+        [IgnoreDataMember]
+        public string WidgetDateFormatUserInput
+        {
+            get => WidgetDateFormat;
+            set
+            {
+                string newDateText = 
+                    AttemptToGetNewDateTextFromDateFormatUserInput(value, OrdinalDaySuffixPosition);
+                
+                WidgetDateFormat = value;
+                DateText = newDateText;
+            }
+        }
+
+        [DataMember]
+        private string WidgetDateFormat
+        {
+            get => _activeWidgetConfiguration.DateFormat;
+            set => _activeWidgetConfiguration.DateFormat = value;
+        }
+        
+        [DataMember]
+        public byte? OrdinalDaySuffixPosition
+        {
+            get => _activeWidgetConfiguration.OrdinalDaySuffixPosition;
+            set
+            {
+                if (_isViewModelInitialised && value > WidgetDateFormatUserInput.Length)
                 {
-                    return fontWeightBuffer;
+                    throw new DataValidationException("Exceeds format length");
                 }
 
-                // TODO: Error handling.
-                return null;
+                _activeWidgetConfiguration.OrdinalDaySuffixPosition = value;
+                RefreshDateText();
             }
-
-            set => this.RaisePropertyChanged();
         }
 
         [IgnoreDataMember]
