@@ -6,11 +6,11 @@ using System.Timers;
 
 namespace DateToday.Models
 {
-    public class WidgetModel : ReactiveObject
+    internal class WidgetModel : ReactiveObject, IDisposable
     {
         private readonly Timer _newMinuteEventGenerator;
-        public IObservable<System.Reactive.EventPattern<ElapsedEventArgs>>? 
-            NewMinuteEventObservable;
+        private readonly IObservable<System.Reactive.EventPattern<ElapsedEventArgs>> 
+            _newMinuteEventObservable;
 
         public WidgetModel()
         {
@@ -26,7 +26,7 @@ namespace DateToday.Models
             /* I have converted the Timer Elapsed event into a Rx.NET observable.
              * See: https://www.reactiveui.net/docs/handbook/events.html#how-do-i-convert-my-own-c-events-into-observables */
 
-            NewMinuteEventObservable = 
+            _newMinuteEventObservable = 
                 Observable.FromEventPattern<ElapsedEventHandler, ElapsedEventArgs>(
                     handler => _newMinuteEventGenerator.Elapsed += handler,
                     handler => _newMinuteEventGenerator.Elapsed -= handler
@@ -36,6 +36,12 @@ namespace DateToday.Models
             _newMinuteEventGenerator.Start();
         }
 
+        public void Dispose()
+        {
+            _newMinuteEventGenerator.Dispose();
+            Debug.WriteLine("Disposed of Model");
+        }
+
         private void ResetTickGeneratorInterval()
         {
             /* This function has been adapted from code posted to Stack Overflow by Jared. 
@@ -43,10 +49,13 @@ namespace DateToday.Models
              * See: https://stackoverflow.com/a/2075022 */
 
             DateTime currentDateTime = DateTime.Now;
-            _newMinuteEventGenerator.Interval = 
+            _newMinuteEventGenerator.Interval =
                 -1000 * currentDateTime.Second - currentDateTime.Millisecond + 60000;
 
             Debug.WriteLine($"Reset tick generator interval at {currentDateTime}");
         }
+
+        public IObservable<System.Reactive.EventPattern<ElapsedEventArgs>> NewMinuteEventObservable => 
+            _newMinuteEventObservable;
     }
 }

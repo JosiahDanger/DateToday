@@ -1,5 +1,4 @@
-﻿using DateToday.ViewModels;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using ReactiveUI;
 using System;
 using System.IO;
@@ -8,39 +7,36 @@ using System.Reactive.Linq;
 
 namespace DateToday.Drivers
 {
-    public class SuspensionDriver(string filePath) : ISuspensionDriver
+    internal class SuspensionDriver(string filePath, Type stateType) : ISuspensionDriver
     {
-        private readonly string _stateFilePath = filePath;
-        private readonly JsonSerializerSettings _settings = new()
-        {
-            TypeNameHandling = TypeNameHandling.All
-        };
-
         public IObservable<Unit> InvalidateState()
         {
-            if (File.Exists(_stateFilePath))
-                File.Delete(_stateFilePath);
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
             return Observable.Return(Unit.Default);
         }
 
         public IObservable<object> LoadState()
         {
-            if (!File.Exists(_stateFilePath))
+            if (!File.Exists(filePath))
             {
-                File.WriteAllText(_stateFilePath, "null");
+                File.WriteAllText(filePath, "null");
             }
 
-            var lines = File.ReadAllText(_stateFilePath);
-            WidgetViewModel state = 
-                JsonConvert.DeserializeObject<WidgetViewModel>(lines, _settings);
+            string jsonText = File.ReadAllText(filePath);
+            object? state = JsonConvert.DeserializeObject(jsonText, stateType);
 
-            return Observable.Return(state);
+            return Observable.Return(state)!;
         }
 
         public IObservable<Unit> SaveState(object state)
         {
-            var lines = JsonConvert.SerializeObject(state, _settings);
-            File.WriteAllText(_stateFilePath, lines);
+            string jsonText = JsonConvert.SerializeObject(state);
+            File.WriteAllText(filePath, jsonText);
+
             return Observable.Return(Unit.Default);
         }
     }

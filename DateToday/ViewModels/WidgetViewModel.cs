@@ -1,5 +1,4 @@
 ﻿using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data;
 using Avalonia.Media;
 using DateToday.Models;
@@ -10,8 +9,10 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Runtime.Serialization;
 using System.Windows.Input;
@@ -19,7 +20,7 @@ using System.Windows.Input;
 namespace DateToday.ViewModels
 {
     [DataContract]
-    public class WidgetViewModel : ViewModelBase
+    internal class WidgetViewModel : ViewModelBase, IActivatableViewModel, IDisposable
     {
         [IgnoreDataMember]
         private IWidgetView? _viewInterface = null;
@@ -72,9 +73,15 @@ namespace DateToday.ViewModels
                 }
             }
 
-            _model.NewMinuteEventObservable?
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(_ => RefreshDateText());
+            this.WhenActivated(disposables =>
+            {
+                this.HandleActivation();
+
+                _model.NewMinuteEventObservable?
+                      .ObserveOn(RxApp.MainThreadScheduler)
+                      .Subscribe(_ => RefreshDateText())
+                      .DisposeWith(disposables);
+            });
 
             CommandReceiveNewSettings = ReactiveCommand.CreateFromTask(async () =>
                 {
@@ -86,11 +93,7 @@ namespace DateToday.ViewModels
 
             CommandExitApplication = ReactiveCommand.Create(() =>
                 {
-                    if (Application.Current?.ApplicationLifetime is
-                        IClassicDesktopStyleApplicationLifetime desktopApp)
-                    {
-                        desktopApp.Shutdown();
-                    }
+                    Environment.Exit(0);
                 });
 
             _activeWidgetConfiguration =
@@ -104,16 +107,27 @@ namespace DateToday.ViewModels
                     _fontWeightDictionary, _activeWidgetConfiguration.FontWeightLookupKey);
         }
 
-        public void AttachViewInterface(IWidgetView newViewInterface)
-        {
-            _viewInterface = newViewInterface;
-            newViewInterface.WidgetPosition = WidgetPosition;
-        }
-
-        public void OnViewModelInitialised()
+        private void HandleActivation()
         {
             _isViewModelInitialised = true;
             RefreshDateText();
+        }
+
+        public void Dispose()
+        {
+            _model.Dispose();
+            Debug.WriteLine("Disposed of View Model");
+            GC.SuppressFinalize(this);
+        }
+
+        internal void AttachViewInterface(IWidgetView newViewInterface)
+        {
+            _viewInterface = newViewInterface;
+
+            if (newViewInterface != null)
+            {
+                newViewInterface.WidgetPosition = WidgetPosition;
+            }
         }
 
         private void RefreshDateText()
@@ -137,25 +151,38 @@ namespace DateToday.ViewModels
                 };
             }
 
+            CultureInfo operatingSystemCulture = CultureInfo.CurrentCulture;
             DateTime currentDateTime = DateTime.Now;
-            Debug.WriteLine($"Refreshed widget text at {currentDateTime}");
+            
+            string formattedDateOutput;
 
             if (ordinalDaySuffixPosition != null)
             {
                 Byte dayOfMonth = (byte)currentDateTime.Day;
                 string ordinalDaySuffix = GetOrdinalDaySuffix(dayOfMonth);
 
-                string finalDateFormat = 
-                    dateFormat.Insert((int) ordinalDaySuffixPosition, "{0}");
+                /* This code makes use of .NET composite formatting.
+                 * 
+                 * See the following Microsoft Learn article:
+                 * https://learn.microsoft.com/dotnet/standard/base-types/composite-formatting */
 
-                return
+                string dateFormatIncludingFormatItem =
+                    dateFormat.Insert((int)ordinalDaySuffixPosition, "{0}");
+
+                string formattedDateIncludingFormatItem = 
+                    currentDateTime.ToString(dateFormatIncludingFormatItem, operatingSystemCulture);
+
+                formattedDateOutput = 
                     string.Format(
-                        currentDateTime.ToString(finalDateFormat), 
-                        ordinalDaySuffix
-                    );
+                        operatingSystemCulture, formattedDateIncludingFormatItem, ordinalDaySuffix);
+            }
+            else
+            {
+                formattedDateOutput = currentDateTime.ToString(dateFormat, operatingSystemCulture);
             }
 
-            return currentDateTime.ToString(dateFormat);
+            Debug.WriteLine($"Refreshed widget text at {currentDateTime}");
+            return formattedDateOutput;
         }
 
         private static int? AttemptFontWeightLookup(
@@ -180,7 +207,7 @@ namespace DateToday.ViewModels
         {
             // TODO: Put all validation message strings in a new JSON file.
 
-            if (string.IsNullOrEmpty(newDateFormat))
+            if (string.IsNullOrWhiteSpace(newDateFormat))
             {
                 throw new DataValidationException("Please enter a date format");
             }
@@ -207,9 +234,6 @@ namespace DateToday.ViewModels
                 throw new DataValidationException("Invalid date format");
             }
         }
-
-        [IgnoreDataMember]
-        public IWidgetView? ViewInterface { set => _viewInterface = value; }
 
         [DataMember]
         public PixelPoint WidgetPosition
@@ -345,6 +369,8 @@ namespace DateToday.ViewModels
             get => _dateText;
             set => this.RaiseAndSetIfChanged(ref _dateText, value);
         }
+
+        public ViewModelActivator Activator { get; } = new ViewModelActivator();
 
         [IgnoreDataMember]
         public Interaction<SettingsViewModel, bool> InteractionReceiveNewSettings { get; } = new();

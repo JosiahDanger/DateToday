@@ -9,12 +9,12 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 
 namespace DateToday.Views;
-public partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
+internal partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
 {
 #if OS_WINDOWS
     private readonly Control? _windowDragHandle;
-    private bool _isWindowDragInEffect = false;
-    private Point _cursorPositionAtWindowDragStart = new(0, 0);
+    private bool _isWindowDragInEffect;
+    private Point _cursorPositionAtWindowDragStart;
 #endif
 
     public SettingsWindow()
@@ -38,13 +38,6 @@ public partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
 #if OS_WINDOWS
             if (_windowDragHandle != null)
             {
-                /* I don't think it's necessary to utilise DisposeWith() explicitly on each of these
-                 * subscriptions. But I'm doing it anyway because I'm not certain. If someone else
-                 * is reading this, perhaps you can confirm whether it is safe to remove?
-                 * 
-                 * Further information:
-                 * https://www.reactiveui.net/docs/guidelines/framework/dispose-your-subscriptions.html */
-
                 Observable.FromEventPattern<PointerEventArgs>(
                     handler => _windowDragHandle.PointerMoved += handler,
                     handler => _windowDragHandle.PointerMoved -= handler,

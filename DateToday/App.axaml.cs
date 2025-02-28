@@ -9,7 +9,7 @@ using ReactiveUI;
 
 namespace DateToday
 {
-    public partial class App : Application
+    internal partial class App : Application
     {
         private static WidgetWindow WidgetFactory(WidgetViewModel? inputViewModel)
         {
@@ -26,7 +26,6 @@ namespace DateToday
 
             WidgetWindow view = new() { DataContext = viewModel };
             viewModel.AttachViewInterface(view);
-            viewModel.OnViewModelInitialised();
             
             return view;
         }
@@ -52,10 +51,11 @@ namespace DateToday
                 };
 
                 RxApp.SuspensionHost.SetupDefaultSuspendResume(
-                    new SuspensionDriver("AppState.json")
+                    new SuspensionDriver("AppState.json", typeof(WidgetViewModel))
                 );
 
                 suspension.OnFrameworkInitializationCompleted();
+                suspension.Dispose();
 
                 // Load the saved View Model state if it exists.
                 WidgetViewModel? restoredViewModel = 

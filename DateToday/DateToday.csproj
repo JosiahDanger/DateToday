@@ -11,7 +11,7 @@
     <PlatformTarget>x64</PlatformTarget>
 	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 	<EnableNETAnalyzers>True</EnableNETAnalyzers>
-	<AnalysisLevel>latest-recommended</AnalysisLevel>
+	<AnalysisLevel>latest-all</AnalysisLevel>
   </PropertyGroup>
 
 	<PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">

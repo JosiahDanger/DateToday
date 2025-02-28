@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace DateToday.ViewModels
 {
-    public class SettingsViewModel(WidgetViewModel widgetViewModel) : ViewModelBase
+    internal class SettingsViewModel(WidgetViewModel widgetViewModel) : ViewModelBase
     {
         private readonly WidgetViewModel _widgetViewModel = widgetViewModel;
         
