@@ -2,27 +2,29 @@
 Beautiful, configurable desktop widget that displays the current date
 
 ---
-**TL;DR**
 
-If you simply [want a Windows executable](https://old.reddit.com/r/github/comments/1at9br4/i_am_new_to_github_and_i_have_lots_to_say/?share_id=rjJKZS1aIO04c9zK5J3vL), please see [Releases](https://github.com/JosiahDanger/DateToday/releases/), and download 'DateToday.Windows.x64.zip'.
+If you are here simply to download a Windows executable, please see [Releases](https://github.com/JosiahDanger/DateToday/releases/). I will add Linux support when I can.
 
 You will need to install as a prerequisite the [x64 .NET Desktop Runtime 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
 
 ---
 
-Do you take pride in your gorgeous, excessively customised Windows desktop? Perhaps you use tools like [ExplorerPatcher](https://github.com/valinet/ExplorerPatcher), [TranslucentTB](https://github.com/TranslucentTB/TranslucentTB), or [Wallpaper Engine](https://www.wallpaperengine.io/)? Put a cherry on top of your ['rice'](https://www.reddit.com/r/unixporn/comments/45l5if/what_is_the_etymology_of_the_word_rice/): a date display widget for the modern minimalist. Just run the executable; no bullshit.
+DataToday is a desktop widget that displays the current date in a configurable format, featuring gorgeous text rendering. Settings may be adjusted through an intuitive GUI. Recommended for users of [ExplorerPatcher](https://github.com/valinet/ExplorerPatcher), [TranslucentTB](https://github.com/TranslucentTB/TranslucentTB), and [Wallpaper Engine](https://www.wallpaperengine.io/). The app's theme will adapt automatically to that of your operating system. Open-source under the MIT Licence, and free forever.
 
 &nbsp;
 
-![Widget](https://github.com/user-attachments/assets/bcc8fd52-9cb6-4692-bd91-9771678e192f)
+![Widget Screenshot](https://github.com/user-attachments/assets/299c8b35-1e6f-4203-8727-83968fa59c94)
 
-![Settings](https://github.com/user-attachments/assets/a6656357-0f7d-4d10-a345-0addd5d01d4c)
+![Settings Screenshot](https://github.com/user-attachments/assets/5e984148-0cd7-4915-9420-658080a0bd57)
 
 &nbsp;
 
 # Get Started
-1. Run 'DateToday.exe'. The widget will be displayed. You may right-click the widget to open a context menu. Select 'Widget Settings' to customise its font and position on your desktop. The app's theme will adapt automatically to that of your Windows installation.
-2. (Optional) Configure DateToday to run upon signing in to Windows:
+
+1. Ensure that the [x64 .NET Desktop Runtime 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) is installed on your computer.
+2. Run 'DateToday.exe'. The widget will be displayed. You may right-click the widget to open a context menu. Select 'Widget Settings' for configuration options.
+3. To customise the format in which the date is displayed, you may enter a valid date format string. See [this Microsoft Learn page](https://learn.microsoft.com/dotnet/standard/base-types/custom-date-and-time-format-strings).
+4. (Optional) Configure DateToday to run upon signing in to Windows:
   
     1. Make a shortcut to 'DateToday.exe'.
     2. Launch 'Run'.
@@ -31,7 +33,6 @@ Do you take pride in your gorgeous, excessively customised Windows desktop? Perh
 
 # Planned Features
 - Additional configuration options:
-  - Custom date format string
   - Option to override automatic black / white font colour with a custom colour
   - Text shadow
 - Multi-monitor support
@@ -41,3 +42,6 @@ Do you take pride in your gorgeous, excessively customised Windows desktop? Perh
 - This is a .NET 8.0 application built with Avalonia and ReactiveUI.
 - The app follows the MVVM architechtural pattern.
 - Persistence of settings is achieved through the ReactiveUI 'AutoSuspendHelper' class.
+- Widget text is refreshed every minute, on the minute.
+
+I am keen to receive feedback on this application, particularly on its codebase. Please let me know if you have any suggestions.
