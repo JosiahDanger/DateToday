@@ -11,6 +11,8 @@ namespace DateToday.Views
     internal interface IWidgetView
     {
         PixelPoint WidgetPosition { get; set; }
+
+        void CloseWidget(object? dialogResult);
     }
 
     internal partial class WidgetWindow : ReactiveWindow<WidgetViewModel>, IWidgetView
@@ -48,6 +50,11 @@ namespace DateToday.Views
         {
             get => Position;
             set => Position = value;
+        }
+
+        public void CloseWidget(object? dialogResult)
+        {
+            this.Close(dialogResult);
         }
 
         private async Task DoShowDialogAsync(

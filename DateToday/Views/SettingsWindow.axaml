@@ -175,7 +175,8 @@
             <StackPanel HorizontalAlignment="Center"
                         Orientation="Horizontal">
 
-                <Border Classes="SettingsInnerBorder">
+                <Border Width="691"
+                        Classes="SettingsInnerBorder">
 
                     <StackPanel Orientation="Vertical">
 
@@ -184,7 +185,7 @@
 
                         <Border Classes="FieldGroupBorder">
 
-                            <Grid ColumnDefinitions="Auto, Auto, Auto"
+                            <Grid ColumnDefinitions="Auto, 447, Auto"
                                   RowDefinitions="Auto, Auto">
 
                                 <TextBlock Grid.Row="0"
@@ -195,6 +196,7 @@
                                 <TextBox Grid.Row="0"
                                          Grid.Column="1"
                                          Grid.ColumnSpan="2"
+                                         Width="550"
                                          Classes="TextField"
                                          Text="{Binding WidgetDateFormat}" />
 

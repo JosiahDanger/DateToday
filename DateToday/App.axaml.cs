@@ -55,7 +55,14 @@ namespace DateToday
                 );
 
                 suspension.OnFrameworkInitializationCompleted();
-                suspension.Dispose();
+
+                /* TODO:
+                 * 
+                 * This instance of AutoSuspendHelper should be explicitly disposed of at some
+                 * point, perhaps just before the application closes. If I dispose it here, it
+                 * prevents persistence of the app state. */
+
+                //suspension.Dispose();
 
                 // Load the saved View Model state if it exists.
                 WidgetViewModel? restoredViewModel = 

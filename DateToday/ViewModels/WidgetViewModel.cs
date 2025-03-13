@@ -93,7 +93,7 @@ namespace DateToday.ViewModels
 
             CommandExitApplication = ReactiveCommand.Create(() =>
                 {
-                    Environment.Exit(0);
+                    _viewInterface?.CloseWidget(0);
                 });
 
             _activeWidgetConfiguration =

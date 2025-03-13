@@ -66,7 +66,7 @@
     <Style Selector="TextBox.TextField">
         <Setter Property="AcceptsReturn" Value="False" />
         <Setter Property="AcceptsTab" Value="False" />
-        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
         <Setter Property="Margin" Value="10 5" />
         <Setter Property="TextWrapping" Value="NoWrap" />
     </Style>
