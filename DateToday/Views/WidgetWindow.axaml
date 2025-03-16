@@ -31,9 +31,9 @@
 
     <TextBlock Name="WidgetDateText"
                Classes="WidgetDisplayText"
-               FontFamily="{Binding WidgetFontFamily}"
-               FontSize="{Binding WidgetFontSize}"
-               FontWeight="{Binding WidgetFontWeight}"
+               FontFamily="{Binding FontFamily}"
+               FontSize="{Binding FontSize}"
+               FontWeight="{Binding FontWeight}"
                Text="{Binding DateText}" />
 
 </Window>

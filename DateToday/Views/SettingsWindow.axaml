@@ -214,7 +214,7 @@
                                                Grid.Column="2"
                                                Classes="WidgetOrdinalDaySuffixPositionField"
                                                Maximum="{Binding WidgetDateFormat.Length}"
-                                               Value="{Binding OrdinalDaySuffixPosition}" />
+                                               Value="{Binding WidgetOrdinalDaySuffixPosition}" />
 
                             </Grid>
 

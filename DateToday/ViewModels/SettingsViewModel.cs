@@ -11,51 +11,51 @@ namespace DateToday.ViewModels
         
         public int? WidgetPositionX
         {
-            get => _widgetViewModel.WidgetPosition.X;
+            get => _widgetViewModel.Position.X;
             set
             {
                 if (value != null)
                 {
-                    _widgetViewModel.WidgetPosition = 
-                        _widgetViewModel.WidgetPosition.WithX((int) value);
+                    _widgetViewModel.Position = 
+                        _widgetViewModel.Position.WithX((int) value);
                 }
             }
         }
 
         public int? WidgetPositionY
         {
-            get => _widgetViewModel.WidgetPosition.Y;
+            get => _widgetViewModel.Position.Y;
             set
             {
                 if (value != null)
                 {
-                    _widgetViewModel.WidgetPosition =
-                        _widgetViewModel.WidgetPosition.WithY((int) value);
+                    _widgetViewModel.Position =
+                        _widgetViewModel.Position.WithY((int) value);
                 }
             }
         }
 
         public FontFamily WidgetFontFamily
         {
-            get => _widgetViewModel.WidgetFontFamily;
-            set => _widgetViewModel.WidgetFontFamily = value.Name;
+            get => _widgetViewModel.FontFamily;
+            set => _widgetViewModel.FontFamily = value.Name;
         }
 
         public int? WidgetFontSize
         {
-            get => _widgetViewModel.WidgetFontSize;
+            get => _widgetViewModel.FontSize;
             set
             {
                 if (value != null)
                 {
-                    _widgetViewModel.WidgetFontSize = (int) value;
+                    _widgetViewModel.FontSize = (int) value;
                 }
             }
         }
 
         public string WidgetFontWeightLookupKey
         {
-            get => _widgetViewModel.WidgetFontWeightLookupKey;
+            get => _widgetViewModel.FontWeightLookupKey;
             set 
             { 
                 /* TODO: 
@@ -64,15 +64,15 @@ namespace DateToday.ViewModels
 
                 if (!string.IsNullOrEmpty(value))
                 { 
-                    _widgetViewModel.WidgetFontWeightLookupKey = value;
+                    _widgetViewModel.FontWeightLookupKey = value;
                 }  
             }
         }
 
         public string WidgetDateFormat
         {
-            get => _widgetViewModel.WidgetDateFormatUserInput;
-            set => _widgetViewModel.WidgetDateFormatUserInput = value;
+            get => _widgetViewModel.DateFormatUserInput;
+            set => _widgetViewModel.DateFormatUserInput = value;
         }
 
         public static List<FontFamily> InstalledFontsList =>
@@ -81,7 +81,7 @@ namespace DateToday.ViewModels
         public Dictionary<string, FontWeight> FontWeightDictionary =>
             _widgetViewModel.FontWeightDictionary;
 
-        public byte? OrdinalDaySuffixPosition
+        public byte? WidgetOrdinalDaySuffixPosition
         {
             get => _widgetViewModel.OrdinalDaySuffixPosition;
             set => _widgetViewModel.OrdinalDaySuffixPosition = value;

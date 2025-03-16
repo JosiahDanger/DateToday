@@ -4,13 +4,14 @@ using Avalonia.ReactiveUI;
 using DateToday.ViewModels;
 using ReactiveUI;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 
 namespace DateToday.Views
 {
     internal interface IWidgetView
     {
-        PixelPoint WidgetPosition { get; set; }
+        PixelPoint WidgetPosition { get; }
 
         void CloseWidget(object? dialogResult);
     }
@@ -33,6 +34,11 @@ namespace DateToday.Views
                 Disposable
                     .Create(() => this.HandleDeactivation())
                     .DisposeWith(disposables);
+
+                ViewModel.WhenAnyValue(x => x.PositionOAPH)
+                         .ObserveOn(RxApp.MainThreadScheduler)
+                         .BindTo(this, x => x.Position)
+                         .DisposeWith(disposables);
             });
         }
 
@@ -46,15 +52,11 @@ namespace DateToday.Views
             ViewModel!.Dispose();
         }
 
-        public PixelPoint WidgetPosition
-        {
-            get => Position;
-            set => Position = value;
-        }
+        public PixelPoint WidgetPosition => Position;
 
         public void CloseWidget(object? dialogResult)
         {
-            this.Close(dialogResult);
+            Close(dialogResult);
         }
 
         private async Task DoShowDialogAsync(
