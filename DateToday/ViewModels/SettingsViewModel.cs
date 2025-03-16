@@ -2,36 +2,52 @@
 using ReactiveUI;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 
 namespace DateToday.ViewModels
 {
-    internal class SettingsViewModel(WidgetViewModel widgetViewModel) : ViewModelBase
+    internal class SettingsViewModel : ViewModelBase, IActivatableViewModel
     {
-        private readonly WidgetViewModel _widgetViewModel = widgetViewModel;
-        
-        public int? WidgetPositionX
+        private readonly WidgetViewModel _widgetViewModel;
+
+        public SettingsViewModel(WidgetViewModel widgetViewModel)
         {
-            get => _widgetViewModel.Position.X;
+            _widgetViewModel = widgetViewModel;
+
+            this.WhenActivated(disposables => 
+            {
+                _widgetViewModel.WhenAnyValue(x => x.PositionOAPH)
+                                .ObserveOn(RxApp.MainThreadScheduler)
+                                .Select(x => x.X)
+                                .ToProperty(this, nameof(WidgetPositionX))
+                                .DisposeWith(disposables);
+
+                _widgetViewModel.WhenAnyValue(x => x.PositionOAPH)
+                                .ObserveOn(RxApp.MainThreadScheduler)
+                                .Select(x => x.Y)
+                                .ToProperty(this, nameof(WidgetPositionY))
+                                .DisposeWith(disposables);
+            });
+        }
+
+        public int WidgetPositionX
+        {
+            get => _widgetViewModel.PositionOAPH.X;
             set
             {
-                if (value != null)
-                {
-                    _widgetViewModel.Position = 
-                        _widgetViewModel.Position.WithX((int) value);
-                }
+                _widgetViewModel.Position = 
+                    _widgetViewModel.PositionOAPH.WithX(value);
             }
         }
 
-        public int? WidgetPositionY
+        public int WidgetPositionY
         {
-            get => _widgetViewModel.Position.Y;
+            get => _widgetViewModel.PositionOAPH.Y;
             set
             {
-                if (value != null)
-                {
-                    _widgetViewModel.Position =
-                        _widgetViewModel.Position.WithY((int) value);
-                }
+                _widgetViewModel.Position =
+                    _widgetViewModel.PositionOAPH.WithY(value);
             }
         }
 
@@ -86,6 +102,8 @@ namespace DateToday.ViewModels
             get => _widgetViewModel.OrdinalDaySuffixPosition;
             set => _widgetViewModel.OrdinalDaySuffixPosition = value;
         }
+
+        public ViewModelActivator Activator { get; } = new ViewModelActivator();
 
         public ReactiveCommand<bool, bool> CommandCloseSettingsView { get; } =
             ReactiveCommand.Create<bool, bool>(dialogResult =>

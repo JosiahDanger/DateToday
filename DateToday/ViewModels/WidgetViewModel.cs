@@ -83,7 +83,7 @@ namespace DateToday.ViewModels
             _positionOAPH = this
                 .WhenAnyValue(x => x.Position)
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .ToProperty(this, x => x.PositionOAPH);
+                .ToProperty(this, nameof(PositionOAPH));
 
             this.WhenActivated(disposables =>
             {
