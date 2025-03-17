@@ -1,4 +1,5 @@
-﻿using Avalonia.Media;
+﻿using Avalonia;
+using Avalonia.Media;
 using ReactiveUI;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,11 @@ namespace DateToday.ViewModels
                                 .Select(x => x.Y)
                                 .ToProperty(this, nameof(WidgetPositionY))
                                 .DisposeWith(disposables);
+
+                _widgetViewModel.WhenAnyValue(x => x.PositionMax)
+                                .ObserveOn(RxApp.MainThreadScheduler)
+                                .ToProperty(this, nameof(WidgetPositionMax))
+                                .DisposeWith(disposables);
             });
         }
 
@@ -50,6 +56,8 @@ namespace DateToday.ViewModels
                     _widgetViewModel.PositionOAPH.WithY(value);
             }
         }
+
+        public PixelPoint WidgetPositionMax => _widgetViewModel.PositionMax;
 
         public FontFamily WidgetFontFamily
         {

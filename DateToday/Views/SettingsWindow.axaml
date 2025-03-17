@@ -150,6 +150,7 @@
                                 <NumericUpDown Grid.Row="0"
                                                Grid.Column="1"
                                                Classes="WidgetPositionField"
+                                               Maximum="{Binding WidgetPositionMax.X}"
                                                Value="{Binding WidgetPositionX}" />
 
                                 <TextBlock Grid.Row="1"
@@ -160,6 +161,7 @@
                                 <NumericUpDown Grid.Row="1"
                                                Grid.Column="1"
                                                Classes="WidgetPositionField"
+                                               Maximum="{Binding WidgetPositionMax.Y}"
                                                Value="{Binding WidgetPositionY}" />
 
                             </Grid>

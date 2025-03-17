@@ -45,6 +45,9 @@ namespace DateToday.ViewModels
         private readonly ObservableAsPropertyHelper<PixelPoint> _positionOAPH;
 
         [IgnoreDataMember]
+        private PixelPoint _positionMax;
+
+        [IgnoreDataMember]
         private int _widgetFontSize;
 
         [IgnoreDataMember]
@@ -120,7 +123,6 @@ namespace DateToday.ViewModels
             _positionOAPH.Dispose();
 
             Debug.WriteLine("Disposed of View Model");
-            GC.SuppressFinalize(this);
         }
 
         private void RefreshDateText()
@@ -230,6 +232,13 @@ namespace DateToday.ViewModels
         {
             get => _widgetPosition;
             set => this.RaiseAndSetIfChanged(ref _widgetPosition, value);
+        }
+
+        [IgnoreDataMember]
+        public PixelPoint PositionMax
+        {
+            get => _positionMax;
+            set => this.RaiseAndSetIfChanged(ref _positionMax, value);
         }
 
         [DataMember]

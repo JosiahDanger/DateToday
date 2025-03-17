@@ -65,41 +65,57 @@ namespace DateToday.Views
 
         private void OnWidgetSizeChanged(SizeChangedEventArgs e)
         {
+            Screen? monitor = Screens.Primary;
+
+            if (monitor != null)
+            {
+                PixelSize screenRealEstate = monitor.WorkingArea.Size;
+
+                ViewModel!.PositionMax = GetNewPositionMax(screenRealEstate, Bounds);
+                ConfineWidgetWithinScreenRealEstate(e, screenRealEstate);
+            }
+        }
+
+        private static PixelPoint GetNewPositionMax(PixelSize monitorSize, Rect widgetBounds)
+        {
+            // Calculate the maximum on-screen coordinate at which the widget will be fully visible.
+
+            return 
+                new(monitorSize.Width - (int)widgetBounds.Width, 
+                    monitorSize.Height - (int)widgetBounds.Height);
+        }
+
+        private void ConfineWidgetWithinScreenRealEstate(
+            SizeChangedEventArgs e, PixelSize screenRealEstate)
+        {
             bool hasWidthIncreased = e.NewSize.Width > e.PreviousSize.Width;
             bool hasHeightIncreased = e.NewSize.Height > e.PreviousSize.Height;
 
-            if (hasWidthIncreased || hasHeightIncreased)
+            if (hasWidthIncreased)
             {
-                Debug.WriteLine("Widget size increased.");
-                Screen? monitor = Screens.Primary;
+                int widgetRightEdgeX = this.PointToScreen(Bounds.TopRight).X;
+                int deltaX = widgetRightEdgeX - screenRealEstate.Width;
 
-                if (monitor != null)
+                if (deltaX > 0)
                 {
-                    PixelSize monitorBounds = monitor.WorkingArea.Size;
+                    int newPositionX = Math.Max(ViewModel!.PositionMax.X, PixelPoint.Origin.X);
+                    ViewModel!.Position = Position.WithX(newPositionX);
 
-                    if (hasWidthIncreased)
-                    {
-                        int widgetRightEdgeX = this.PointToScreen(Bounds.TopRight).X;
-                        int deltaX = widgetRightEdgeX - monitorBounds.Width;
+                    Debug.WriteLine("Adjusted widget X position within monitor real estate.");
+                }
+            }
 
-                        if (deltaX > 0)
-                        {
-                            ViewModel!.Position = Position.WithX(Position.X - deltaX);
-                            Debug.WriteLine("Adjusted widget X position within monitor bounds.");
-                        }
-                    }
+            if (hasHeightIncreased)
+            {
+                int widgetBottomEdgeY = this.PointToScreen(Bounds.BottomLeft).Y;
+                int deltaY = widgetBottomEdgeY - screenRealEstate.Height;
 
-                    if (hasHeightIncreased)
-                    {
-                        int widgetBottomEdgeY = this.PointToScreen(Bounds.BottomLeft).Y;
-                        int deltaY = widgetBottomEdgeY - monitorBounds.Height;
+                if (deltaY > 0)
+                {
+                    int newPositionY = Math.Max(ViewModel!.PositionMax.Y, PixelPoint.Origin.Y);
+                    ViewModel!.Position = Position.WithY(newPositionY);
 
-                        if (deltaY > 0)
-                        {
-                            ViewModel!.Position = Position.WithY(Position.Y - deltaY);
-                            Debug.WriteLine("Adjusted widget Y position within monitor bounds.");
-                        }
-                    }
+                    Debug.WriteLine("Adjusted widget Y position within monitor real estate.");
                 }
             }
         }
