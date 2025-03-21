@@ -55,7 +55,7 @@ namespace DateToday.Models
             Debug.WriteLine($"Reset tick generator interval at {currentDateTime}.");
         }
 
-        public IObservable<System.Reactive.EventPattern<ElapsedEventArgs>> 
-            NewMinuteEventObservable => _newMinuteEventObservable;
+        public IObservable<System.Reactive.EventPattern<ElapsedEventArgs>> NewMinuteEventObservable 
+            => _newMinuteEventObservable;
     }
 }

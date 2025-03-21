@@ -55,24 +55,25 @@ namespace DateToday.ViewModels
                         x => x.WidgetOrdinalDaySuffixPositionUserInput)
                     .ObserveOn(RxApp.MainThreadScheduler)
                     .Throttle(TimeSpan.FromMilliseconds(1))
+                    .Do(_ => OnDateFormatUserInputChanging())
                     .InvokeCommand(this, x => x.CommandParseDateFormatUserInput)
                     .DisposeWith(disposables);
             });
 
-            IObservable<bool> dateFormatValidationOutcomeObservable =
+            IObservable<bool> mayUserEnterNewDateFormatObservable =
                 this.WhenAnyValue(x => x.HasErrors)
                     .ObserveOn(RxApp.MainThreadScheduler)
                     .Select(x => !x);
 
             CommandParseDateFormatUserInput =
                 ReactiveCommand.Create<ValueTuple<string, byte?>>(
-                    canExecute: dateFormatValidationOutcomeObservable, 
+                    canExecute: mayUserEnterNewDateFormatObservable, 
                     execute: x =>
                     {
                         try
                         {
                             _widgetViewModel.SetDateFormat(x.Item1, x.Item2);
-                            IsDateTextSetSuccessfully = true;
+                            
                         }
                         catch (System.FormatException)
                         {
@@ -87,23 +88,9 @@ namespace DateToday.ViewModels
 
             // TODO: Deserialise validation strings from an external JSON file.
 
-            IObservable<bool> isDateFormatPopulatedObservable =
-                this.WhenAnyValue(x => x.WidgetDateFormatUserInput)
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Select(x => !string.IsNullOrEmpty(x))
-                .Do(isDateFormatPopulated => { 
-                    if (!isDateFormatPopulated)
-                    {
-                        /* When the user erases the input date format, erase too the provided
-                         * ordinal day suffix position. */
-
-                        WidgetOrdinalDaySuffixPositionUserInput = null;
-                    }
-                });
-
             this.ValidationRule(
                 settingsViewModel => settingsViewModel.WidgetDateFormatUserInput,
-                isDateFormatPopulatedObservable,
+                dateFormat => !string.IsNullOrEmpty(dateFormat),
                 "Please enter a date format."); 
 
             IObservable<bool> isDateFormatOrdinalSuffixPositionValidObservable =
@@ -135,6 +122,24 @@ namespace DateToday.ViewModels
                 isDateFormatValidObservable,
                 "The entered date format is invalid.\n" +
                 "Please see Microsoft Learn: 'Custom date and time format strings'.");   
+        }
+
+        private void OnDateFormatUserInputChanging()
+        {
+            // This method is executed immediately before CommandParseDateFormatUserInput.
+
+            /* Reset the IsDateTextSetSuccessfully flag such that the user is permitted to 
+             * correct an invalid date format. */
+
+            IsDateTextSetSuccessfully = true;
+
+            if (string.IsNullOrEmpty(WidgetDateFormatUserInput))
+            {
+                /* When the user erases the input date format, erase too the provided
+                 * ordinal day suffix position. */
+
+                WidgetOrdinalDaySuffixPositionUserInput = null;
+            }
         }
 
         public int WidgetPositionX
