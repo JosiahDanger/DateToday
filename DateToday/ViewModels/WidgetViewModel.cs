@@ -1,5 +1,4 @@
 ﻿using Avalonia;
-using Avalonia.Data;
 using Avalonia.Media;
 using DateToday.Configuration;
 using DateToday.Models;
@@ -9,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Runtime.Serialization;
@@ -20,6 +18,8 @@ namespace DateToday.ViewModels
     [DataContract]
     internal class WidgetViewModel : ViewModelBase, IActivatableViewModel, IDisposable
     {
+        // TODO: Address style inconsistencies regarding the substring 'widget' in field names.
+
         [IgnoreDataMember]
         private readonly IWidgetView _viewInterface;
 
@@ -30,7 +30,7 @@ namespace DateToday.ViewModels
         private readonly WidgetModel _model;
 
         [IgnoreDataMember]
-        private string _dateText;
+        private string _dateText, _dateFormat, _dateFormatUserInput;
 
         [IgnoreDataMember]
         private int? _widgetFontWeightValue;
@@ -52,9 +52,6 @@ namespace DateToday.ViewModels
 
         [IgnoreDataMember]
         private string _widgetFontWeightLookupKey;
-
-        [IgnoreDataMember]
-        private string _widgetDateFormat;
 
         [IgnoreDataMember]
         private byte? _widgetOrdinalDaySuffixPosition;
@@ -80,7 +77,7 @@ namespace DateToday.ViewModels
             _widgetFontWeightLookupKey = restoredSettings.FontWeightLookupKey;
             _widgetFontWeightValue = 
                 AttemptFontWeightLookup(_fontWeightDictionary, FontWeightLookupKey);
-            _widgetDateFormat = restoredSettings.DateFormat;
+            _dateFormat = _dateFormatUserInput = restoredSettings.DateFormat;
             _widgetOrdinalDaySuffixPosition = restoredSettings.OrdinalDaySuffixPosition;
 
             _positionOAPH = this
@@ -96,20 +93,25 @@ namespace DateToday.ViewModels
                       .ObserveOn(RxApp.MainThreadScheduler)
                       .Subscribe(_ => RefreshDateText())
                       .DisposeWith(disposables);
+
+                this.WhenAnyValue(x => x.DateFormatUserInput)
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .ToProperty(this, nameof(DateFormat))
+                    .DisposeWith(disposables);
             });
 
             CommandReceiveNewSettings = ReactiveCommand.CreateFromTask(async () =>
-                {
-                    SettingsViewModel settingsViewModel = new(this);
-                    await InteractionReceiveNewSettings.Handle(settingsViewModel);
+            {
+                SettingsViewModel settingsViewModel = new(this);
+                await InteractionReceiveNewSettings.Handle(settingsViewModel);
 
-                    RxApp.SuspensionHost.AppState = this;
-                });
+                RxApp.SuspensionHost.AppState = this;
+            });
 
             CommandExitApplication = ReactiveCommand.Create(() =>
-                {
-                    _viewInterface?.CloseWidget(0);
-                });
+            {
+                _viewInterface?.CloseWidget(0);
+            });
         }
 
         private void HandleActivation()
@@ -122,7 +124,7 @@ namespace DateToday.ViewModels
             _model.Dispose();
             _positionOAPH.Dispose();
 
-            Debug.WriteLine("Disposed of View Model");
+            Debug.WriteLine("Disposed of View Model.");
         }
 
         private void RefreshDateText()
@@ -173,7 +175,7 @@ namespace DateToday.ViewModels
                 formattedDateOutput = currentDateTime.ToString(dateFormat, operatingSystemCulture);
             }
 
-            Debug.WriteLine($"Refreshed widget text at {currentDateTime}");
+            Debug.WriteLine($"Refreshed widget text at {currentDateTime}.");
             return formattedDateOutput;
         }
 
@@ -194,37 +196,19 @@ namespace DateToday.ViewModels
             return null;
         }
 
-        private static string AttemptToGetNewDateTextFromDateFormatUserInput(
-            string newDateFormat, byte? ordinalDaySuffixPosition)
+        public void SetDateFormat(string newDateFormat, byte? ordinalDaySuffixPosition)
         {
-            // TODO: Put all validation message strings in a new JSON file.
-
-            if (string.IsNullOrWhiteSpace(newDateFormat))
-            {
-                throw new DataValidationException("Please enter a date format");
-            }
-
-            if (ordinalDaySuffixPosition != null && ordinalDaySuffixPosition > newDateFormat.Length)
-            {
-                throw new DataValidationException(
-                    "Ordinal day suffifx position exceeds length of new date format");
-            }
-
-            string[] curlyBraces = ["{", "}"];
-
-            if (curlyBraces.Any(newDateFormat.Contains))
-            {
-                throw new DataValidationException("Curly braces are not permitted");
-            }
-
             try
             {
-                return GetNewDateText(newDateFormat, ordinalDaySuffixPosition);
+                DateText = GetNewDateText(newDateFormat, ordinalDaySuffixPosition);
             }
             catch (System.FormatException)
             {
-                throw new DataValidationException("Invalid date format");
+                throw;
             }
+
+            DateFormat = newDateFormat;
+            OrdinalDaySuffixPosition = ordinalDaySuffixPosition;
         }
 
         [DataMember]
@@ -291,38 +275,22 @@ namespace DateToday.ViewModels
         [IgnoreDataMember]
         public string DateFormatUserInput
         {
-            get => _widgetDateFormat;
-            set
-            {
-                string newDateText =
-                    AttemptToGetNewDateTextFromDateFormatUserInput(value, _widgetOrdinalDaySuffixPosition);
-
-                DateFormat = value;
-                DateText = newDateText;
-            }
+            get => _dateFormatUserInput;
+            set => this.RaiseAndSetIfChanged(ref _dateFormatUserInput, value);
         }
 
         [DataMember]
-        private string DateFormat
-        {
-            get => _widgetDateFormat;
-            set => _widgetDateFormat = value;
+        public string DateFormat
+        { 
+            get => _dateFormat;
+            set => this.RaiseAndSetIfChanged(ref _dateFormat, value);
         }
 
         [DataMember]
         public byte? OrdinalDaySuffixPosition
         {
             get => _widgetOrdinalDaySuffixPosition;
-            set
-            {
-                if (value > _widgetDateFormat.Length)
-                {
-                    throw new DataValidationException("Exceeds format length");
-                }
-
-                _widgetOrdinalDaySuffixPosition = value;
-                RefreshDateText();
-            }
+            set => this.RaiseAndSetIfChanged(ref _widgetOrdinalDaySuffixPosition, value);
         }
 
         [IgnoreDataMember]

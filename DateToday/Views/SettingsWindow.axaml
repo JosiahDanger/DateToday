@@ -200,7 +200,7 @@
                                          Grid.ColumnSpan="2"
                                          Width="550"
                                          Classes="TextField"
-                                         Text="{Binding WidgetDateFormat}" />
+                                         Text="{Binding WidgetDateFormatUserInput}" />
 
                                 <!--
                                     TODO:
@@ -215,8 +215,8 @@
                                 <NumericUpDown Grid.Row="1"
                                                Grid.Column="2"
                                                Classes="WidgetOrdinalDaySuffixPositionField"
-                                               Maximum="{Binding WidgetDateFormat.Length}"
-                                               Value="{Binding WidgetOrdinalDaySuffixPosition}" />
+                                               Maximum="{Binding WidgetDateFormatUserInput.Length}"
+                                               Value="{Binding WidgetOrdinalDaySuffixPositionUserInput}" />
 
                             </Grid>
 

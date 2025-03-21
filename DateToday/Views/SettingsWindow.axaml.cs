@@ -33,8 +33,11 @@ internal partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
 
         this.WhenActivated(disposables =>
         {
-            ViewModel!.CommandCloseSettingsView.Subscribe(dialogResult => Close(dialogResult));
-
+            ViewModel!.CommandCloseSettingsView
+                      .ObserveOn(RxApp.MainThreadScheduler)
+                      .Subscribe(dialogResult => Close(dialogResult))
+                      .DisposeWith(disposables);
+            
 #if OS_WINDOWS
             if (_windowDragHandle != null)
             {
@@ -42,6 +45,7 @@ internal partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
                     handler => _windowDragHandle.PointerMoved += handler,
                     handler => _windowDragHandle.PointerMoved -= handler,
                     RxApp.MainThreadScheduler)
+                .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x => WindowDragHandle_OnPointerMoved(x.Sender, x.EventArgs))
                 .DisposeWith(disposables);
 
@@ -49,6 +53,7 @@ internal partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
                     handler => _windowDragHandle.PointerPressed += handler,
                     handler => _windowDragHandle.PointerPressed -= handler,
                     RxApp.MainThreadScheduler)
+                .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x => WindowDragHandle_OnPointerPressed(x.Sender, x.EventArgs))
                 .DisposeWith(disposables);
 
@@ -56,6 +61,7 @@ internal partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
                     handler => _windowDragHandle.PointerReleased += handler,
                     handler => _windowDragHandle.PointerReleased -= handler,
                     RxApp.MainThreadScheduler)
+                .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x => WindowDragHandle_OnPointerReleased(x.Sender, x.EventArgs))
                 .DisposeWith(disposables);
             }

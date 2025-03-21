@@ -85,14 +85,24 @@ namespace DateToday
             {
                 AutoSuspendHelper suspension = new(desktop);
 
+                /* TODO:
+                 * 
+                 * This instance of AutoSuspendHelper needs to be disposed of at some point before
+                 * the application is exited; the compiler currently raises warning #CA2000. I am
+                 * having some trouble addressing this. The AutoSuspendHelper instance needs to be
+                 * present in memory each time the application state is persisted to disk.
+                 * Subscribing to the IControlledApplicationLifetime.Exit event and disposing of the
+                 * object inside an event handler unfortunately does not resolve the warning. Might
+                 * need to seek help from the Avalonia / ReactiveUI community. */
+
                 RxApp.SuspensionHost.CreateNewAppState = () =>
                 {
                     /* Initialise the CreateNewAppState factory. If the app has no saved data, or 
                      * if the saved data is corrupt, ReactiveUI invokes this factory method to 
                      * create a default instance of the application state object. */
 
-                    return 
-                        GetDeserialisedWidgetConfiguration(FILEPATH_DEFAULT_WIDGET_CONFIGURATION); 
+                    return
+                        GetDeserialisedWidgetConfiguration(FILEPATH_DEFAULT_WIDGET_CONFIGURATION);
                 };
 
                 RxApp.SuspensionHost.SetupDefaultSuspendResume(
@@ -100,14 +110,6 @@ namespace DateToday
                 );
 
                 suspension.OnFrameworkInitializationCompleted();
-
-                /* TODO:
-                 * 
-                 * This instance of AutoSuspendHelper should be explicitly disposed of at some
-                 * point, perhaps just before the application closes. If I dispose it here, it
-                 * prevents the app from closing. */
-
-                //suspension.Dispose();
 
                 // Load saved widget settings should they exist.
                 WidgetConfiguration? restoredSettings =
