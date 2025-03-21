@@ -23,9 +23,10 @@ DateToday is a desktop widget that displays the current date in a configurable f
 
 1. Ensure that the [x64 .NET Desktop Runtime 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) is installed on your computer.
 2. Run 'DateToday.exe'. The widget will be displayed. You may right-click the widget to open a context menu. Select 'Widget Settings' for configuration options.
-3. To customise the format in which the date is displayed, you may enter a valid date format string. See [this Microsoft Learn page](https://learn.microsoft.com/dotnet/standard/base-types/custom-date-and-time-format-strings).
+3. To customise the format in which the date is displayed, you may enter a valid date format string.
+See [this Microsoft Learn page](https://learn.microsoft.com/dotnet/standard/base-types/custom-date-and-time-format-strings).
 
-### (Optional) Configure Datetoday To Run Upon Signing in to Windows
+### (Optional) Configure DateToday To Run Upon Signing in to Windows
 
 1. Make a shortcut to 'DateToday.exe'.
 2. Launch 'Run'.
