@@ -23,8 +23,7 @@ DateToday is a desktop widget that displays the current date in a configurable f
 
 1. Ensure that the [x64 .NET Desktop Runtime 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) is installed on your computer.
 2. Run 'DateToday.exe'. The widget will be displayed. You may right-click the widget to open a context menu. Select 'Widget Settings' for configuration options.
-3. To customise the format in which the date is displayed, you may enter a valid date format string.
-See [this Microsoft Learn page](https://learn.microsoft.com/dotnet/standard/base-types/custom-date-and-time-format-strings).
+3. To customise the format in which the date is displayed, you may enter a valid date format string. See [this Microsoft Learn page](https://learn.microsoft.com/dotnet/standard/base-types/custom-date-and-time-format-strings).
 
 ### (Optional) Configure DateToday To Run Upon Signing in to Windows
 
@@ -45,5 +44,13 @@ See [this Microsoft Learn page](https://learn.microsoft.com/dotnet/standard/base
 - The app follows the MVVM architechtural pattern.
 - Persistence of settings is achieved through the ReactiveUI 'AutoSuspendHelper' class.
 - Widget text is refreshed every minute, on the minute.
+
+## More Screenshots
+
+![Screenshot 2025-03-22 025400](https://github.com/user-attachments/assets/66fd5f22-1e4a-490f-b2a5-3b174a4837db)
+
+![Screenshot 2025-03-22 030209](https://github.com/user-attachments/assets/ffcec9f1-1173-4d93-b04f-ba182a7b81a1)
+
+![Screenshot 2025-03-22 031345](https://github.com/user-attachments/assets/ba30fe7b-6408-438c-b4e2-518ddedcc1ca)
 
 I am keen to receive feedback on this application, particularly on its codebase. Please let me know if you have any suggestions.
