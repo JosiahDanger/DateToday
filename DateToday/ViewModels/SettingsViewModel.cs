@@ -5,6 +5,7 @@ using ReactiveUI.Validation.Extensions;
 using ReactiveUI.Validation.Helpers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
@@ -15,10 +16,15 @@ namespace DateToday.ViewModels
     internal class SettingsViewModel : ReactiveValidationObject, IActivatableViewModel
     {
         private readonly WidgetViewModel _widgetViewModel;
-        private bool _isDateTextSetSuccessfully = true;
-
+       
         private string _widgetDateFormatUserInput;
         private byte? _widgetOrdinalDaySuffixPositionUserInput;
+        private bool _isDateTextSetSuccessfully = true;
+
+        private readonly List<ValidationHelper> _prerequisitesForNewDateFormatEntry;
+
+        private ObservableAsPropertyHelper<EventPattern<DataErrorsChangedEventArgs>>? 
+            _dataErrorsChangedOAPH;
 
         public SettingsViewModel(WidgetViewModel widgetViewModel)
         {
@@ -31,7 +37,7 @@ namespace DateToday.ViewModels
             _widgetDateFormatUserInput = _widgetViewModel.DateFormat;
             _widgetOrdinalDaySuffixPositionUserInput = _widgetViewModel.OrdinalDaySuffixPosition;
 
-            this.WhenActivated(disposables => 
+            this.WhenActivated(disposables =>
             {
                 _widgetViewModel.WhenAnyValue(x => x.PositionOAPH)
                                 .ObserveOn(RxApp.MainThreadScheduler)
@@ -50,30 +56,97 @@ namespace DateToday.ViewModels
                                 .ToProperty(this, nameof(WidgetPositionMax))
                                 .DisposeWith(disposables);
 
+                _dataErrorsChangedOAPH =
+                    Observable.FromEventPattern<DataErrorsChangedEventArgs>(
+                        handler => ErrorsChanged += handler,
+                        handler => ErrorsChanged -= handler
+                        )
+                        .ToProperty(this, nameof(DataErrorsChangedOAPH))
+                        .DisposeWith(disposables);
+
                 this.WhenAnyValue(
-                        x => x.WidgetDateFormatUserInput, 
+                        x => x.WidgetDateFormatUserInput,
                         x => x.WidgetOrdinalDaySuffixPositionUserInput)
                     .ObserveOn(RxApp.MainThreadScheduler)
                     .Throttle(TimeSpan.FromMilliseconds(1))
-                    .Do(_ => OnDateFormatUserInputChanging())
                     .InvokeCommand(this, x => x.CommandParseDateFormatUserInput)
                     .DisposeWith(disposables);
             });
 
-            IObservable<bool> mayUserEnterNewDateFormatObservable =
-                this.WhenAnyValue(x => x.HasErrors)
+            IObservable<bool> isDateFormatPopulated =
+                this.WhenAnyValue(x => x.WidgetDateFormatUserInput)
                     .ObserveOn(RxApp.MainThreadScheduler)
-                    .Select(x => !x);
+                    .Select(x => !string.IsNullOrEmpty(x))
+                    .Do(x => {
+                        if (!x)
+                        {
+                            /* When the user erases the input date format, erase too the provided
+                             * ordinal day suffix position. */
+
+                            WidgetOrdinalDaySuffixPositionUserInput = null;
+                        }
+                    });
+
+            IObservable<bool> isDateFormatOrdinalSuffixPositionValid =
+                this.WhenAnyValue(
+                        x => x.WidgetDateFormatUserInput,
+                        x => x.WidgetOrdinalDaySuffixPositionUserInput,
+                    (dateFormat, suffixPosition) =>
+                        !(suffixPosition != null && suffixPosition > dateFormat.Length))
+                    .ObserveOn(RxApp.MainThreadScheduler);
+
+            IObservable<bool> isDateFormatValid =
+                this.WhenAnyValue(x => x.IsDateTextSetSuccessfully)
+                    .ObserveOn(RxApp.MainThreadScheduler);
+
+            string[] curlyBraces = ["{", "}"];
+
+            IObservable<bool> areCurlyBracesAbsentFromDateFormat =
+                this.WhenAnyValue(
+                        x => x.WidgetDateFormatUserInput, 
+                        x => x != null && !curlyBraces.Any(x.Contains))
+                    .ObserveOn(RxApp.MainThreadScheduler);
+
+            // TODO: Deserialise validation strings from an external JSON file.
+
+            _prerequisitesForNewDateFormatEntry = 
+                [
+                    this.ValidationRule(
+                        settingsViewModel => settingsViewModel.WidgetDateFormatUserInput,
+                        isDateFormatPopulated,
+                        "Please enter a date format."),
+
+                    this.ValidationRule(
+                        settingsViewModel => settingsViewModel.WidgetDateFormatUserInput,
+                        isDateFormatOrdinalSuffixPositionValid,
+                        "Ordinal day suffifx position exceeds length of new date format."),
+
+                    this.ValidationRule(
+                        settingsViewModel => settingsViewModel.WidgetDateFormatUserInput,
+                        areCurlyBracesAbsentFromDateFormat,
+                        "Curly braces are not permitted.")
+                ];
+
+            this.ValidationRule(
+                settingsViewModel => settingsViewModel.WidgetDateFormatUserInput,
+                isDateFormatValid,
+                "The entered date format is invalid.\n" +
+                "Please see Microsoft Learn: 'Custom date and time format strings'.");
+
+            IObservable<bool> mayUserEnterNewDateFormat =
+                this.WhenAnyValue(x => x.DataErrorsChangedOAPH)
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .Select(_ => _prerequisitesForNewDateFormatEntry.All(x => x.IsValid));
 
             CommandParseDateFormatUserInput =
                 ReactiveCommand.Create<ValueTuple<string, byte?>>(
-                    canExecute: mayUserEnterNewDateFormatObservable, 
+                    canExecute: mayUserEnterNewDateFormat,
                     execute: x =>
                     {
                         try
                         {
                             _widgetViewModel.SetDateFormat(x.Item1, x.Item2);
-                            
+                            IsDateTextSetSuccessfully = true;
                         }
                         catch (System.FormatException)
                         {
@@ -83,63 +156,7 @@ namespace DateToday.ViewModels
 
                             IsDateTextSetSuccessfully = false;
                         }
-                        
                     });
-
-            // TODO: Deserialise validation strings from an external JSON file.
-
-            this.ValidationRule(
-                settingsViewModel => settingsViewModel.WidgetDateFormatUserInput,
-                dateFormat => !string.IsNullOrEmpty(dateFormat),
-                "Please enter a date format."); 
-
-            IObservable<bool> isDateFormatOrdinalSuffixPositionValidObservable =
-                this.WhenAnyValue(
-                    x => x.WidgetDateFormatUserInput,
-                    x => x.WidgetOrdinalDaySuffixPositionUserInput,
-                    (dateFormat, suffixPosition) =>
-                        !(suffixPosition != null && suffixPosition > dateFormat.Length))
-                    .ObserveOn(RxApp.MainThreadScheduler);
-
-            this.ValidationRule(
-                settingsViewModel => settingsViewModel.WidgetDateFormatUserInput,
-                isDateFormatOrdinalSuffixPositionValidObservable,
-                "Ordinal day suffifx position exceeds length of new date format.");
-
-            string[] curlyBraces = ["{", "}"];
-
-            this.ValidationRule(
-                settingsViewModel => settingsViewModel.WidgetDateFormatUserInput,
-                dateFormat => !curlyBraces.Any(dateFormat!.Contains),
-                "Curly braces are not permitted.");
-
-            IObservable<bool> isDateFormatValidObservable =
-                this.WhenAnyValue(x => x.IsDateTextSetSuccessfully)
-                    .ObserveOn(RxApp.MainThreadScheduler);
-
-            this.ValidationRule(
-                settingsViewModel => settingsViewModel.WidgetDateFormatUserInput,
-                isDateFormatValidObservable,
-                "The entered date format is invalid.\n" +
-                "Please see Microsoft Learn: 'Custom date and time format strings'.");   
-        }
-
-        private void OnDateFormatUserInputChanging()
-        {
-            // This method is executed immediately before CommandParseDateFormatUserInput.
-
-            /* Reset the IsDateTextSetSuccessfully flag such that the user is permitted to 
-             * correct an invalid date format. */
-
-            IsDateTextSetSuccessfully = true;
-
-            if (string.IsNullOrEmpty(WidgetDateFormatUserInput))
-            {
-                /* When the user erases the input date format, erase too the provided
-                 * ordinal day suffix position. */
-
-                WidgetOrdinalDaySuffixPositionUserInput = null;
-            }
         }
 
         public int WidgetPositionX
@@ -225,6 +242,9 @@ namespace DateToday.ViewModels
 
         public ReactiveCommand<ValueTuple<string, byte?>, Unit> 
             CommandParseDateFormatUserInput { get; }
+
+        private EventPattern<DataErrorsChangedEventArgs>? DataErrorsChangedOAPH => 
+            _dataErrorsChangedOAPH?.Value;
 
         public ReactiveCommand<bool, bool> CommandCloseSettingsView { get; } =
             ReactiveCommand.Create<bool, bool>(dialogResult =>
