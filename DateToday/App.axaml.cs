@@ -33,8 +33,7 @@ namespace DateToday
 
             if (restoredSettings != null)
             {
-                viewModel = 
-                    new(view, model, fontWeightDictionary, (WidgetConfiguration)restoredSettings);
+                viewModel = new(view, model, fontWeightDictionary, restoredSettings);
             }
             else
             {

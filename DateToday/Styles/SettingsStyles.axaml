@@ -7,7 +7,7 @@
         </Border>
     </Design.PreviewWith>
 
-    <Style Selector="Button.Close">
+    <Style Selector="Button.CloseButton">
         <Setter Property="Background" Value="Red" />
         <Setter Property="BorderBrush" Value="{DynamicResource SystemControlBackgroundBaseLowBrush}" />
         <Setter Property="BorderThickness" Value="2" />
@@ -71,7 +71,7 @@
         <Setter Property="TextWrapping" Value="NoWrap" />
     </Style>
 
-    <Style Selector="NumericUpDown.WidgetPositionField">
+    <Style Selector="NumericUpDown.PositionField">
         <Setter Property="HorizontalAlignment" Value="Right" />
         <Setter Property="Increment" Value="10" />
         <Setter Property="Margin" Value="10 5" />
@@ -81,7 +81,7 @@
         <Setter Property="Width" Value="125" />
     </Style>
 
-    <Style Selector="NumericUpDown.WidgetOrdinalDaySuffixPositionField">
+    <Style Selector="NumericUpDown.OrdinalDaySuffixPositionField">
         <Setter Property="ClipValueToMinMax" Value="True" />
         <Setter Property="HorizontalAlignment" Value="Right" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -93,7 +93,7 @@
         <Setter Property="Width" Value="103" />
     </Style>
 
-    <Style Selector="NumericUpDown.WidgetFontSizeField">
+    <Style Selector="NumericUpDown.FontSizeField">
         <Setter Property="HorizontalAlignment" Value="Right" />
         <Setter Property="Increment" Value="10" />
         <Setter Property="Margin" Value="10 5" />

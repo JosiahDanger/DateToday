@@ -19,12 +19,6 @@ internal partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
 
     public SettingsWindow()
     {
-        if (Design.IsDesignMode)
-        {
-            // Make the previewer happy.
-            return;
-        };
-
         InitializeComponent();
 
 #if OS_WINDOWS
@@ -33,7 +27,7 @@ internal partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
 
         this.WhenActivated(disposables =>
         {
-            ViewModel!.CommandCloseSettingsView
+            ViewModel!.CloseSettingsView
                       .ObserveOn(RxApp.MainThreadScheduler)
                       .Subscribe(dialogResult => Close(dialogResult))
                       .DisposeWith(disposables);

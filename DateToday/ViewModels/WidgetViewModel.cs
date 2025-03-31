@@ -16,10 +16,8 @@ using System.Windows.Input;
 namespace DateToday.ViewModels
 {
     [DataContract]
-    internal class WidgetViewModel : ViewModelBase, IActivatableViewModel, IDisposable
+    internal class WidgetViewModel : ReactiveObject, IActivatableViewModel, IDisposable
     {
-        // TODO: Address style inconsistencies regarding the substring 'widget' in field names.
-
         [IgnoreDataMember]
         private readonly IWidgetView _viewInterface;
 
@@ -30,31 +28,36 @@ namespace DateToday.ViewModels
         private readonly WidgetModel _model;
 
         [IgnoreDataMember]
-        private string _dateText, _dateFormat, _dateFormatUserInput;
+        private string _dateText, _dateFormat, _dateFormatUserInput, _fontWeightLookupKey;
 
         [IgnoreDataMember]
-        private int? _widgetFontWeightValue;
+        private int? _fontWeightValue;
 
         [IgnoreDataMember]
-        private FontFamily _widgetFontFamily;
+        private FontFamily _fontFamily;
 
         [IgnoreDataMember]
-        private PixelPoint _widgetPosition;
+        private PixelPoint _position, _positionMax;
 
         [IgnoreDataMember]
         private readonly ObservableAsPropertyHelper<PixelPoint> _positionOAPH;
 
         [IgnoreDataMember]
-        private PixelPoint _positionMax;
+        private int _fontSize;
 
         [IgnoreDataMember]
-        private int _widgetFontSize;
+        private byte? _ordinalDaySuffixPosition;
+
+        public ViewModelActivator Activator { get; } = new();
 
         [IgnoreDataMember]
-        private string _widgetFontWeightLookupKey;
+        public Interaction<SettingsViewModel, bool> InteractionReceiveNewSettings { get; } = new();
 
         [IgnoreDataMember]
-        private byte? _widgetOrdinalDaySuffixPosition;
+        public ICommand ReceiveNewSettings { get; }
+
+        [IgnoreDataMember]
+        public ICommand ExitApplication { get; }
 
         public WidgetViewModel(
             IWidgetView viewInterface, 
@@ -69,16 +72,16 @@ namespace DateToday.ViewModels
             _fontWeightDictionary = fontWeightDictionary;
 
             // Depends on operating system. Default is empty.
-            _widgetFontFamily = 
+            _fontFamily = 
                 restoredSettings.FontFamilyName ?? FontManager.Current.DefaultFontFamily;
 
-            _widgetPosition = restoredSettings.Position;
-            _widgetFontSize = restoredSettings.FontSize;
-            _widgetFontWeightLookupKey = restoredSettings.FontWeightLookupKey;
-            _widgetFontWeightValue = 
+            _position = restoredSettings.Position;
+            _fontSize = restoredSettings.FontSize;
+            _fontWeightLookupKey = restoredSettings.FontWeightLookupKey;
+            _fontWeightValue = 
                 AttemptFontWeightLookup(_fontWeightDictionary, FontWeightLookupKey);
             _dateFormat = _dateFormatUserInput = restoredSettings.DateFormat;
-            _widgetOrdinalDaySuffixPosition = restoredSettings.OrdinalDaySuffixPosition;
+            _ordinalDaySuffixPosition = restoredSettings.OrdinalDaySuffixPosition;
 
             _positionOAPH = this
                 .WhenAnyValue(x => x.Position)
@@ -100,7 +103,7 @@ namespace DateToday.ViewModels
                     .DisposeWith(disposables);
             });
 
-            CommandReceiveNewSettings = ReactiveCommand.CreateFromTask(async () =>
+            ReceiveNewSettings = ReactiveCommand.CreateFromTask(async () =>
             {
                 SettingsViewModel settingsViewModel = new(this);
                 await InteractionReceiveNewSettings.Handle(settingsViewModel);
@@ -108,9 +111,9 @@ namespace DateToday.ViewModels
                 RxApp.SuspensionHost.AppState = this;
             });
 
-            CommandExitApplication = ReactiveCommand.Create(() =>
+            ExitApplication = ReactiveCommand.Create(() =>
             {
-                _viewInterface?.CloseWidget(0);
+                _viewInterface?.CloseView(0);
             });
         }
 
@@ -214,9 +217,12 @@ namespace DateToday.ViewModels
         [DataMember]
         public PixelPoint Position
         {
-            get => _widgetPosition;
-            set => this.RaiseAndSetIfChanged(ref _widgetPosition, value);
+            get => _position;
+            set => this.RaiseAndSetIfChanged(ref _position, value);
         }
+
+        [IgnoreDataMember]
+        public PixelPoint PositionOAPH => _positionOAPH.Value;
 
         [IgnoreDataMember]
         public PixelPoint PositionMax
@@ -231,30 +237,30 @@ namespace DateToday.ViewModels
             /* This property exists because the ReactiveUI data persistence functionality doesn't 
              * support Avalonia's FontFamily data type. */
 
-            get => _widgetFontFamily.Name;
+            get => _fontFamily.Name;
         }
 
         [IgnoreDataMember]
         public FontFamily FontFamily
         {
-            get => _widgetFontFamily;
-            set => this.RaiseAndSetIfChanged(ref _widgetFontFamily, value);
+            get => _fontFamily;
+            set => this.RaiseAndSetIfChanged(ref _fontFamily, value);
         }
 
         [DataMember]
         public int FontSize
         {
-            get => _widgetFontSize;
-            set => this.RaiseAndSetIfChanged(ref _widgetFontSize, value);
+            get => _fontSize;
+            set => this.RaiseAndSetIfChanged(ref _fontSize, value);
         }
 
         [DataMember]
         public string FontWeightLookupKey
         {
-            get => _widgetFontWeightLookupKey;
+            get => _fontWeightLookupKey;
             set
             {
-                this.RaiseAndSetIfChanged(ref _widgetFontWeightLookupKey, value);
+                this.RaiseAndSetIfChanged(ref _fontWeightLookupKey, value);
 
                 int? newFontWeightValue = AttemptFontWeightLookup(_fontWeightDictionary, value);
 
@@ -268,8 +274,8 @@ namespace DateToday.ViewModels
         [IgnoreDataMember]
         public int? FontWeight
         {
-            get => _widgetFontWeightValue;
-            set => this.RaiseAndSetIfChanged(ref _widgetFontWeightValue, value);
+            get => _fontWeightValue;
+            set => this.RaiseAndSetIfChanged(ref _fontWeightValue, value);
         }
 
         [IgnoreDataMember]
@@ -289,12 +295,9 @@ namespace DateToday.ViewModels
         [DataMember]
         public byte? OrdinalDaySuffixPosition
         {
-            get => _widgetOrdinalDaySuffixPosition;
-            set => this.RaiseAndSetIfChanged(ref _widgetOrdinalDaySuffixPosition, value);
+            get => _ordinalDaySuffixPosition;
+            set => this.RaiseAndSetIfChanged(ref _ordinalDaySuffixPosition, value);
         }
-
-        [IgnoreDataMember]
-        public Dictionary<string, FontWeight> FontWeightDictionary => _fontWeightDictionary;
 
         [IgnoreDataMember]
         public string DateText 
@@ -304,17 +307,6 @@ namespace DateToday.ViewModels
         }
 
         [IgnoreDataMember]
-        public PixelPoint PositionOAPH => _positionOAPH.Value;
-
-        public ViewModelActivator Activator { get; } = new ViewModelActivator();
-
-        [IgnoreDataMember]
-        public Interaction<SettingsViewModel, bool> InteractionReceiveNewSettings { get; } = new();
-
-        [IgnoreDataMember]
-        public ICommand CommandReceiveNewSettings { get; }
-
-        [IgnoreDataMember]
-        public ICommand CommandExitApplication { get; }
+        public Dictionary<string, FontWeight> FontWeightDictionary => _fontWeightDictionary;
     }
 }

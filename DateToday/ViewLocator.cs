@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using DateToday.ViewModels;
+using ReactiveUI;
 using System;
 
 namespace DateToday
@@ -27,7 +28,7 @@ namespace DateToday
 
         public bool Match(object? data)
         {
-            return data is ViewModelBase;
+            return data is IActivatableViewModel;
         }
     }
 }

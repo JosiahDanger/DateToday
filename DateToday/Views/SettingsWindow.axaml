@@ -23,8 +23,8 @@
 
         <StackPanel Orientation="Vertical">
 
-            <Button Classes="Close"
-                    Command="{Binding CommandCloseSettingsView}"
+            <Button Classes="CloseButton"
+                    Command="{Binding CloseSettingsView}"
                     CommandParameter="{x:False}">
                 🗙
             </Button>
@@ -76,7 +76,7 @@
 
                                 <NumericUpDown Grid.Row="1"
                                                Grid.Column="1"
-                                               Classes="WidgetFontSizeField"
+                                               Classes="FontSizeField"
                                                Value="{Binding WidgetFontSize}" />
 
                                 <TextBlock Grid.Row="1"
@@ -88,7 +88,7 @@
                                           Grid.Column="3"
                                           Width="126"
                                           Classes="StringSelector"
-                                          ItemsSource="{Binding FontWeightDictionary,
+                                          ItemsSource="{Binding WidgetAvailableFontWeights,
                                                                 Mode=OneTime}"
                                           MaxDropDownHeight="532"
                                           SelectedValue="{Binding WidgetFontWeightLookupKey}"
@@ -149,7 +149,7 @@
 
                                 <NumericUpDown Grid.Row="0"
                                                Grid.Column="1"
-                                               Classes="WidgetPositionField"
+                                               Classes="PositionField"
                                                Maximum="{Binding WidgetPositionMax.X}"
                                                Value="{Binding WidgetPositionX}" />
 
@@ -160,7 +160,7 @@
 
                                 <NumericUpDown Grid.Row="1"
                                                Grid.Column="1"
-                                               Classes="WidgetPositionField"
+                                               Classes="PositionField"
                                                Maximum="{Binding WidgetPositionMax.Y}"
                                                Value="{Binding WidgetPositionY}" />
 
@@ -214,7 +214,7 @@
 
                                 <NumericUpDown Grid.Row="1"
                                                Grid.Column="2"
-                                               Classes="WidgetOrdinalDaySuffixPositionField"
+                                               Classes="OrdinalDaySuffixPositionField"
                                                Maximum="{Binding WidgetDateFormatUserInput.Length}"
                                                Value="{Binding WidgetOrdinalDaySuffixPositionUserInput}" />
 

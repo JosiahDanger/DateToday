@@ -6,7 +6,7 @@ namespace DateToday.Configuration
         PixelPoint position, string fontFamilyName, int fontSize, string fontWeightLookupKey,
         string dateFormat, byte? ordinalDaySuffixPosition)
     {
-        /* This class provides a simple data structure into which persisted settings may be 
+        /* This class constitutes a simple data structure into which persisted settings may be 
          * deserialised. */
 
         private readonly PixelPoint _position = position;

@@ -16,21 +16,36 @@ namespace DateToday.ViewModels
     internal class SettingsViewModel : ReactiveValidationObject, IActivatableViewModel
     {
         private readonly WidgetViewModel _widgetViewModel;
-       
         private string _widgetDateFormatUserInput;
         private byte? _widgetOrdinalDaySuffixPositionUserInput;
-        private bool _isDateTextSetSuccessfully = true;
 
         private readonly List<ValidationHelper> _prerequisitesForNewDateFormatEntry;
-
-        private ObservableAsPropertyHelper<EventPattern<DataErrorsChangedEventArgs>>? 
+        private ObservableAsPropertyHelper<EventPattern<DataErrorsChangedEventArgs>>?
             _dataErrorsChangedOAPH;
+        private bool _isDateTextSetSuccessfully = true;
+
+        public ViewModelActivator Activator { get; } = new();
+
+        public ReactiveCommand<ValueTuple<string, byte?>, Unit> ParseDateFormatUserInput { get; }
+
+        private EventPattern<DataErrorsChangedEventArgs>? DataErrorsChangedOAPH =>
+            _dataErrorsChangedOAPH?.Value;
+
+        public ReactiveCommand<bool, bool> CloseSettingsView { get; } =
+            ReactiveCommand.Create<bool, bool>(dialogResult =>
+            {
+                /* This function will accept a dummy boolean value and pass it to the caller: the 
+                 * WidgetViewModel instance. This behaviour is a vestige of cut functionality in 
+                 * which the user would be able to manually save or revert changes to settings. I 
+                 * will keep this here for now in case I want the SettingsWindow dialogue in the 
+                 * future to return something meaningful. */
+
+                return dialogResult;
+            });
 
         public SettingsViewModel(WidgetViewModel widgetViewModel)
         {
             // TODO: Instead of injecting the actual WidgetViewModel object, simply inject an interface.
-
-            // TODO: Address style inconsistencies regarding the substring 'widget' in field names.
 
             _widgetViewModel = widgetViewModel;
 
@@ -39,19 +54,19 @@ namespace DateToday.ViewModels
 
             this.WhenActivated(disposables =>
             {
-                _widgetViewModel.WhenAnyValue(x => x.PositionOAPH)
+                _widgetViewModel.WhenAnyValue(widgetViewModel => widgetViewModel.PositionOAPH)
                                 .ObserveOn(RxApp.MainThreadScheduler)
-                                .Select(x => x.X)
+                                .Select(position => position.X)
                                 .ToProperty(this, nameof(WidgetPositionX))
                                 .DisposeWith(disposables);
 
-                _widgetViewModel.WhenAnyValue(x => x.PositionOAPH)
+                _widgetViewModel.WhenAnyValue(widgetViewModel => widgetViewModel.PositionOAPH)
                                 .ObserveOn(RxApp.MainThreadScheduler)
-                                .Select(x => x.Y)
+                                .Select(position => position.Y)
                                 .ToProperty(this, nameof(WidgetPositionY))
                                 .DisposeWith(disposables);
 
-                _widgetViewModel.WhenAnyValue(x => x.PositionMax)
+                _widgetViewModel.WhenAnyValue(widgetViewModel => widgetViewModel.PositionMax)
                                 .ObserveOn(RxApp.MainThreadScheduler)
                                 .ToProperty(this, nameof(WidgetPositionMax))
                                 .DisposeWith(disposables);
@@ -65,20 +80,23 @@ namespace DateToday.ViewModels
                         .DisposeWith(disposables);
 
                 this.WhenAnyValue(
-                        x => x.WidgetDateFormatUserInput,
-                        x => x.WidgetOrdinalDaySuffixPositionUserInput)
+                        settingsViewModel => 
+                            settingsViewModel.WidgetDateFormatUserInput,
+                        settingsViewModel => 
+                            settingsViewModel.WidgetOrdinalDaySuffixPositionUserInput)
                     .ObserveOn(RxApp.MainThreadScheduler)
                     .Throttle(TimeSpan.FromMilliseconds(1))
-                    .InvokeCommand(this, x => x.CommandParseDateFormatUserInput)
+                    .InvokeCommand(this, settingsViewModel => 
+                        settingsViewModel.ParseDateFormatUserInput)
                     .DisposeWith(disposables);
             });
 
             IObservable<bool> isDateFormatPopulated =
-                this.WhenAnyValue(x => x.WidgetDateFormatUserInput)
+                this.WhenAnyValue(settingsViewModel => settingsViewModel.WidgetDateFormatUserInput)
                     .ObserveOn(RxApp.MainThreadScheduler)
-                    .Select(x => !string.IsNullOrEmpty(x))
-                    .Do(x => {
-                        if (!x)
+                    .Select(inputString => !string.IsNullOrEmpty(inputString))
+                    .Do(isPopulated => {
+                        if (!isPopulated)
                         {
                             /* When the user erases the input date format, erase too the provided
                              * ordinal day suffix position. */
@@ -89,22 +107,25 @@ namespace DateToday.ViewModels
 
             IObservable<bool> isDateFormatOrdinalSuffixPositionValid =
                 this.WhenAnyValue(
-                        x => x.WidgetDateFormatUserInput,
-                        x => x.WidgetOrdinalDaySuffixPositionUserInput,
+                        settingsViewModel => 
+                            settingsViewModel.WidgetDateFormatUserInput,
+                        settingsViewModel => 
+                            settingsViewModel.WidgetOrdinalDaySuffixPositionUserInput,
                     (dateFormat, suffixPosition) =>
                         !(suffixPosition != null && suffixPosition > dateFormat.Length))
                     .ObserveOn(RxApp.MainThreadScheduler);
 
             IObservable<bool> isDateFormatValid =
-                this.WhenAnyValue(x => x.IsDateTextSetSuccessfully)
+                this.WhenAnyValue(settingsViewModel => settingsViewModel.IsDateTextSetSuccessfully)
                     .ObserveOn(RxApp.MainThreadScheduler);
 
             string[] curlyBraces = ["{", "}"];
 
             IObservable<bool> areCurlyBracesAbsentFromDateFormat =
                 this.WhenAnyValue(
-                        x => x.WidgetDateFormatUserInput, 
-                        x => x != null && !curlyBraces.Any(x.Contains))
+                        settingsViewModel => settingsViewModel.WidgetDateFormatUserInput, 
+                        inputString => 
+                            inputString != null && !curlyBraces.Any(inputString.Contains))
                     .ObserveOn(RxApp.MainThreadScheduler);
 
             // TODO: Deserialise validation strings from an external JSON file.
@@ -134,18 +155,20 @@ namespace DateToday.ViewModels
                 "Please see Microsoft Learn: 'Custom date and time format strings'.");
 
             IObservable<bool> mayUserEnterNewDateFormat =
-                this.WhenAnyValue(x => x.DataErrorsChangedOAPH)
+                this.WhenAnyValue(settingsViewModel => settingsViewModel.DataErrorsChangedOAPH)
                     .ObserveOn(RxApp.MainThreadScheduler)
-                    .Select(_ => _prerequisitesForNewDateFormatEntry.All(x => x.IsValid));
+                    .Select(_ => _prerequisitesForNewDateFormatEntry
+                                 .All(validaionRule => validaionRule.IsValid));
 
-            CommandParseDateFormatUserInput =
+            ParseDateFormatUserInput =
                 ReactiveCommand.Create<ValueTuple<string, byte?>>(
                     canExecute: mayUserEnterNewDateFormat,
-                    execute: x =>
+                    execute: dateFormatTuple =>
                     {
                         try
                         {
-                            _widgetViewModel.SetDateFormat(x.Item1, x.Item2);
+                            _widgetViewModel.SetDateFormat(
+                                dateFormatTuple.Item1, dateFormatTuple.Item2);
                             IsDateTextSetSuccessfully = true;
                         }
                         catch (System.FormatException)
@@ -158,6 +181,15 @@ namespace DateToday.ViewModels
                         }
                     });
         }
+
+        private bool IsDateTextSetSuccessfully
+        {
+            get => _isDateTextSetSuccessfully;
+            set => this.RaiseAndSetIfChanged(ref _isDateTextSetSuccessfully, value);
+        }
+
+        public static List<FontFamily> InstalledFontsList =>
+            [.. FontManager.Current.SystemFonts.OrderBy(x => x.Name)];
 
         public int WidgetPositionX
         {
@@ -214,6 +246,9 @@ namespace DateToday.ViewModels
             }
         }
 
+        public Dictionary<string, FontWeight> WidgetAvailableFontWeights =>
+            _widgetViewModel.FontWeightDictionary;
+
         public string WidgetDateFormatUserInput
         {
             get => _widgetDateFormatUserInput;
@@ -225,37 +260,5 @@ namespace DateToday.ViewModels
             get => _widgetOrdinalDaySuffixPositionUserInput;
             set => this.RaiseAndSetIfChanged(ref _widgetOrdinalDaySuffixPositionUserInput, value);
         }
-
-        private bool IsDateTextSetSuccessfully
-        {
-            get => _isDateTextSetSuccessfully;
-            set => this.RaiseAndSetIfChanged(ref _isDateTextSetSuccessfully, value);
-        }
-
-        public static List<FontFamily> InstalledFontsList =>
-            [.. FontManager.Current.SystemFonts.OrderBy(x => x.Name)];
-
-        public Dictionary<string, FontWeight> FontWeightDictionary =>
-            _widgetViewModel.FontWeightDictionary;
-
-        public ViewModelActivator Activator { get; } = new ViewModelActivator();
-
-        public ReactiveCommand<ValueTuple<string, byte?>, Unit> 
-            CommandParseDateFormatUserInput { get; }
-
-        private EventPattern<DataErrorsChangedEventArgs>? DataErrorsChangedOAPH => 
-            _dataErrorsChangedOAPH?.Value;
-
-        public ReactiveCommand<bool, bool> CommandCloseSettingsView { get; } =
-            ReactiveCommand.Create<bool, bool>(dialogResult =>
-            {
-                /* This function will accept a dummy boolean value and pass it to the caller: the 
-                 * WidgetViewModel instance. This behaviour is a vestige of cut functionality in 
-                 * which the user would be able to manually save or revert changes to settings. I 
-                 * will keep this here for now in case I want the SettingsWindow dialogue in the 
-                 * future to return something meaningful. */
-
-                return dialogResult;
-            });
     }
 }

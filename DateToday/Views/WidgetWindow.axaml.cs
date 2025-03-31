@@ -14,20 +14,14 @@ namespace DateToday.Views
 {
     internal interface IWidgetView
     {
-        PixelPoint WidgetPosition { get; }
-        void CloseWidget(object? dialogResult);
+        PixelPoint Position { get; }
+        void CloseView(object? dialogResult);
     }
 
     internal partial class WidgetWindow : ReactiveWindow<WidgetViewModel>, IWidgetView
     {
         public WidgetWindow()
         {
-            if (Design.IsDesignMode)
-            {
-                // Make the previewer happy.
-                return;
-            };
-
             InitializeComponent();
 
             this.WhenActivated(disposables => 
@@ -48,14 +42,14 @@ namespace DateToday.Views
                     handler => SizeChanged -= handler
                 )
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(x => OnWidgetSizeChanged(x.EventArgs))
+                .Subscribe(x => OnViewSizeChanged(x.EventArgs))
                 .DisposeWith(disposables);
             });
         }
 
         private void HandleActivation() 
         {
-            ViewModel!.InteractionReceiveNewSettings.RegisterHandler(DoShowDialogAsync);
+            ViewModel!.InteractionReceiveNewSettings.RegisterHandler(DoShowSettingsDialogAsync);
         }
 
         private void HandleDeactivation()
@@ -63,29 +57,30 @@ namespace DateToday.Views
             ViewModel!.Dispose();
         }
 
-        private void OnWidgetSizeChanged(SizeChangedEventArgs e)
+        private void OnViewSizeChanged(SizeChangedEventArgs e)
         {
+            static PixelPoint GetNewViewPositionMax(PixelSize monitorSize, Rect widgetBounds)
+            {
+                /* Calculate the maximum on-screen coordinate at which the widget will be fully 
+                 * visible. */
+
+                return
+                    new(monitorSize.Width - (int)widgetBounds.Width,
+                        monitorSize.Height - (int)widgetBounds.Height);
+            }
+
             Screen? monitor = Screens.Primary;
 
             if (monitor != null)
             {
                 PixelSize screenRealEstate = monitor.WorkingArea.Size;
 
-                ViewModel!.PositionMax = GetNewPositionMax(screenRealEstate, Bounds);
-                ConfineWidgetWithinScreenRealEstate(e, screenRealEstate);
+                ViewModel!.PositionMax = GetNewViewPositionMax(screenRealEstate, Bounds);
+                ConfineViewWithinScreenRealEstate(e, screenRealEstate);
             }
         }
 
-        private static PixelPoint GetNewPositionMax(PixelSize monitorSize, Rect widgetBounds)
-        {
-            // Calculate the maximum on-screen coordinate at which the widget will be fully visible.
-
-            return 
-                new(monitorSize.Width - (int)widgetBounds.Width, 
-                    monitorSize.Height - (int)widgetBounds.Height);
-        }
-
-        private void ConfineWidgetWithinScreenRealEstate(
+        private void ConfineViewWithinScreenRealEstate(
             SizeChangedEventArgs e, PixelSize screenRealEstate)
         {
             bool hasWidthIncreased = e.NewSize.Width > e.PreviousSize.Width;
@@ -120,14 +115,12 @@ namespace DateToday.Views
             }
         }
 
-        public PixelPoint WidgetPosition => Position;
-
-        public void CloseWidget(object? dialogResult)
+        public void CloseView(object? dialogResult)
         {
             Close(dialogResult);
         }
 
-        private async Task DoShowDialogAsync(
+        private async Task DoShowSettingsDialogAsync(
             IInteractionContext<SettingsViewModel, bool> interaction)
         {
             SettingsWindow dialog = new() { DataContext = interaction.Input };
