@@ -40,9 +40,6 @@ namespace DateToday.ViewModels
         private PixelPoint _position, _positionMax;
 
         [IgnoreDataMember]
-        private readonly ObservableAsPropertyHelper<PixelPoint> _positionOAPH;
-
-        [IgnoreDataMember]
         private int _fontSize;
 
         [IgnoreDataMember]
@@ -83,11 +80,6 @@ namespace DateToday.ViewModels
             _dateFormat = _dateFormatUserInput = restoredSettings.DateFormat;
             _ordinalDaySuffixPosition = restoredSettings.OrdinalDaySuffixPosition;
 
-            _positionOAPH = this
-                .WhenAnyValue(x => x.Position)
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .ToProperty(this, nameof(PositionOAPH));
-
             this.WhenActivated(disposables =>
             {
                 this.HandleActivation();
@@ -125,8 +117,6 @@ namespace DateToday.ViewModels
         public void Dispose()
         {
             _model.Dispose();
-            _positionOAPH.Dispose();
-
             Debug.WriteLine("Disposed of View Model.");
         }
 
@@ -220,9 +210,6 @@ namespace DateToday.ViewModels
             get => _position;
             set => this.RaiseAndSetIfChanged(ref _position, value);
         }
-
-        [IgnoreDataMember]
-        public PixelPoint PositionOAPH => _positionOAPH.Value;
 
         [IgnoreDataMember]
         public PixelPoint PositionMax

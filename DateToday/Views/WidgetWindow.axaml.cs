@@ -32,7 +32,7 @@ namespace DateToday.Views
                     .Create(() => this.HandleDeactivation())
                     .DisposeWith(disposables);
 
-                ViewModel.WhenAnyValue(x => x.PositionOAPH)
+                ViewModel.WhenAnyValue(x => x.Position)
                          .ObserveOn(RxApp.MainThreadScheduler)
                          .BindTo(this, x => x.Position)
                          .DisposeWith(disposables);

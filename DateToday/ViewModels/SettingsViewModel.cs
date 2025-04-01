@@ -54,13 +54,13 @@ namespace DateToday.ViewModels
 
             this.WhenActivated(disposables =>
             {
-                _widgetViewModel.WhenAnyValue(widgetViewModel => widgetViewModel.PositionOAPH)
+                _widgetViewModel.WhenAnyValue(widgetViewModel => widgetViewModel.Position)
                                 .ObserveOn(RxApp.MainThreadScheduler)
                                 .Select(position => position.X)
                                 .ToProperty(this, nameof(WidgetPositionX))
                                 .DisposeWith(disposables);
 
-                _widgetViewModel.WhenAnyValue(widgetViewModel => widgetViewModel.PositionOAPH)
+                _widgetViewModel.WhenAnyValue(widgetViewModel => widgetViewModel.Position)
                                 .ObserveOn(RxApp.MainThreadScheduler)
                                 .Select(position => position.Y)
                                 .ToProperty(this, nameof(WidgetPositionY))
@@ -193,20 +193,15 @@ namespace DateToday.ViewModels
 
         public int WidgetPositionX
         {
-            get => _widgetViewModel.PositionOAPH.X;
-            set
-            {
-                _widgetViewModel.Position = _widgetViewModel.PositionOAPH.WithX(value);
-            }
+            get => _widgetViewModel.Position.X;
+            set => _widgetViewModel.Position = _widgetViewModel.Position.WithX(value);
+            
         }
 
         public int WidgetPositionY
         {
-            get => _widgetViewModel.PositionOAPH.Y;
-            set
-            {
-                _widgetViewModel.Position = _widgetViewModel.PositionOAPH.WithY(value);
-            }
+            get => _widgetViewModel.Position.Y;
+            set => _widgetViewModel.Position = _widgetViewModel.Position.WithY(value);
         }
 
         public PixelPoint WidgetPositionMax => _widgetViewModel.PositionMax;
