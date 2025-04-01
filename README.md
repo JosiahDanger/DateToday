@@ -11,21 +11,18 @@ You will need to install as a prerequisite the [x64 .NET Desktop Runtime 8.0](ht
 
 DateToday is a desktop widget that displays the current date in a configurable format, featuring gorgeous text rendering. Settings may be adjusted through an intuitive GUI. Recommended for users of [ExplorerPatcher](https://github.com/valinet/ExplorerPatcher), [TranslucentTB](https://github.com/TranslucentTB/TranslucentTB), and [Wallpaper Engine](https://www.wallpaperengine.io/). The app's theme will adapt automatically to that of your operating system.
 
-&nbsp;
-
+\
 **All of my apps are proudly:**
 - Open-source under the MIT Licence
 - Free forever
 - Developed without the use of generative AI
 
-&nbsp;
-
+\
 ![Widget Screenshot](https://github.com/user-attachments/assets/43626d79-c1b2-4a98-8f4c-03e79050b469)
 
 ![Settings Screenshot](https://github.com/user-attachments/assets/a7ecff73-3ed1-46c9-80a2-c3a9e0f57d0b)
 
-&nbsp;
-
+\
 ## Get Started
 
 1. Ensure that the [x64 .NET Desktop Runtime 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) is installed on your computer.
