@@ -3,13 +3,22 @@ Beautiful, configurable desktop widget that displays the current date
 
 ---
 
-If you are here simply to download a Windows executable, please see [Releases](https://github.com/JosiahDanger/DateToday/releases/). I will add Linux support when I can.
+<p style="text-align:center">
+  If you are here simply to download a Windows executable, please see <a href="https://github.com/JosiahDanger/DateToday/releases/">Releases</a>. I will add Linux support when I can.
+</p>
 
-You will need to install as a prerequisite the [x64 .NET Desktop Runtime 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
+<p style="text-align:center">
+  You will need to install as a prerequisite the <a href="https://dotnet.microsoft.com/en-us/download/dotnet/8.0">x64 .NET Desktop Runtime 8.0</a>.
+</p>
 
 ---
 
-DateToday is a desktop widget that displays the current date in a configurable format, featuring gorgeous text rendering. Settings may be adjusted through an intuitive GUI. Recommended for users of [ExplorerPatcher](https://github.com/valinet/ExplorerPatcher), [TranslucentTB](https://github.com/TranslucentTB/TranslucentTB), and [Wallpaper Engine](https://www.wallpaperengine.io/). The app's theme will adapt automatically to that of your operating system. Open-source under the MIT Licence, and free forever. All of my apps are developed without the use of any generative AI whatsoever.
+DateToday is a desktop widget that displays the current date in a configurable format, featuring gorgeous text rendering. Settings may be adjusted through an intuitive GUI. Recommended for users of [ExplorerPatcher](https://github.com/valinet/ExplorerPatcher), [TranslucentTB](https://github.com/TranslucentTB/TranslucentTB), and [Wallpaper Engine](https://www.wallpaperengine.io/). The app's theme will adapt automatically to that of your operating system.
+
+**All of my apps are proudly:**
+- Open-source under the MIT Licence
+- Free forever
+- Developed without the use of generative AI
 
 &nbsp;
 
