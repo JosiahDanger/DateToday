@@ -22,7 +22,6 @@ DateToday is a desktop widget that displays the current date in a configurable f
 
 ![Settings Screenshot](https://github.com/user-attachments/assets/a7ecff73-3ed1-46c9-80a2-c3a9e0f57d0b)
 
-\
 ## Get Started
 
 1. Ensure that the [x64 .NET Desktop Runtime 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) is installed on your computer.
