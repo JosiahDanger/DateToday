@@ -28,10 +28,6 @@ namespace DateToday.Views
             {
                 this.HandleActivation();
 
-                Disposable
-                    .Create(() => this.HandleDeactivation())
-                    .DisposeWith(disposables);
-
                 ViewModel.WhenAnyValue(x => x.Position)
                          .ObserveOn(RxApp.MainThreadScheduler)
                          .BindTo(this, x => x.Position)
@@ -50,11 +46,6 @@ namespace DateToday.Views
         private void HandleActivation() 
         {
             ViewModel!.InteractionReceiveNewSettings.RegisterHandler(DoShowSettingsDialogAsync);
-        }
-
-        private void HandleDeactivation()
-        {
-            ViewModel!.Dispose();
         }
 
         private void OnViewSizeChanged(SizeChangedEventArgs e)

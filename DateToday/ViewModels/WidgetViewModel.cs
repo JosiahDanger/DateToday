@@ -16,7 +16,7 @@ using System.Windows.Input;
 namespace DateToday.ViewModels
 {
     [DataContract]
-    internal class WidgetViewModel : ReactiveObject, IActivatableViewModel, IDisposable
+    internal class WidgetViewModel : ReactiveObject, IActivatableViewModel
     {
         [IgnoreDataMember]
         private readonly IWidgetView _viewInterface;
@@ -31,7 +31,7 @@ namespace DateToday.ViewModels
         private string _dateText, _dateFormat, _dateFormatUserInput, _fontWeightLookupKey;
 
         [IgnoreDataMember]
-        private int? _fontWeightValue;
+        private ObservableAsPropertyHelper<int?>? _fontWeight;
 
         [IgnoreDataMember]
         private FontFamily _fontFamily;
@@ -75,8 +75,6 @@ namespace DateToday.ViewModels
             _position = restoredSettings.Position;
             _fontSize = restoredSettings.FontSize;
             _fontWeightLookupKey = restoredSettings.FontWeightLookupKey;
-            _fontWeightValue = 
-                AttemptFontWeightLookup(_fontWeightDictionary, FontWeightLookupKey);
             _dateFormat = _dateFormatUserInput = restoredSettings.DateFormat;
             _ordinalDaySuffixPosition = restoredSettings.OrdinalDaySuffixPosition;
 
@@ -89,10 +87,12 @@ namespace DateToday.ViewModels
                       .Subscribe(_ => RefreshDateText())
                       .DisposeWith(disposables);
 
-                this.WhenAnyValue(x => x.DateFormatUserInput)
-                    .ObserveOn(RxApp.MainThreadScheduler)
-                    .ToProperty(this, nameof(DateFormat))
-                    .DisposeWith(disposables);
+                _fontWeight =
+                    this.WhenAnyValue(x => x.FontWeightLookupKey)
+                        .ObserveOn(RxApp.MainThreadScheduler)
+                        .Select(x => AttemptFontWeightLookup(fontWeightDictionary, x))
+                        .ToProperty(this, nameof(FontWeight))
+                        .DisposeWith(disposables);
             });
 
             ReceiveNewSettings = ReactiveCommand.CreateFromTask(async () =>
@@ -114,14 +114,10 @@ namespace DateToday.ViewModels
             RefreshDateText();
         }
 
-        public void Dispose()
-        {
-            _model.Dispose();
-            Debug.WriteLine("Disposed of View Model.");
-        }
-
         private void RefreshDateText()
         {
+            // TODO: This could probably be a ReactiveCommand.
+
             DateText = GetNewDateText(DateFormat, OrdinalDaySuffixPosition);   
         }
 
@@ -245,25 +241,11 @@ namespace DateToday.ViewModels
         public string FontWeightLookupKey
         {
             get => _fontWeightLookupKey;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref _fontWeightLookupKey, value);
-
-                int? newFontWeightValue = AttemptFontWeightLookup(_fontWeightDictionary, value);
-
-                if (newFontWeightValue != null)
-                {
-                    FontWeight = newFontWeightValue;
-                }
-            }
+            set => this.RaiseAndSetIfChanged(ref _fontWeightLookupKey, value);
         }
 
         [IgnoreDataMember]
-        public int? FontWeight
-        {
-            get => _fontWeightValue;
-            set => this.RaiseAndSetIfChanged(ref _fontWeightValue, value);
-        }
+        public int? FontWeight => _fontWeight?.Value;
 
         [IgnoreDataMember]
         public string DateFormatUserInput
