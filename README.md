@@ -55,4 +55,5 @@ DateToday is a desktop widget that displays the current date in a configurable f
 
 ![Screenshot 2025-03-22 031345](https://github.com/user-attachments/assets/ba30fe7b-6408-438c-b4e2-518ddedcc1ca)
 
+\
 I am keen to receive feedback on this application, particularly on its codebase. Please let me know if you have any suggestions.
