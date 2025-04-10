@@ -52,7 +52,7 @@
                                           Grid.Column="1"
                                           Grid.ColumnSpan="3"
                                           Classes="StringSelector"
-                                          ItemsSource="{Binding InstalledFontsList,
+                                          ItemsSource="{Binding AvailableFonts,
                                                                 Mode=OneTime}"
                                           SelectedItem="{Binding WidgetFontFamily}">
 
@@ -77,7 +77,7 @@
                                 <NumericUpDown Grid.Row="1"
                                                Grid.Column="1"
                                                Classes="FontSizeField"
-                                               Value="{Binding WidgetFontSize}" />
+                                               Value="{Binding WidgetFontSizeUserInput}" />
 
                                 <TextBlock Grid.Row="1"
                                            Grid.Column="2"
@@ -88,12 +88,10 @@
                                           Grid.Column="3"
                                           Width="126"
                                           Classes="StringSelector"
-                                          ItemsSource="{Binding WidgetAvailableFontWeights,
-                                                                Mode=OneTime}"
+                                          ItemsSource="{Binding AvailableFontWeights}"
                                           MaxDropDownHeight="532"
                                           SelectedValue="{Binding WidgetFontWeightLookupKey}"
-                                          SelectedValueBinding="{Binding Key,
-                                                                         Mode=OneTime}">
+                                          SelectedValueBinding="{Binding Key}">
 
                                     <ComboBox.ItemTemplate>
 
@@ -103,15 +101,6 @@
                                                 TODO:
                                                 Why can't I bind the TextBlock FontFamily property
                                                 to WidgetFontFamily?
-                                            -->
-
-                                            <!--
-                                                FontWeight="{Binding Value}"
-                                                
-                                                No fonts installed on my machine support every font
-                                                weight. Will leave this commented out until I can
-                                                render the font weight names in the user's selected
-                                                font.
                                             -->
 
                                             <TextBlock Text="{Binding Key}" />
@@ -151,7 +140,7 @@
                                                Grid.Column="1"
                                                Classes="PositionField"
                                                Maximum="{Binding WidgetPositionMax.X}"
-                                               Value="{Binding WidgetPositionX}" />
+                                               Value="{Binding WidgetPositionXUserInput}" />
 
                                 <TextBlock Grid.Row="1"
                                            Grid.Column="0"
@@ -162,7 +151,7 @@
                                                Grid.Column="1"
                                                Classes="PositionField"
                                                Maximum="{Binding WidgetPositionMax.Y}"
-                                               Value="{Binding WidgetPositionY}" />
+                                               Value="{Binding WidgetPositionYUserInput}" />
 
                             </Grid>
 
@@ -202,11 +191,6 @@
                                          Classes="TextField"
                                          Text="{Binding WidgetDateFormatUserInput}" />
 
-                                <!--
-                                    TODO:
-                                    Make the data source update when the Enter key is pressed.
-                                -->
-
                                 <TextBlock Grid.Row="1"
                                            Grid.Column="1"
                                            Classes="FieldLabel"
@@ -216,7 +200,7 @@
                                                Grid.Column="2"
                                                Classes="OrdinalDaySuffixPositionField"
                                                Maximum="{Binding WidgetDateFormatUserInput.Length}"
-                                               Value="{Binding WidgetOrdinalDaySuffixPositionUserInput}" />
+                                               Value="{Binding WidgetOrdinalDaySuffixPosition}" />
 
                             </Grid>
 
