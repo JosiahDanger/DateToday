@@ -15,11 +15,24 @@ using System.Windows.Input;
 
 namespace DateToday.ViewModels
 {
+    internal interface IWidgetViewModel
+    {
+        PixelPoint WindowPosition { get; set; }
+        PixelPoint WindowPositionMax { get; }
+        int FontSize { get; set; }
+        FontFamily FontFamily { get; set; }
+        string FontWeightLookupKey { get; set; }
+        string DateFormat { get; set; }
+        byte? OrdinalDaySuffixPosition { get; set; }
+
+        void SetDateFormat(string newDateFormat, byte? ordinalDaySuffixPosition);
+    }
+
     [DataContract]
-    internal class WidgetViewModel : ReactiveObject, IActivatableViewModel
+    internal class WidgetViewModel : ReactiveObject, IActivatableViewModel, IWidgetViewModel
     {
         [IgnoreDataMember]
-        private readonly IWidgetView _viewInterface;
+        private readonly IWidgetWindow _viewInterface;
 
         [IgnoreDataMember]
         private readonly WidgetModel _model;
@@ -34,7 +47,7 @@ namespace DateToday.ViewModels
         private FontFamily _fontFamily;
 
         [IgnoreDataMember]
-        private PixelPoint _position, _positionMax;
+        private PixelPoint _windowPosition, _windowPositionMax;
 
         [IgnoreDataMember]
         private int _fontSize;
@@ -55,7 +68,7 @@ namespace DateToday.ViewModels
         public ICommand ExitApplication { get; }
 
         public WidgetViewModel(
-            IWidgetView viewInterface, 
+            IWidgetWindow viewInterface, 
             WidgetModel model,
             List<FontFamily> availableFonts,
             Dictionary<string, FontWeight> fontWeightDictionary,
@@ -65,7 +78,8 @@ namespace DateToday.ViewModels
 
             _viewInterface = viewInterface;
             _model = model;
-            _position = restoredSettings.Position;
+
+            _windowPosition = restoredSettings.WindowPosition;
             _fontSize = restoredSettings.FontSize;
             _fontWeightLookupKey = restoredSettings.FontWeightLookupKey;
             _dateFormat = _dateFormatUserInput = restoredSettings.DateFormat;
@@ -105,7 +119,7 @@ namespace DateToday.ViewModels
 
             ExitApplication = ReactiveCommand.Create(() =>
             {
-                _viewInterface?.CloseView(0);
+                _viewInterface?.Close(0);
             });
         }
 
@@ -187,6 +201,8 @@ namespace DateToday.ViewModels
 
         public void SetDateFormat(string newDateFormat, byte? ordinalDaySuffixPosition)
         {
+            // TODO: Make this a ReactiveCommand?
+
             try
             {
                 DateText = GetNewDateText(newDateFormat, ordinalDaySuffixPosition);
@@ -204,17 +220,17 @@ namespace DateToday.ViewModels
         public int? FontWeight => _fontWeight.Value; // TODO: Make this a ReactiveCommand?
 
         [DataMember]
-        public PixelPoint Position
+        public PixelPoint WindowPosition
         {
-            get => _position;
-            set => this.RaiseAndSetIfChanged(ref _position, value);
+            get => _windowPosition;
+            set => this.RaiseAndSetIfChanged(ref _windowPosition, value);
         }
 
         [IgnoreDataMember]
-        public PixelPoint PositionMax
+        public PixelPoint WindowPositionMax
         {
-            get => _positionMax;
-            set => this.RaiseAndSetIfChanged(ref _positionMax, value);
+            get => _windowPositionMax;
+            set => this.RaiseAndSetIfChanged(ref _windowPositionMax, value);
         }
 
         [DataMember]

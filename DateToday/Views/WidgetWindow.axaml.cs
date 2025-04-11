@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 
 namespace DateToday.Views
 {
-    internal interface IWidgetView
+    internal interface IWidgetWindow
     {
         PixelPoint Position { get; }
-        void CloseView(object? dialogResult);
+        void Close(object? dialogResult);
     }
 
-    internal partial class WidgetWindow : ReactiveWindow<WidgetViewModel>, IWidgetView
+    internal partial class WidgetWindow : ReactiveWindow<WidgetViewModel>, IWidgetWindow
     {
         public WidgetWindow()
         {
@@ -28,7 +28,7 @@ namespace DateToday.Views
             {
                 this.HandleActivation();
 
-                ViewModel.WhenAnyValue(x => x.Position)
+                ViewModel.WhenAnyValue(x => x.WindowPosition)
                          .ObserveOn(RxApp.MainThreadScheduler)
                          .BindTo(this, x => x.Position)
                          .DisposeWith(disposables);
@@ -66,7 +66,7 @@ namespace DateToday.Views
             {
                 PixelSize screenRealEstate = monitor.WorkingArea.Size;
 
-                ViewModel!.PositionMax = GetNewViewPositionMax(screenRealEstate, Bounds);
+                ViewModel!.WindowPositionMax = GetNewViewPositionMax(screenRealEstate, Bounds);
                 ConfineViewWithinScreenRealEstate(e, screenRealEstate);
             }
         }
@@ -84,8 +84,9 @@ namespace DateToday.Views
 
                 if (deltaX > 0)
                 {
-                    int newPositionX = Math.Max(ViewModel!.PositionMax.X, PixelPoint.Origin.X);
-                    ViewModel!.Position = Position.WithX(newPositionX);
+                    int newPositionX = 
+                        Math.Max(ViewModel!.WindowPositionMax.X, PixelPoint.Origin.X);
+                    ViewModel!.WindowPosition = Position.WithX(newPositionX);
 
                     Debug.WriteLine("Adjusted widget X position within monitor real estate.");
                 }
@@ -98,8 +99,9 @@ namespace DateToday.Views
 
                 if (deltaY > 0)
                 {
-                    int newPositionY = Math.Max(ViewModel!.PositionMax.Y, PixelPoint.Origin.Y);
-                    ViewModel!.Position = Position.WithY(newPositionY);
+                    int newPositionY = 
+                        Math.Max(ViewModel!.WindowPositionMax.Y, PixelPoint.Origin.Y);
+                    ViewModel!.WindowPosition = Position.WithY(newPositionY);
 
                     Debug.WriteLine("Adjusted widget Y position within monitor real estate.");
                 }
