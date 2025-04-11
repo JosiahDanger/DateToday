@@ -12,7 +12,7 @@ namespace DateToday.Views;
 internal partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
 {
 #if OS_WINDOWS
-    private readonly Control? _windowDragHandle;
+    private readonly Control? _settingsWindowDragHandle, _settingsDateFormatField;
     private bool _isWindowDragInEffect;
     private Point _cursorPositionAtWindowDragStart;
 #endif
@@ -21,8 +21,10 @@ internal partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
     {
         InitializeComponent();
 
+        _settingsDateFormatField = this.FindControl<TextBox>("SettingsDateFormatField");
+
 #if OS_WINDOWS
-        _windowDragHandle = this.FindControl<Border>("WindowDragHandle");
+        _settingsWindowDragHandle = this.FindControl<Border>("SettingsWindowDragHandle");
 #endif
 
         this.WhenActivated(disposables =>
@@ -31,29 +33,44 @@ internal partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
                       .ObserveOn(RxApp.MainThreadScheduler)
                       .Subscribe(dialogResult => Close(dialogResult))
                       .DisposeWith(disposables);
+
+            if (_settingsDateFormatField != null)
+            {
+                /* The TextBox 'SettingsDateFormatField' is initialised in XAML such that its
+                 * 'undo' / 'redo' functionality is disabled. Upon activation of the Settings
+                 * window, the control's 'undo' / 'redo' functionality is manually enabled here.
+                 * 
+                 * This behaviour being in place prevents a minor bug that would otherwise occur if
+                 * the user were to perform an 'undo' operation on the TextBox immediately after
+                 * opening the Settings window. When this bug occurs, text inside the control is
+                 * erased entirely, and the validation message "Curly braces are not permitted" is
+                 * displayed in error. */
+
+                ((TextBox)_settingsDateFormatField).IsUndoEnabled = true;
+            }
             
 #if OS_WINDOWS
-            if (_windowDragHandle != null)
+            if (_settingsWindowDragHandle != null)
             {
                 Observable.FromEventPattern<PointerEventArgs>(
-                    handler => _windowDragHandle.PointerMoved += handler,
-                    handler => _windowDragHandle.PointerMoved -= handler,
+                    handler => _settingsWindowDragHandle.PointerMoved += handler,
+                    handler => _settingsWindowDragHandle.PointerMoved -= handler,
                     RxApp.MainThreadScheduler)
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x => WindowDragHandle_OnPointerMoved(x.Sender, x.EventArgs))
                 .DisposeWith(disposables);
 
                 Observable.FromEventPattern<PointerPressedEventArgs>(
-                    handler => _windowDragHandle.PointerPressed += handler,
-                    handler => _windowDragHandle.PointerPressed -= handler,
+                    handler => _settingsWindowDragHandle.PointerPressed += handler,
+                    handler => _settingsWindowDragHandle.PointerPressed -= handler,
                     RxApp.MainThreadScheduler)
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x => WindowDragHandle_OnPointerPressed(x.Sender, x.EventArgs))
                 .DisposeWith(disposables);
 
                 Observable.FromEventPattern<PointerReleasedEventArgs>(
-                    handler => _windowDragHandle.PointerReleased += handler,
-                    handler => _windowDragHandle.PointerReleased -= handler,
+                    handler => _settingsWindowDragHandle.PointerReleased += handler,
+                    handler => _settingsWindowDragHandle.PointerReleased -= handler,
                     RxApp.MainThreadScheduler)
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(x => WindowDragHandle_OnPointerReleased(x.Sender, x.EventArgs))
@@ -77,7 +94,7 @@ internal partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
 
     private void WindowDragHandle_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if ((e.Source is Control sourceControl) && (sourceControl == _windowDragHandle))
+        if ((e.Source is Control sourceControl) && (sourceControl == _settingsWindowDragHandle))
         {
             _isWindowDragInEffect = true;
             _cursorPositionAtWindowDragStart = e.GetPosition(this);

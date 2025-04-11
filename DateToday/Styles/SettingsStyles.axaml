@@ -67,6 +67,7 @@
         <Setter Property="AcceptsReturn" Value="False" />
         <Setter Property="AcceptsTab" Value="False" />
         <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="IsUndoEnabled" Value="False" />
         <Setter Property="Margin" Value="10 5" />
         <Setter Property="TextWrapping" Value="NoWrap" />
     </Style>
@@ -99,7 +100,7 @@
         <Setter Property="Margin" Value="10 5" />
         <Setter Property="Maximum" Value="999" />
         <Setter Property="Minimum" Value="10" />
-        <Setter Property="MinWidth" Value="103" />
+        <Setter Property="Width" Value="114" />
         <Setter Property="ParsingNumberStyle" Value="Integer" />
     </Style>
 

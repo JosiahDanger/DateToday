@@ -18,7 +18,7 @@
 
     <Design.DataContext />
 
-    <Border x:Name="WindowDragHandle"
+    <Border x:Name="SettingsWindowDragHandle"
             Classes="SettingsOuterBorder">
 
         <StackPanel Orientation="Vertical">
@@ -140,7 +140,7 @@
                                                Grid.Column="1"
                                                Classes="PositionField"
                                                Maximum="{Binding WidgetPositionMax.X}"
-                                               Value="{Binding WidgetPositionXUserInput}" />
+                                               Value="{Binding WidgetPositionUserInputX}" />
 
                                 <TextBlock Grid.Row="1"
                                            Grid.Column="0"
@@ -151,7 +151,7 @@
                                                Grid.Column="1"
                                                Classes="PositionField"
                                                Maximum="{Binding WidgetPositionMax.Y}"
-                                               Value="{Binding WidgetPositionYUserInput}" />
+                                               Value="{Binding WidgetPositionUserInputY}" />
 
                             </Grid>
 
@@ -166,7 +166,7 @@
             <StackPanel HorizontalAlignment="Center"
                         Orientation="Horizontal">
 
-                <Border Width="691"
+                <Border Width="702"
                         Classes="SettingsInnerBorder">
 
                     <StackPanel Orientation="Vertical">
@@ -184,7 +184,8 @@
                                            Classes="FieldLabel"
                                            Text="Format:" />
 
-                                <TextBox Grid.Row="0"
+                                <TextBox x:Name="SettingsDateFormatField"
+                                         Grid.Row="0"
                                          Grid.Column="1"
                                          Grid.ColumnSpan="2"
                                          Width="550"

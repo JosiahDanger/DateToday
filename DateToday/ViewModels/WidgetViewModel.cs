@@ -22,9 +22,6 @@ namespace DateToday.ViewModels
         private readonly IWidgetView _viewInterface;
 
         [IgnoreDataMember]
-        private readonly Dictionary<string, FontWeight> _fontWeightDictionary;
-
-        [IgnoreDataMember]
         private readonly WidgetModel _model;
 
         [IgnoreDataMember]
@@ -45,6 +42,7 @@ namespace DateToday.ViewModels
         [IgnoreDataMember]
         private byte? _ordinalDaySuffixPosition;
 
+        [IgnoreDataMember]
         public ViewModelActivator Activator { get; } = new();
 
         [IgnoreDataMember]
@@ -59,6 +57,7 @@ namespace DateToday.ViewModels
         public WidgetViewModel(
             IWidgetView viewInterface, 
             WidgetModel model,
+            List<FontFamily> availableFonts,
             Dictionary<string, FontWeight> fontWeightDictionary,
             WidgetConfiguration restoredSettings)
         {
@@ -66,7 +65,6 @@ namespace DateToday.ViewModels
 
             _viewInterface = viewInterface;
             _model = model;
-            _fontWeightDictionary = fontWeightDictionary;
             _position = restoredSettings.Position;
             _fontSize = restoredSettings.FontSize;
             _fontWeightLookupKey = restoredSettings.FontWeightLookupKey;
@@ -98,7 +96,8 @@ namespace DateToday.ViewModels
 
             ReceiveNewSettings = ReactiveCommand.CreateFromTask(async () =>
             {
-                SettingsViewModel settingsViewModel = new(this);
+                SettingsViewModel settingsViewModel = 
+                    new(this, availableFonts, fontWeightDictionary);
                 await InteractionReceiveNewSettings.Handle(settingsViewModel);
 
                 RxApp.SuspensionHost.AppState = this;
@@ -117,7 +116,7 @@ namespace DateToday.ViewModels
 
         private void RefreshDateText()
         {
-            // TODO: This could probably be a ReactiveCommand.
+            // TODO: This could probably be a ReactiveCommand or ICommand.
 
             DateText = GetNewDateText(DateFormat, OrdinalDaySuffixPosition);   
         }
@@ -202,11 +201,7 @@ namespace DateToday.ViewModels
         }
 
         [IgnoreDataMember]
-        public int? FontWeight => _fontWeight.Value; // TODO: Make this a ReactiveCommand.
-
-        [IgnoreDataMember]
-        // TODO: Inject this into the SettingsViewModel constructor, and remove this property.
-        public Dictionary<string, FontWeight> FontWeightDictionary => _fontWeightDictionary;
+        public int? FontWeight => _fontWeight.Value; // TODO: Make this a ReactiveCommand?
 
         [DataMember]
         public PixelPoint Position

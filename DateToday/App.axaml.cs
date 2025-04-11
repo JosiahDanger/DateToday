@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using ReactiveUI;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace DateToday
 {
@@ -28,18 +29,22 @@ namespace DateToday
             WidgetViewModel viewModel;
             WidgetModel model = new();
 
+            List<FontFamily> availableFonts = 
+                [.. FontManager.Current.SystemFonts.OrderBy(x => x.Name)];
+
             Dictionary<string, FontWeight> fontWeightDictionary = 
                 GetDeserialisedFontWeightDictionary(FILEPATH_FONT_WEIGHT_DICTIONARY);
 
             if (restoredSettings != null)
             {
-                viewModel = new(view, model, fontWeightDictionary, restoredSettings);
+                viewModel = 
+                    new(view, model, availableFonts, fontWeightDictionary, restoredSettings);
             }
             else
             {
                 WidgetConfiguration defaultSettings = 
                     GetDeserialisedWidgetConfiguration(FILEPATH_DEFAULT_WIDGET_CONFIGURATION);
-                viewModel = new(view, model, fontWeightDictionary, defaultSettings);
+                viewModel = new(view, model, availableFonts, fontWeightDictionary, defaultSettings);
             }
 
             view.DataContext = viewModel;

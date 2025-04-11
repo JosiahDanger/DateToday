@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Media;
 using ReactiveUI;
 using ReactiveUI.Validation.Extensions;
@@ -17,13 +18,17 @@ namespace DateToday.ViewModels
     {
         private readonly WidgetViewModel _widgetViewModel;
 
-        private int? _widgetPositionXUserInput, _widgetPositionYUserInput, _widgetFontSizeUserInput;
+        private int? _widgetPositionUserInputX, _widgetPositionUserInputY, _widgetFontSizeUserInput;
+        private byte? _widgetOrdinalDaySuffixPosition;
 
         private FontFamily _widgetFontFamily;
-        private string _widgetFontWeightLookupKey;
+        private string _widgetFontWeightLookupKey, _widgetDateFormatUserInput;
 
-        private string _widgetDateFormatUserInput;
-        private byte? _widgetOrdinalDaySuffixPosition;
+        private ObservableAsPropertyHelper<EventPattern<DataErrorsChangedEventArgs>>?
+            _dataErrorsChanged;
+
+        private readonly List<FontFamily> _availableFonts;
+        private readonly Dictionary<string, FontWeight> _fontWeightDictionary;
 
 #pragma warning disable IDE0079
 #pragma warning disable CA2213
@@ -33,43 +38,40 @@ namespace DateToday.ViewModels
         private readonly ObservableAsPropertyHelper<PixelPoint> _widgetPositionMax;
 #pragma warning restore CA2213, IDE0079
 
-        private readonly List<ValidationHelper> _prerequisitesForNewDateFormatEntry;
-        private ObservableAsPropertyHelper<EventPattern<DataErrorsChangedEventArgs>>?
-            _dataErrorsChanged;
-        private bool _isDateTextSetSuccessfully = true;
-
         public ViewModelActivator Activator { get; } = new();
 
-        public ReactiveCommand<ValueTuple<string, byte?>, Unit> ParseDateFormatUserInput { get; }
-
-        private EventPattern<DataErrorsChangedEventArgs>? DataErrorsChangedOAPH =>
+        private readonly List<ValidationHelper> _prerequisitesForNewDateFormatEntry;
+        private EventPattern<DataErrorsChangedEventArgs>? DataErrorsChanged =>
             _dataErrorsChanged?.Value;
+        private bool _isDateTextSetSuccessfully = true;
+
+        public ReactiveCommand<ValueTuple<string, byte?>, Unit> ParseDateFormatUserInput { get; }
 
         public ReactiveCommand<bool, bool> CloseSettingsView { get; } =
             ReactiveCommand.Create<bool, bool>(dialogResult =>
             {
-                /* This function will accept a dummy boolean value and pass it to the caller: the 
-                 * WidgetViewModel instance. This behaviour is a vestige of cut functionality in 
-                 * which the user would be able to manually save or revert changes to settings. I 
-                 * will keep this here for now in case I want the SettingsWindow dialogue in the 
+                /* This function will accept a dummy boolean value and pass it to the caller: the
+                 * WidgetViewModel instance. This behaviour is a vestige of cut functionality in
+                 * which the user would be able to manually save or revert changes to settings. I
+                 * will keep this here for now in case I want the SettingsWindow dialogue in the
                  * future to return something meaningful. */
 
                 return dialogResult;
             });
 
-        public SettingsViewModel(WidgetViewModel widgetViewModel)
+        public SettingsViewModel(
+            WidgetViewModel widgetViewModel,
+            List<FontFamily> availableFonts,
+            Dictionary<string, FontWeight> fontWeightDictionary)
         {
             // TODO: Instead of injecting the actual WidgetViewModel object, simply inject an interface.
 
             _widgetViewModel = widgetViewModel;
+            _availableFonts = availableFonts;
+            _fontWeightDictionary = fontWeightDictionary;
 
-            _widgetPositionXUserInput = widgetViewModel.Position.X;
-            _widgetPositionYUserInput = widgetViewModel.Position.Y;
-
-            _widgetPositionMax =
-                _widgetViewModel.WhenAnyValue(widgetViewModel => widgetViewModel.PositionMax)
-                                .ObserveOn(RxApp.MainThreadScheduler)
-                                .ToProperty(this, nameof(WidgetPositionMax));
+            _widgetPositionUserInputX = widgetViewModel.Position.X;
+            _widgetPositionUserInputY = widgetViewModel.Position.Y;
 
             _widgetFontSizeUserInput = widgetViewModel.FontSize;
             _widgetFontWeightLookupKey = widgetViewModel.FontWeightLookupKey;
@@ -78,6 +80,11 @@ namespace DateToday.ViewModels
             _widgetDateFormatUserInput = widgetViewModel.DateFormat;
             _widgetOrdinalDaySuffixPosition = widgetViewModel.OrdinalDaySuffixPosition;
 
+            _widgetPositionMax =
+                _widgetViewModel.WhenAnyValue(widgetViewModel => widgetViewModel.PositionMax)
+                                .ObserveOn(RxApp.MainThreadScheduler)
+                                .ToProperty(this, nameof(WidgetPositionMax));
+
             this.WhenActivated(disposables =>
             {
                 disposables.Add(_widgetPositionMax);
@@ -85,18 +92,16 @@ namespace DateToday.ViewModels
                 _widgetViewModel.WhenAnyValue(widgetViewModel => widgetViewModel.Position)
                                 .ObserveOn(RxApp.MainThreadScheduler)
                                 .Select(position => position.X)
-                                .BindTo(this, settingsViewModel =>
-                                                  settingsViewModel.WidgetPositionXUserInput)
+                                .BindTo(this, svm => svm.WidgetPositionUserInputX)
                                 .DisposeWith(disposables);
 
                 _widgetViewModel.WhenAnyValue(widgetViewModel => widgetViewModel.Position)
                                 .ObserveOn(RxApp.MainThreadScheduler)
                                 .Select(position => position.Y)
-                                .BindTo(this, settingsViewModel =>
-                                                  settingsViewModel.WidgetPositionYUserInput)
+                                .BindTo(this, svm => svm.WidgetPositionUserInputY)
                                 .DisposeWith(disposables);
 
-                this.WhenAnyValue(settingsViewModel => settingsViewModel.WidgetPositionXUserInput)
+                this.WhenAnyValue(settingsViewModel => settingsViewModel.WidgetPositionUserInputX)
                     .ObserveOn(RxApp.MainThreadScheduler)
                     .Where(input => input != null)
                     .Select(validatedInput => (int)validatedInput!)
@@ -104,7 +109,7 @@ namespace DateToday.ViewModels
                     .BindTo(widgetViewModel, widgetViewModel => widgetViewModel.Position)
                     .DisposeWith(disposables);
 
-                this.WhenAnyValue(settingsViewModel => settingsViewModel.WidgetPositionYUserInput)
+                this.WhenAnyValue(settingsViewModel => settingsViewModel.WidgetPositionUserInputY)
                     .ObserveOn(RxApp.MainThreadScheduler)
                     .Where(input => input != null)
                     .Select(validatedInput => (int)validatedInput!)
@@ -133,7 +138,7 @@ namespace DateToday.ViewModels
                         handler => ErrorsChanged += handler,
                         handler => ErrorsChanged -= handler
                         )
-                        .ToProperty(this, nameof(DataErrorsChangedOAPH))
+                        .ToProperty(this, nameof(DataErrorsChanged))
                         .DisposeWith(disposables);
 
                 this.WhenAnyValue(
@@ -161,12 +166,10 @@ namespace DateToday.ViewModels
 
             IObservable<bool> isDateFormatOrdinalSuffixPositionValid =
                 this.WhenAnyValue(
-                        settingsViewModel => 
-                            settingsViewModel.WidgetDateFormatUserInput,
-                        settingsViewModel => 
-                            settingsViewModel.WidgetOrdinalDaySuffixPosition,
-                    (dateFormat, suffixPosition) =>
-                        !(suffixPosition != null && suffixPosition > dateFormat.Length))
+                        settingsViewModel => settingsViewModel.WidgetDateFormatUserInput,
+                        settingsViewModel => settingsViewModel.WidgetOrdinalDaySuffixPosition,
+                        (dateFormat, suffixPosition) =>
+                            !(suffixPosition != null && suffixPosition > dateFormat.Length))
                     .ObserveOn(RxApp.MainThreadScheduler);
 
             IObservable<bool> isDateFormatValid =
@@ -209,7 +212,7 @@ namespace DateToday.ViewModels
                 "Please see Microsoft Learn: 'Custom date and time format strings'.");
 
             IObservable<bool> mayUserEnterNewDateFormat =
-                this.WhenAnyValue(settingsViewModel => settingsViewModel.DataErrorsChangedOAPH)
+                this.WhenAnyValue(settingsViewModel => settingsViewModel.DataErrorsChanged)
                     .ObserveOn(RxApp.MainThreadScheduler)
                     .Select(_ => _prerequisitesForNewDateFormatEntry
                                  .All(validaionRule => validaionRule.IsValid));
@@ -236,28 +239,22 @@ namespace DateToday.ViewModels
                     });
         }
 
-        // TODO: Change read-only properties into ReactiveCommands.
+        public List<FontFamily> AvailableFonts => _availableFonts;
 
-        public static List<FontFamily> AvailableFonts =>
-            // TODO: Should this list instead be injected into the constructor?
-
-            [.. FontManager.Current.SystemFonts.OrderBy(x => x.Name)];
-
-        public Dictionary<string, FontWeight> AvailableFontWeights =>
-            _widgetViewModel.FontWeightDictionary;
+        public Dictionary<string, FontWeight> AvailableFontWeights => _fontWeightDictionary;
 
         public PixelPoint WidgetPositionMax => _widgetPositionMax.Value;
 
-        public int? WidgetPositionXUserInput
+        public int? WidgetPositionUserInputX
         {
-            get => _widgetPositionXUserInput;
-            set => this.RaiseAndSetIfChanged(ref _widgetPositionXUserInput, value);    
+            get => _widgetPositionUserInputX;
+            set => this.RaiseAndSetIfChanged(ref _widgetPositionUserInputX, value);    
         }
 
-        public int? WidgetPositionYUserInput
+        public int? WidgetPositionUserInputY
         {
-            get => _widgetPositionYUserInput;
-            set => this.RaiseAndSetIfChanged(ref _widgetPositionYUserInput, value);
+            get => _widgetPositionUserInputY;
+            set => this.RaiseAndSetIfChanged(ref _widgetPositionUserInputY, value);
         }
 
         public FontFamily WidgetFontFamily
