@@ -137,6 +137,11 @@ namespace DateToday.ViewModels
                         settingsViewModel => settingsViewModel.WidgetDateFormatUserInput,
                         settingsViewModel => settingsViewModel.WidgetOrdinalDaySuffixPosition)
                     .ObserveOn(RxApp.MainThreadScheduler)
+
+                    /* TODO: 
+                     * https://stackoverflow.com/questions/29636910/possible-to-ignore-the-initial-value-for-a-reactiveobject */
+
+                    .Skip(1)
                     .Throttle(TimeSpan.FromMilliseconds(1))
                     .InvokeCommand(this, svm => svm.ParseDateFormatUserInput)
                     .DisposeWith(disposables);

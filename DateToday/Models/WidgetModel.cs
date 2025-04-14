@@ -1,12 +1,17 @@
-﻿using ReactiveUI;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Timers;
 
 namespace DateToday.Models
 {
-    internal class WidgetModel : ReactiveObject, IDisposable
+    internal interface INewMinuteEventGenerator : IDisposable
+    {
+        IObservable<System.Reactive.EventPattern<ElapsedEventArgs>> 
+            NewMinuteEventObservable { get; }
+    }
+
+    internal class WidgetModel : INewMinuteEventGenerator
     {
         private readonly Timer _newMinuteEventGenerator;
         private readonly IObservable<System.Reactive.EventPattern<ElapsedEventArgs>> 
@@ -20,8 +25,8 @@ namespace DateToday.Models
              * minute, on the minute. My implementation of this behaviour relies on resetting its 
              * Interval property on each Elapsed event. This approach will prevent the Timer from 
              * drifting. */
-            
-            ResetTickGeneratorInterval();
+
+            ResetMinuteEventGeneratorInterval();
 
             /* I have converted the Timer Elapsed event into a Rx.NET observable.
              * See: https://www.reactiveui.net/docs/handbook/events.html#how-do-i-convert-my-own-c-events-into-observables */
@@ -31,18 +36,12 @@ namespace DateToday.Models
                     handler => _newMinuteEventGenerator.Elapsed += handler,
                     handler => _newMinuteEventGenerator.Elapsed -= handler
                 )
-                .Do(_ => ResetTickGeneratorInterval());
+                .Do(_ => ResetMinuteEventGeneratorInterval());
 
             _newMinuteEventGenerator.Start();
         }
 
-        public void Dispose()
-        {
-            _newMinuteEventGenerator.Dispose();
-            Debug.WriteLine("Disposed of Model.");
-        }
-
-        private void ResetTickGeneratorInterval()
+        private void ResetMinuteEventGeneratorInterval()
         {
             /* This function has been adapted from code posted to Stack Overflow by Jared. 
              * Thanks Jared!
@@ -55,7 +54,13 @@ namespace DateToday.Models
             Debug.WriteLine($"Reset tick generator interval at {currentDateTime}.");
         }
 
-        public IObservable<System.Reactive.EventPattern<ElapsedEventArgs>> NewMinuteEventObservable 
+        public IObservable<System.Reactive.EventPattern<ElapsedEventArgs>> NewMinuteEventObservable
             => _newMinuteEventObservable;
+
+        public void Dispose()
+        {
+            _newMinuteEventGenerator.Dispose();
+            Debug.WriteLine("Disposed of Model.");
+        }
     }
 }

@@ -32,9 +32,6 @@ namespace DateToday.ViewModels
     internal class WidgetViewModel : ReactiveObject, IActivatableViewModel, IWidgetViewModel
     {
         [IgnoreDataMember]
-        private readonly WidgetModel _model;
-
-        [IgnoreDataMember]
         private string _dateText, _dateFormat, _dateFormatUserInput, _fontWeightLookupKey;
 
         [IgnoreDataMember]
@@ -66,13 +63,11 @@ namespace DateToday.ViewModels
 
         public WidgetViewModel(
             IWidgetWindow viewInterface, 
-            WidgetModel model,
+            INewMinuteEventGenerator modelInterface,
             List<FontFamily> availableFonts,
             Dictionary<string, FontWeight> fontWeightDictionary,
             WidgetConfiguration restoredSettings)
         {
-            _model = model;
-
             _dateText = string.Empty;
 
             _windowPosition = restoredSettings.WindowPosition;
@@ -85,7 +80,11 @@ namespace DateToday.ViewModels
                  * will be used. */
                 restoredSettings.FontFamilyName ?? FontManager.Current.DefaultFontFamily;
 
+
             _fontWeight =
+                /* Please note that _fontWeight does not need explicit disposal.
+                 * See: https://www.reactiveui.net/docs/guidelines/framework/dispose-your-subscriptions.html */
+
                 this.WhenAnyValue(widgetViewModel => widgetViewModel.FontWeightLookupKey)
                     .ObserveOn(RxApp.MainThreadScheduler)
                     .Select(key => AttemptFontWeightLookup(fontWeightDictionary, key))
@@ -93,15 +92,14 @@ namespace DateToday.ViewModels
 
             this.WhenActivated(disposables =>
             {
-                disposables.Add(_fontWeight); // Probably doesn't need explicit disposal?
-                disposables.Add(_model);
+                disposables.Add(modelInterface);
 
                 this.HandleActivation();
 
-                _model.NewMinuteEventObservable?
-                      .ObserveOn(RxApp.MainThreadScheduler)
-                      .Subscribe(_ => RefreshDateText())
-                      .DisposeWith(disposables);
+                modelInterface.NewMinuteEventObservable?
+                              .ObserveOn(RxApp.MainThreadScheduler)
+                              .Subscribe(_ => RefreshDateText())
+                              .DisposeWith(disposables);
             });
 
             ReceiveNewSettings = ReactiveCommand.CreateFromTask(async () =>
@@ -213,7 +211,7 @@ namespace DateToday.ViewModels
         }
 
         [IgnoreDataMember]
-        public int? FontWeight => _fontWeight.Value; // TODO: Make this a ReactiveCommand?
+        public int? FontWeight => _fontWeight.Value;
 
         [DataMember]
         public PixelPoint WindowPosition
