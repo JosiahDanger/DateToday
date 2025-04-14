@@ -32,9 +32,6 @@ namespace DateToday.ViewModels
     internal class WidgetViewModel : ReactiveObject, IActivatableViewModel, IWidgetViewModel
     {
         [IgnoreDataMember]
-        private readonly IWidgetWindow _viewInterface;
-
-        [IgnoreDataMember]
         private readonly WidgetModel _model;
 
         [IgnoreDataMember]
@@ -74,10 +71,9 @@ namespace DateToday.ViewModels
             Dictionary<string, FontWeight> fontWeightDictionary,
             WidgetConfiguration restoredSettings)
         {
-            _dateText = string.Empty;
-
-            _viewInterface = viewInterface;
             _model = model;
+
+            _dateText = string.Empty;
 
             _windowPosition = restoredSettings.WindowPosition;
             _fontSize = restoredSettings.FontSize;
@@ -119,7 +115,7 @@ namespace DateToday.ViewModels
 
             ExitApplication = ReactiveCommand.Create(() =>
             {
-                _viewInterface?.Close(0);
+                viewInterface?.Close(0);
             });
         }
 

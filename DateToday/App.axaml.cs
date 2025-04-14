@@ -92,12 +92,17 @@ namespace DateToday
                 /* TODO:
                  * 
                  * This instance of AutoSuspendHelper needs to be disposed of at some point before
-                 * the application is exited; the compiler currently raises warning #CA2000. I am
+                 * the application is exited; the compiler currently raises warning CA2000. I am
                  * having some trouble addressing this. The AutoSuspendHelper instance needs to be
                  * present in memory each time the application state is persisted to disk.
                  * Subscribing to the IControlledApplicationLifetime.Exit event and disposing of the
                  * object inside an event handler unfortunately does not resolve the warning. Might
-                 * need to seek help from the Avalonia / ReactiveUI community. */
+                 * need to seek help from the Avalonia / ReactiveUI community.
+                 * 
+                 * Update, 2025-04-13. I have raised a discussion in the ReactiveUI GitHub
+                 * repository to address this.
+                 * 
+                 * See: https://github.com/reactiveui/ReactiveUI/discussions/4012 */
 
                 RxApp.SuspensionHost.CreateNewAppState = () =>
                 {
