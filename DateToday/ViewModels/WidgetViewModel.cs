@@ -32,7 +32,11 @@ namespace DateToday.ViewModels
     internal class WidgetViewModel : ReactiveObject, IActivatableViewModel, IWidgetViewModel
     {
         [IgnoreDataMember]
-        private string _dateText, _dateFormat, _dateFormatUserInput, _fontWeightLookupKey;
+        private readonly INewMinuteEventGenerator _modelInterface;
+
+        [IgnoreDataMember]
+        private string 
+            _dateText = string.Empty, _dateFormat, _dateFormatUserInput, _fontWeightLookupKey;
 
         [IgnoreDataMember]
         private readonly ObservableAsPropertyHelper<int?> _fontWeight;
@@ -68,7 +72,13 @@ namespace DateToday.ViewModels
             Dictionary<string, FontWeight> fontWeightDictionary,
             WidgetConfiguration restoredSettings)
         {
-            _dateText = string.Empty;
+            /* Assigning the 'modelInterface' argument to a private WidgetViewModel field here is
+             * not strictly necessary; the argument object can be disposed of with the
+             * WidgetViewModel CompositeDisposable collection. However, if I don't assign it to a
+             * WidgetViewModel field, the compiler raises warning CA2000. I suspect this warning is
+             * raised in error, but I'm not certain. */
+
+            _modelInterface = modelInterface;
 
             _windowPosition = restoredSettings.WindowPosition;
             _fontSize = restoredSettings.FontSize;
@@ -79,7 +89,6 @@ namespace DateToday.ViewModels
                 /* Should the user have no settings persisted, the operating system's default font
                  * will be used. */
                 restoredSettings.FontFamilyName ?? FontManager.Current.DefaultFontFamily;
-
 
             _fontWeight =
                 /* Please note that _fontWeight does not need explicit disposal.
@@ -92,11 +101,11 @@ namespace DateToday.ViewModels
 
             this.WhenActivated(disposables =>
             {
-                disposables.Add(modelInterface);
+                disposables.Add(_modelInterface);
 
                 this.HandleActivation();
 
-                modelInterface.NewMinuteEventObservable?
+                _modelInterface.NewMinuteEventObservable?
                               .ObserveOn(RxApp.MainThreadScheduler)
                               .Subscribe(_ => RefreshDateText())
                               .DisposeWith(disposables);

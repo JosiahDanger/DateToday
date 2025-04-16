@@ -130,13 +130,14 @@ namespace DateToday.ViewModels
                         handler => ErrorsChanged += handler,
                         handler => ErrorsChanged -= handler
                         )
+                        .ObserveOn(RxApp.MainThreadScheduler)
                         .ToProperty(this, nameof(DataErrorsChanged))
                         .DisposeWith(disposables);
 
                 this.WhenAnyValue(
                         settingsViewModel => settingsViewModel.WidgetDateFormatUserInput,
                         settingsViewModel => settingsViewModel.WidgetOrdinalDaySuffixPosition)
-                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .ObserveOn(RxApp.MainThreadScheduler) // Continued below.
 
                     /* TODO: 
                      * https://stackoverflow.com/questions/29636910/possible-to-ignore-the-initial-value-for-a-reactiveobject */

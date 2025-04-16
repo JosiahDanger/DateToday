@@ -24,6 +24,12 @@ namespace DateToday.Views
         {
             InitializeComponent();
 
+            if (Design.IsDesignMode)
+            {
+                // Make the previewer happy.
+                return;
+            }
+
             this.WhenActivated(disposables => 
             {
                 this.HandleActivation();

@@ -23,61 +23,6 @@ namespace DateToday
         private const string FILEPATH_FONT_WEIGHT_DICTIONARY = 
             "FontWeightDictionary.json";
 
-        private static WidgetWindow WidgetFactory(WidgetConfiguration? restoredSettings)
-        {
-            WidgetWindow view = new();
-            WidgetViewModel viewModel;
-            WidgetModel model = new();
-
-            List<FontFamily> availableFonts = 
-                [.. FontManager.Current.SystemFonts.OrderBy(x => x.Name)];
-
-            Dictionary<string, FontWeight> fontWeightDictionary = 
-                GetDeserialisedFontWeightDictionary(FILEPATH_FONT_WEIGHT_DICTIONARY);
-
-            if (restoredSettings != null)
-            {
-                viewModel = 
-                    new(view, model, availableFonts, fontWeightDictionary, restoredSettings);
-            }
-            else
-            {
-                WidgetConfiguration defaultSettings = 
-                    GetDeserialisedWidgetConfiguration(FILEPATH_DEFAULT_WIDGET_CONFIGURATION);
-                viewModel = new(view, model, availableFonts, fontWeightDictionary, defaultSettings);
-            }
-
-            view.DataContext = viewModel;
-            return view;
-        }
-
-        private static WidgetConfiguration GetDeserialisedWidgetConfiguration(string filepath)
-        {
-            string jsonBuffer = File.ReadAllText(filepath);
-
-            // TODO: Error handling.
-            return JsonConvert.DeserializeObject<WidgetConfiguration>(jsonBuffer)!;
-        }
-
-        private static Dictionary<string, FontWeight> GetDeserialisedFontWeightDictionary(
-            string filepath)
-        {
-            string jsonBuffer = File.ReadAllText(filepath);
-
-            Dictionary<string, FontWeight>? dictionaryBuffer =
-                JsonConvert.DeserializeObject<Dictionary<string, FontWeight>>(jsonBuffer);
-
-            if (dictionaryBuffer != null)
-            {
-                return dictionaryBuffer;
-            }
-            else
-            {
-                // TODO: Error handling.
-                return [];
-            }
-        }
-
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
@@ -85,6 +30,62 @@ namespace DateToday
 
         public override void OnFrameworkInitializationCompleted()
         {
+            static WidgetWindow WidgetFactory(WidgetConfiguration? restoredSettings)
+            {
+                WidgetWindow view = new();
+                WidgetViewModel viewModel;
+                WidgetModel model = new();
+
+                List<FontFamily> availableFonts =
+                    [.. FontManager.Current.SystemFonts.OrderBy(x => x.Name)];
+
+                Dictionary<string, FontWeight> fontWeightDictionary =
+                    GetDeserialisedFontWeightDictionary(FILEPATH_FONT_WEIGHT_DICTIONARY);
+
+                if (restoredSettings != null)
+                {
+                    viewModel =
+                        new(view, model, availableFonts, fontWeightDictionary, restoredSettings);
+                }
+                else
+                {
+                    WidgetConfiguration defaultSettings =
+                        GetDeserialisedWidgetConfiguration(FILEPATH_DEFAULT_WIDGET_CONFIGURATION);
+                    viewModel = 
+                        new(view, model, availableFonts, fontWeightDictionary, defaultSettings);
+                }
+
+                view.DataContext = viewModel;
+                return view;
+            }
+
+            static WidgetConfiguration GetDeserialisedWidgetConfiguration(string filepath)
+            {
+                string jsonBuffer = File.ReadAllText(filepath);
+
+                // TODO: Error handling. Must remove null-forgiving operator later.
+                return JsonConvert.DeserializeObject<WidgetConfiguration>(jsonBuffer)!;
+            }
+
+            static Dictionary<string, FontWeight> GetDeserialisedFontWeightDictionary(
+                string filepath)
+            {
+                string jsonBuffer = File.ReadAllText(filepath);
+
+                Dictionary<string, FontWeight>? dictionaryBuffer =
+                    JsonConvert.DeserializeObject<Dictionary<string, FontWeight>>(jsonBuffer);
+
+                if (dictionaryBuffer != null)
+                {
+                    return dictionaryBuffer;
+                }
+                else
+                {
+                    // TODO: Error handling.
+                    return [];
+                }
+            }
+
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 AutoSuspendHelper suspension = new(desktop);
@@ -96,8 +97,8 @@ namespace DateToday
                  * having some trouble addressing this. The AutoSuspendHelper instance needs to be
                  * present in memory each time the application state is persisted to disk.
                  * Subscribing to the IControlledApplicationLifetime.Exit event and disposing of the
-                 * object inside an event handler unfortunately does not resolve the warning. Might
-                 * need to seek help from the Avalonia / ReactiveUI community.
+                 * object inside an event handler is a potential solution, but the compiler simply
+                 * raises warning CA1001 instead.
                  * 
                  * Update, 2025-04-13. I have raised a discussion in the ReactiveUI GitHub
                  * repository to address this.

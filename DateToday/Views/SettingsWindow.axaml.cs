@@ -21,6 +21,12 @@ internal partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
     {
         InitializeComponent();
 
+        if (Design.IsDesignMode)
+        {
+            // Make the previewer happy.
+            return;
+        }
+
         _settingsDateFormatField = this.FindControl<TextBox>("SettingsDateFormatField");
 
 #if OS_WINDOWS
