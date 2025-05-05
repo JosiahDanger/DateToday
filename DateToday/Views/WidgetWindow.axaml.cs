@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.ReactiveUI;
 using DateToday.ViewModels;
@@ -15,11 +16,17 @@ namespace DateToday.Views
     internal interface IWidgetWindow
     {
         PixelPoint Position { get; }
+        Color ThemedTextColour { get; }
+
         void Close(object? dialogResult);
     }
 
     internal partial class WidgetWindow : ReactiveWindow<WidgetViewModel>, IWidgetWindow
     {
+        private const string RESOURCE_KEY_THEMED_TEXT_COLOUR = "SystemBaseHighColor";
+
+        private readonly Color _themedTextColour;
+
         public WidgetWindow()
         {
             InitializeComponent();
@@ -30,7 +37,22 @@ namespace DateToday.Views
                 return;
             }
 
-            this.WhenActivated(disposables => 
+            this.TryFindResource(
+                RESOURCE_KEY_THEMED_TEXT_COLOUR, 
+                ActualThemeVariant, 
+                out var potentialThemedTextColourResource);
+
+            if (potentialThemedTextColourResource is Color themedTextColourResource)
+            {
+                _themedTextColour = themedTextColourResource;
+            }
+            else
+            {
+                Debug.WriteLine("Failed to discern a thematically-appropriate text colour.");
+                _themedTextColour = Colors.Black;
+            }
+
+            this.WhenActivated(disposables =>
             {
                 this.HandleActivation();
 
@@ -44,19 +66,19 @@ namespace DateToday.Views
                     handler => SizeChanged -= handler
                 )
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(x => OnViewSizeChanged(x.EventArgs))
+                .Subscribe(x => OnWidgetSizeChanged(x.EventArgs))
                 .DisposeWith(disposables);
             });
         }
 
-        private void HandleActivation() 
+        private void HandleActivation()
         {
             ViewModel!.InteractionReceiveNewSettings.RegisterHandler(DoShowSettingsDialogAsync);
         }
 
-        private void OnViewSizeChanged(SizeChangedEventArgs e)
+        private void OnWidgetSizeChanged(SizeChangedEventArgs e)
         {
-            static PixelPoint GetNewViewPositionMax(PixelSize monitorSize, Rect widgetBounds)
+            static PixelPoint GetNewWidgetPositionMax(PixelSize monitorSize, Rect widgetBounds)
             {
                 /* Calculate the maximum on-screen coordinate at which the widget will be fully 
                  * visible. */
@@ -72,12 +94,12 @@ namespace DateToday.Views
             {
                 PixelSize screenRealEstate = monitor.WorkingArea.Size;
 
-                ViewModel!.WindowPositionMax = GetNewViewPositionMax(screenRealEstate, Bounds);
-                ConfineViewWithinScreenRealEstate(e, screenRealEstate);
+                ViewModel!.WindowPositionMax = GetNewWidgetPositionMax(screenRealEstate, Bounds);
+                ConfineWidgetWithinScreenRealEstate(e, screenRealEstate);
             }
         }
 
-        private void ConfineViewWithinScreenRealEstate(
+        private void ConfineWidgetWithinScreenRealEstate(
             SizeChangedEventArgs e, PixelSize screenRealEstate)
         {
             bool hasWidthIncreased = e.NewSize.Width > e.PreviousSize.Width;
@@ -90,7 +112,7 @@ namespace DateToday.Views
 
                 if (deltaX > 0)
                 {
-                    int newPositionX = 
+                    int newPositionX =
                         Math.Max(ViewModel!.WindowPositionMax.X, PixelPoint.Origin.X);
                     ViewModel!.WindowPosition = Position.WithX(newPositionX);
 
@@ -105,7 +127,7 @@ namespace DateToday.Views
 
                 if (deltaY > 0)
                 {
-                    int newPositionY = 
+                    int newPositionY =
                         Math.Max(ViewModel!.WindowPositionMax.Y, PixelPoint.Origin.Y);
                     ViewModel!.WindowPosition = Position.WithY(newPositionY);
 
@@ -113,6 +135,8 @@ namespace DateToday.Views
                 }
             }
         }
+
+        public Color ThemedTextColour => _themedTextColour;
 
         public void CloseView(object? dialogResult)
         {

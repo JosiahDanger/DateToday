@@ -1,6 +1,7 @@
 <Window x:Class="DateToday.Views.WidgetWindow"
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:conv="using:DateToday.Converters"
         xmlns:vm="using:DateToday.ViewModels"
         Title="Date Today"
         x:DataType="vm:WidgetViewModel"
@@ -20,6 +21,10 @@
         -->
     </Design.DataContext>
 
+    <Window.Resources>
+        <conv:ToBrushMultiConverterWithFallback x:Key="BrushSelector" />
+    </Window.Resources>
+
     <Window.ContextMenu>
         <ContextMenu>
             <MenuItem Command="{Binding ReceiveNewSettings}"
@@ -34,17 +39,40 @@
                FontWeight="{Binding FontWeight}"
                Text="{Binding DateText}">
 
-        <!--<TextBlock.Effect>
-		
-			Drop shadow test.
+        <TextBlock.Foreground>
 
-            <DropShadowEffect BlurRadius="0"
-                              Opacity="1"
-                              Color="Magenta" />
+            <MultiBinding Converter="{StaticResource BrushSelector}">
 
-        </TextBlock.Effect>-->
+                <!--
+                    The application will choose one of the two following Color values for conversion
+                    into a SolidColorBrush. The chosen Color is determined by
+                    'ToBrushMultiConverterWithFallback'; it will be the first non-null colour.
+                    
+                    In effect, if the user has selected a custom font colour, then it will be
+                    applied to the widget, otherwise a thematically-appropriate automatic font
+                    colour will be used.
+                -->
 
+                <Binding Path="CustomFontColour" />
+
+                <Binding Path="AutomaticFontColour" />
+
+            </MultiBinding>
+
+        </TextBlock.Foreground>
 
     </TextBlock>
+
+    <!-- Experimenting with Drop Shadow:
+	
+	        <TextBlock.Effect>
+		
+			    Drop shadow test.
+
+                <DropShadowEffect BlurRadius="0"
+                                  Opacity="1"
+                                  Color="Magenta" />
+
+            </TextBlock.Effect>-->
 
 </Window>

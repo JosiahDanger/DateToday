@@ -40,78 +40,117 @@
 
                         <Border Classes="FieldGroupBorder">
 
-                            <Grid ColumnDefinitions="Auto, Auto, Auto, Auto"
-                                  RowDefinitions="Auto, Auto">
+                            <StackPanel Orientation="Vertical">
 
-                                <TextBlock Grid.Row="0"
-                                           Grid.Column="0"
-                                           Classes="FieldLabel"
-                                           Text="Name:" />
+                                <Grid ColumnDefinitions="Auto, Auto, Auto, Auto"
+                                      RowDefinitions="Auto, Auto">
 
-                                <ComboBox Grid.Row="0"
-                                          Grid.Column="1"
-                                          Grid.ColumnSpan="3"
-                                          Classes="StringSelector"
-                                          ItemsSource="{Binding AvailableFonts,
-                                                                Mode=OneTime}"
-                                          SelectedItem="{Binding WidgetFontFamily}">
+                                    <TextBlock Grid.Row="0"
+                                               Grid.Column="0"
+                                               Classes="FieldLabel"
+                                               Text="Name:" />
 
-                                    <ComboBox.ItemTemplate>
+                                    <ComboBox x:Name="FontFamilySelector"
+                                              Grid.Row="0"
+                                              Grid.Column="1"
+                                              Grid.ColumnSpan="3"
+                                              Classes="StringSelector"
+                                              ItemsSource="{Binding AvailableFonts,
+                                                                    Mode=OneTime}"
+                                              SelectedItem="{Binding WidgetFontFamily}">
 
-                                        <DataTemplate>
+                                        <ComboBox.ItemTemplate>
 
-                                            <TextBlock FontFamily="{Binding}"
-                                                       Text="{Binding Name}" />
+                                            <DataTemplate>
 
-                                        </DataTemplate>
+                                                <TextBlock FontFamily="{Binding}"
+                                                           Text="{Binding Name}" />
 
-                                    </ComboBox.ItemTemplate>
+                                            </DataTemplate>
 
-                                </ComboBox>
+                                        </ComboBox.ItemTemplate>
 
-                                <TextBlock Grid.Row="1"
-                                           Grid.Column="0"
-                                           Classes="FieldLabel"
-                                           Text="Size:" />
+                                    </ComboBox>
 
-                                <NumericUpDown Grid.Row="1"
-                                               Grid.Column="1"
-                                               Classes="FontSizeField"
-                                               Value="{Binding WidgetFontSizeUserInput}" />
+                                    <TextBlock Grid.Row="1"
+                                               Grid.Column="0"
+                                               Classes="FieldLabel"
+                                               Text="Size:" />
 
-                                <TextBlock Grid.Row="1"
-                                           Grid.Column="2"
-                                           Classes="FieldLabel"
-                                           Text="Weight:" />
+                                    <NumericUpDown Grid.Row="1"
+                                                   Grid.Column="1"
+                                                   Classes="FontSizeField"
+                                                   Value="{Binding WidgetFontSizeUserInput}" />
 
-                                <ComboBox Grid.Row="1"
-                                          Grid.Column="3"
-                                          Width="126"
-                                          Classes="StringSelector"
-                                          ItemsSource="{Binding AvailableFontWeights}"
-                                          MaxDropDownHeight="532"
-                                          SelectedValue="{Binding WidgetFontWeightLookupKey}"
-                                          SelectedValueBinding="{Binding Key}">
+                                    <TextBlock Grid.Row="1"
+                                               Grid.Column="2"
+                                               Classes="FieldLabel"
+                                               Text="Weight:" />
 
-                                    <ComboBox.ItemTemplate>
+                                    <ComboBox x:Name="FontWeightSelector"
+                                              Grid.Row="1"
+                                              Grid.Column="3"
+                                              Width="126"
+                                              Classes="StringSelector"
+                                              ItemsSource="{Binding AvailableFontWeights,
+                                                                    Mode=OneTime}"
+                                              MaxDropDownHeight="750"
+                                              SelectedValue="{Binding WidgetFontWeightLookupKey}"
+                                              SelectedValueBinding="{Binding Key}">
 
-                                        <DataTemplate>
+                                        <ComboBox.ItemTemplate>
 
-                                            <!--
-                                                TODO:
-                                                Why can't I bind the TextBlock FontFamily property
-                                                to WidgetFontFamily?
-                                            -->
+                                            <DataTemplate>
 
-                                            <TextBlock Text="{Binding Key}" />
+                                                <TextBlock FontFamily="{Binding #FontFamilySelector.SelectedItem}"
+                                                           FontWeight="{Binding Value}"
+                                                           Text="{Binding Key}" />
 
-                                        </DataTemplate>
+                                            </DataTemplate>
 
-                                    </ComboBox.ItemTemplate>
+                                        </ComboBox.ItemTemplate>
 
-                                </ComboBox>
+                                    </ComboBox>
 
-                            </Grid>
+                                </Grid>
+
+                                <Expander Classes="FontColourFieldsContainer">
+
+                                    <Expander.Header>
+                                        Colour
+                                    </Expander.Header>
+
+                                    <Grid HorizontalAlignment="Center"
+                                          ColumnDefinitions="Auto, Auto, Auto, Auto"
+                                          RowDefinitions="Auto">
+
+                                        <TextBlock Grid.Row="0"
+                                                   Grid.Column="0"
+                                                   Classes="FieldLabel"
+                                                   Text="Automatic:" />
+
+                                        <CheckBox Grid.Row="0"
+                                                  Grid.Column="1"
+                                                  Classes="CheckBoxField"
+                                                  IsChecked="{Binding IsWidgetFontColourAutomatic}" />
+
+                                        <TextBlock Grid.Row="0"
+                                                   Grid.Column="2"
+                                                   Classes="FieldLabel"
+                                                   Text="Custom:" />
+
+                                        <ColorPicker Grid.Row="0"
+                                                     Grid.Column="3"
+                                                     Classes="ColourSelector"
+                                                     IsEnabled="{Binding !IsWidgetFontColourAutomatic}"
+                                                     Color="{Binding WidgetFontColour,
+                                                                     Converter={StaticResource DoNothingForNullConverter}}" />
+
+                                    </Grid>
+
+                                </Expander>
+
+                            </StackPanel>
 
                         </Border>
 
@@ -121,7 +160,8 @@
 
                 <Border Classes="SettingsInnerBorder">
 
-                    <StackPanel Orientation="Vertical">
+                    <StackPanel VerticalAlignment="Center"
+                                Orientation="Vertical">
 
                         <TextBlock Classes="FieldGroupLabel"
                                    Text="Position" />

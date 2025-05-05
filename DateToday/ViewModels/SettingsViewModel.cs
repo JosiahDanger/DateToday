@@ -25,10 +25,13 @@ namespace DateToday.ViewModels
         private readonly List<FontFamily> _availableFonts;
         private readonly Dictionary<string, FontWeight> _fontWeightDictionary;
 
+        private Color? _widgetFontColour;
+        private bool _isWidgetFontColourAutomatic;
+
 #pragma warning disable IDE0079
 #pragma warning disable CA2213
         /* This disposable field is indeed disposed of with SettingsViewModel CompositeDisposables,
-         * but the compiler doesn't care, and throws warning CA2213. */
+         * but the compiler doesn't care, and throws warning CA2213 anyway. */
 
         private readonly ObservableAsPropertyHelper<PixelPoint> _widgetPositionMax;
 #pragma warning restore CA2213, IDE0079
@@ -68,6 +71,9 @@ namespace DateToday.ViewModels
             _widgetFontSizeUserInput = widgetViewModel.FontSize;
             _widgetFontFamily = widgetViewModel.FontFamily;
             _widgetFontWeightLookupKey = widgetViewModel.FontWeightLookupKey;
+
+            _widgetFontColour = widgetViewModel.CustomFontColour;
+            _isWidgetFontColourAutomatic = widgetViewModel.CustomFontColour == null;
 
             _widgetDateFormatUserInput = widgetViewModel.DateFormat;
             _widgetOrdinalDaySuffixPosition = widgetViewModel.OrdinalDaySuffixPosition;
@@ -124,7 +130,22 @@ namespace DateToday.ViewModels
                     .ObserveOn(RxApp.MainThreadScheduler)
                     .BindTo(widgetViewModel, widgetViewModel => widgetViewModel.FontWeightLookupKey)
                     .DisposeWith(disposables);
-                
+
+                this.WhenAnyValue(svm => svm.IsWidgetFontColourAutomatic)
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .Subscribe(isAutomatic => { 
+                        if (isAutomatic)
+                        {
+                            WidgetFontColour = null;
+                        }
+                    })
+                    .DisposeWith(disposables);
+
+                this.WhenAnyValue(settingsViewModel => settingsViewModel.WidgetFontColour)
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .BindTo(widgetViewModel, widgetViewModel => widgetViewModel.CustomFontColour)
+                    .DisposeWith(disposables);
+
                 _dataErrorsChanged =
                     Observable.FromEventPattern<DataErrorsChangedEventArgs>(
                         handler => ErrorsChanged += handler,
@@ -274,6 +295,18 @@ namespace DateToday.ViewModels
         {
             get => _widgetFontWeightLookupKey;
             set => this.RaiseAndSetIfChanged(ref _widgetFontWeightLookupKey, value);
+        }
+
+        public Color? WidgetFontColour
+        {
+            get => _widgetFontColour;
+            set => this.RaiseAndSetIfChanged(ref _widgetFontColour, value);
+        }
+
+        public bool IsWidgetFontColourAutomatic
+        {
+            get => _isWidgetFontColourAutomatic;
+            set => this.RaiseAndSetIfChanged(ref _isWidgetFontColourAutomatic, value);
         }
 
         public string WidgetDateFormatUserInput

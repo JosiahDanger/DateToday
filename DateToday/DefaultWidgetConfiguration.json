@@ -6,6 +6,7 @@
 	},
 	"FontSize": 70,
 	"FontWeightLookupKey": "Normal",
+	"CustomFontColour": null,
 	"DateFormat": "dddd, \"the\" d \"of\" MMMM",
 	"OrdinalDaySuffixPosition": 13
 }

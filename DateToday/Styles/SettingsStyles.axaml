@@ -35,7 +35,7 @@
         <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="Margin" Value="10" />
-        <Setter Property="Padding" Value="15" />
+        <Setter Property="Padding" Value="15 15 15 5" />
     </Style>
 
     <Style Selector="Border.FieldGroupBorder">
@@ -59,6 +59,7 @@
     </Style>
 
     <Style Selector="TextBlock.FieldLabel">
+        <Setter Property="FontSize" Value="14" />
         <Setter Property="HorizontalAlignment" Value="Right" />
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
@@ -104,10 +105,27 @@
         <Setter Property="ParsingNumberStyle" Value="Integer" />
     </Style>
 
+    <Style Selector="CheckBox.CheckBoxField">
+        <Setter Property="Margin" Value="10 5" />
+    </Style>
+
+    <Style Selector="ColorPicker.ColourSelector">
+        <Setter Property="Margin" Value="10 5" />
+        <Setter Property="IsAccentColorsVisible" Value="False" />
+        <Setter Property="IsColorPreviewVisible" Value="False" />
+        <Setter Property="IsColorSpectrumSliderVisible" Value="False" />
+    </Style>
+
     <Style Selector="ComboBox.StringSelector">
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="Margin" Value="10 5" />
         <Setter Property="VerticalContentAlignment" Value="Bottom" />
+    </Style>
+
+    <Style Selector="Expander.FontColourFieldsContainer">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Margin" Value="0 25 0 0" />
     </Style>
 
 </Styles>

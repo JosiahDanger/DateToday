@@ -1,10 +1,11 @@
 ﻿using Avalonia;
+using Avalonia.Media;
 
 namespace DateToday.Configuration
 {
     internal class WidgetConfiguration(
         PixelPoint windowPosition, string fontFamilyName, int fontSize, string fontWeightLookupKey,
-        string dateFormat, byte? ordinalDaySuffixPosition)
+        Color? customFontColour, string dateFormat, byte? ordinalDaySuffixPosition)
     {
         /* This class constitutes a simple data structure into which persisted settings may be 
          * deserialised. */
@@ -13,6 +14,7 @@ namespace DateToday.Configuration
         private readonly string _fontFamilyName = fontFamilyName;
         private readonly int _fontSize = fontSize;
         private readonly string _fontWeightLookupKey = fontWeightLookupKey;
+        private readonly Color? _customFontColour = customFontColour;
         private readonly string _dateFormat = dateFormat;
         private readonly byte? _ordinalDaySuffixPosition = ordinalDaySuffixPosition;
 
@@ -23,6 +25,8 @@ namespace DateToday.Configuration
         public int FontSize => _fontSize;
 
         public string FontWeightLookupKey => _fontWeightLookupKey;
+
+        public Color? CustomFontColour => _customFontColour;
 
         public string DateFormat => _dateFormat;
 

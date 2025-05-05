@@ -22,6 +22,7 @@ namespace DateToday.ViewModels
         int FontSize { get; set; }
         FontFamily FontFamily { get; set; }
         string FontWeightLookupKey { get; set; }
+        Color? CustomFontColour { get; set; }
         string DateFormat { get; set; }
         byte? OrdinalDaySuffixPosition { get; set; }
 
@@ -35,7 +36,7 @@ namespace DateToday.ViewModels
         private readonly INewMinuteEventGenerator _modelInterface;
 
         [IgnoreDataMember]
-        private string 
+        private string
             _dateText = string.Empty, _dateFormat, _dateFormatUserInput, _fontWeightLookupKey;
 
         [IgnoreDataMember]
@@ -43,6 +44,12 @@ namespace DateToday.ViewModels
 
         [IgnoreDataMember]
         private FontFamily _fontFamily;
+
+        [IgnoreDataMember]
+        private readonly Color _automaticFontColour;
+
+        [IgnoreDataMember]
+        private Color? _customFontColour;
 
         [IgnoreDataMember]
         private PixelPoint _windowPosition, _windowPositionMax;
@@ -66,7 +73,7 @@ namespace DateToday.ViewModels
         public ICommand ExitApplication { get; }
 
         public WidgetViewModel(
-            IWidgetWindow viewInterface, 
+            IWidgetWindow viewInterface,
             INewMinuteEventGenerator modelInterface,
             List<FontFamily> availableFonts,
             Dictionary<string, FontWeight> fontWeightDictionary,
@@ -79,10 +86,12 @@ namespace DateToday.ViewModels
              * raised in error, but I'm not certain. */
 
             _modelInterface = modelInterface;
+            _automaticFontColour = viewInterface.ThemedTextColour;
 
             _windowPosition = restoredSettings.WindowPosition;
             _fontSize = restoredSettings.FontSize;
             _fontWeightLookupKey = restoredSettings.FontWeightLookupKey;
+            _customFontColour = restoredSettings.CustomFontColour;
             _dateFormat = _dateFormatUserInput = restoredSettings.DateFormat;
             _ordinalDaySuffixPosition = restoredSettings.OrdinalDaySuffixPosition;
             _fontFamily =
@@ -113,7 +122,7 @@ namespace DateToday.ViewModels
 
             ReceiveNewSettings = ReactiveCommand.CreateFromTask(async () =>
             {
-                SettingsViewModel settingsViewModel = 
+                SettingsViewModel settingsViewModel =
                     new(this, availableFonts, fontWeightDictionary);
                 await InteractionReceiveNewSettings.Handle(settingsViewModel);
 
@@ -135,7 +144,7 @@ namespace DateToday.ViewModels
         {
             // TODO: This could probably be a ReactiveCommand or ICommand.
 
-            DateText = GetNewDateText(DateFormat, OrdinalDaySuffixPosition);   
+            DateText = GetNewDateText(DateFormat, OrdinalDaySuffixPosition);
         }
 
         private static string GetNewDateText(string dateFormat, byte? ordinalDaySuffixPosition)
@@ -153,7 +162,7 @@ namespace DateToday.ViewModels
 
             CultureInfo operatingSystemCulture = CultureInfo.CurrentCulture;
             DateTime currentDateTime = DateTime.Now;
-            
+
             string formattedDateOutput;
 
             if (ordinalDaySuffixPosition != null)
@@ -169,10 +178,10 @@ namespace DateToday.ViewModels
                 string dateFormatIncludingFormatItem =
                     dateFormat.Insert((int)ordinalDaySuffixPosition, "{0}");
 
-                string formattedDateIncludingFormatItem = 
+                string formattedDateIncludingFormatItem =
                     currentDateTime.ToString(dateFormatIncludingFormatItem, operatingSystemCulture);
 
-                formattedDateOutput = 
+                formattedDateOutput =
                     string.Format(
                         operatingSystemCulture, formattedDateIncludingFormatItem, ordinalDaySuffix);
             }
@@ -204,7 +213,7 @@ namespace DateToday.ViewModels
 
         public void SetDateFormat(string newDateFormat, byte? ordinalDaySuffixPosition)
         {
-            // TODO: Make this a ReactiveCommand?
+            // TODO: Make this a Command?
 
             try
             {
@@ -212,8 +221,12 @@ namespace DateToday.ViewModels
             }
             catch (System.FormatException)
             {
+                // The provided date format or ordinal day suffix position are together invalid.
                 throw;
             }
+
+            /* A new valid date format, which may include an ordinal day suffix, has been applied
+             * successfully. The method arguments are persisted here. */
 
             DateFormat = newDateFormat;
             OrdinalDaySuffixPosition = ordinalDaySuffixPosition;
@@ -221,6 +234,9 @@ namespace DateToday.ViewModels
 
         [IgnoreDataMember]
         public int? FontWeight => _fontWeight.Value;
+
+        [IgnoreDataMember]
+        public Color AutomaticFontColour => _automaticFontColour;
 
         [DataMember]
         public PixelPoint WindowPosition
@@ -264,6 +280,13 @@ namespace DateToday.ViewModels
         {
             get => _fontWeightLookupKey;
             set => this.RaiseAndSetIfChanged(ref _fontWeightLookupKey, value);
+        }
+
+        [DataMember]
+        public Color? CustomFontColour
+        {
+            get => _customFontColour;
+            set => this.RaiseAndSetIfChanged(ref _customFontColour, value);
         }
 
         [IgnoreDataMember]
