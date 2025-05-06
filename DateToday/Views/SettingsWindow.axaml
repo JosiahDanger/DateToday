@@ -7,7 +7,6 @@
         Background="Transparent"
         CanResize="False"
         Icon="/Assets/jd-logo.ico"
-        RequestedThemeVariant="Dark"
         ShowInTaskbar="False"
         SizeToContent="WidthAndHeight"
         SystemDecorations="None"
@@ -163,7 +162,9 @@
                 <StackPanel HorizontalAlignment="Center"
                             Orientation="Horizontal">
 
-                    <Border Classes="SettingsInnerBorder">
+                    <Border Height="203"
+                            VerticalAlignment="Top"
+                            Classes="SettingsInnerBorder">
 
                         <StackPanel Orientation="Vertical">
 
@@ -234,8 +235,7 @@
 
                                     </Grid>
 
-                                    <Expander Classes="ColourFieldsContainer"
-                                              IsEnabled="{Binding IsWidgetDropShadowEnabled}">
+                                    <Expander Classes="ColourFieldsContainer">
 
                                         <Expander.Header>
                                             Colour
@@ -253,7 +253,8 @@
                                             <CheckBox Grid.Row="0"
                                                       Grid.Column="1"
                                                       Classes="CheckBoxField"
-                                                      IsChecked="{Binding IsWidgetDropShadowColourAutomatic}" />
+                                                      IsChecked="{Binding IsWidgetDropShadowColourAutomatic}"
+                                                      IsEnabled="{Binding IsWidgetDropShadowEnabled}" />
 
                                             <TextBlock Grid.Row="0"
                                                        Grid.Column="2"

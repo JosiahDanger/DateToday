@@ -249,7 +249,6 @@ namespace DateToday.ViewModels
             else
             {
                 DropShadow = null;
-                _customDropShadowColour = null;
             }
         }
 
