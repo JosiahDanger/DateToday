@@ -88,7 +88,7 @@
         <Setter Property="HorizontalAlignment" Value="Right" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="Increment" Value="1" />
-        <Setter Property="Margin" Value="10 5" />
+        <Setter Property="Margin" Value="10 10 10 0" />
         <Setter Property="Maximum" Value="99" />
         <Setter Property="Minimum" Value="0" />
         <Setter Property="ParsingNumberStyle" Value="Integer" />
@@ -110,10 +110,12 @@
     </Style>
 
     <Style Selector="ColorPicker.ColourSelector">
+        <Setter Property="ColorModel" Value="Rgba" />
         <Setter Property="Margin" Value="10 5" />
         <Setter Property="IsAccentColorsVisible" Value="False" />
         <Setter Property="IsColorPreviewVisible" Value="False" />
         <Setter Property="IsColorSpectrumSliderVisible" Value="False" />
+        <Setter Property="IsColorModelVisible" Value="False" />
     </Style>
 
     <Style Selector="ComboBox.StringSelector">
@@ -122,7 +124,7 @@
         <Setter Property="VerticalContentAlignment" Value="Bottom" />
     </Style>
 
-    <Style Selector="Expander.FontColourFieldsContainer">
+    <Style Selector="Expander.ColourFieldsContainer">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="Margin" Value="0 25 0 0" />

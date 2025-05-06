@@ -7,6 +7,7 @@
         Background="Transparent"
         CanResize="False"
         Icon="/Assets/jd-logo.ico"
+        RequestedThemeVariant="Dark"
         ShowInTaskbar="False"
         SizeToContent="WidthAndHeight"
         SystemDecorations="None"
@@ -18,7 +19,7 @@
 
     <Design.DataContext />
 
-    <Border x:Name="SettingsWindowDragHandle"
+    <Border Name="SettingsWindowDragHandle"
             Classes="SettingsOuterBorder">
 
         <StackPanel Orientation="Vertical">
@@ -29,9 +30,10 @@
                 🗙
             </Button>
 
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Vertical">
 
-                <Border Classes="SettingsInnerBorder">
+                <Border HorizontalAlignment="Center"
+                        Classes="SettingsInnerBorder">
 
                     <StackPanel Orientation="Vertical">
 
@@ -50,7 +52,7 @@
                                                Classes="FieldLabel"
                                                Text="Name:" />
 
-                                    <ComboBox x:Name="FontFamilySelector"
+                                    <ComboBox Name="FontFamilySelector"
                                               Grid.Row="0"
                                               Grid.Column="1"
                                               Grid.ColumnSpan="3"
@@ -87,7 +89,7 @@
                                                Classes="FieldLabel"
                                                Text="Weight:" />
 
-                                    <ComboBox x:Name="FontWeightSelector"
+                                    <ComboBox Name="FontWeightSelector"
                                               Grid.Row="1"
                                               Grid.Column="3"
                                               Width="126"
@@ -114,7 +116,7 @@
 
                                 </Grid>
 
-                                <Expander Classes="FontColourFieldsContainer">
+                                <Expander Classes="ColourFieldsContainer">
 
                                     <Expander.Header>
                                         Colour
@@ -143,7 +145,7 @@
                                                      Grid.Column="3"
                                                      Classes="ColourSelector"
                                                      IsEnabled="{Binding !IsWidgetFontColourAutomatic}"
-                                                     Color="{Binding WidgetFontColour,
+                                                     Color="{Binding WidgetCustomFontColour,
                                                                      Converter={StaticResource DoNothingForNullConverter}}" />
 
                                     </Grid>
@@ -158,100 +160,174 @@
 
                 </Border>
 
-                <Border Classes="SettingsInnerBorder">
+                <StackPanel HorizontalAlignment="Center"
+                            Orientation="Horizontal">
 
-                    <StackPanel VerticalAlignment="Center"
-                                Orientation="Vertical">
+                    <Border Classes="SettingsInnerBorder">
 
-                        <TextBlock Classes="FieldGroupLabel"
-                                   Text="Position" />
+                        <StackPanel Orientation="Vertical">
 
-                        <Border Classes="FieldGroupBorder">
+                            <TextBlock Classes="FieldGroupLabel"
+                                       Text="Position" />
 
-                            <Grid ColumnDefinitions="Auto, Auto"
-                                  RowDefinitions="Auto, Auto">
+                            <Border Height="137"
+                                    Classes="FieldGroupBorder">
 
-                                <TextBlock Grid.Row="0"
-                                           Grid.Column="0"
-                                           Classes="FieldLabel"
-                                           Text="𝑥:" />
+                                <Grid VerticalAlignment="Center"
+                                      ColumnDefinitions="Auto, Auto"
+                                      RowDefinitions="Auto, Auto">
 
-                                <NumericUpDown Grid.Row="0"
-                                               Grid.Column="1"
-                                               Classes="PositionField"
-                                               Maximum="{Binding WidgetPositionMax.X}"
-                                               Value="{Binding WidgetPositionUserInputX}" />
+                                    <TextBlock Grid.Row="0"
+                                               Grid.Column="0"
+                                               Classes="FieldLabel"
+                                               Text="𝑥:" />
 
-                                <TextBlock Grid.Row="1"
-                                           Grid.Column="0"
-                                           Classes="FieldLabel"
-                                           Text="𝑦:" />
+                                    <NumericUpDown Grid.Row="0"
+                                                   Grid.Column="1"
+                                                   Classes="PositionField"
+                                                   Maximum="{Binding WidgetPositionMax.X}"
+                                                   Value="{Binding WidgetPositionUserInputX}" />
 
-                                <NumericUpDown Grid.Row="1"
-                                               Grid.Column="1"
-                                               Classes="PositionField"
-                                               Maximum="{Binding WidgetPositionMax.Y}"
-                                               Value="{Binding WidgetPositionUserInputY}" />
+                                    <TextBlock Grid.Row="1"
+                                               Grid.Column="0"
+                                               Classes="FieldLabel"
+                                               Text="𝑦:" />
 
-                            </Grid>
+                                    <NumericUpDown Grid.Row="1"
+                                                   Grid.Column="1"
+                                                   Classes="PositionField"
+                                                   Maximum="{Binding WidgetPositionMax.Y}"
+                                                   Value="{Binding WidgetPositionUserInputY}" />
 
-                        </Border>
+                                </Grid>
 
-                    </StackPanel>
+                            </Border>
 
-                </Border>
+                        </StackPanel>
+
+                    </Border>
+
+                    <Border Width="370"
+                            Classes="SettingsInnerBorder">
+
+                        <StackPanel Orientation="Vertical">
+
+                            <TextBlock Classes="FieldGroupLabel"
+                                       Text="Drop Shadow" />
+
+                            <Border Classes="FieldGroupBorder">
+
+                                <StackPanel Orientation="Vertical">
+
+                                    <Grid ColumnDefinitions="Auto, Auto"
+                                          RowDefinitions="Auto">
+
+                                        <TextBlock Grid.Row="0"
+                                                   Grid.Column="0"
+                                                   Classes="FieldLabel"
+                                                   Text="Enabled:" />
+
+                                        <CheckBox Grid.Row="0"
+                                                  Grid.Column="1"
+                                                  Classes="CheckBoxField"
+                                                  IsChecked="{Binding IsWidgetDropShadowEnabled}" />
+
+                                    </Grid>
+
+                                    <Expander Classes="ColourFieldsContainer"
+                                              IsEnabled="{Binding IsWidgetDropShadowEnabled}">
+
+                                        <Expander.Header>
+                                            Colour
+                                        </Expander.Header>
+
+                                        <Grid HorizontalAlignment="Center"
+                                              ColumnDefinitions="Auto, Auto, Auto, Auto"
+                                              RowDefinitions="Auto">
+
+                                            <TextBlock Grid.Row="0"
+                                                       Grid.Column="0"
+                                                       Classes="FieldLabel"
+                                                       Text="Automatic:" />
+
+                                            <CheckBox Grid.Row="0"
+                                                      Grid.Column="1"
+                                                      Classes="CheckBoxField"
+                                                      IsChecked="{Binding IsWidgetDropShadowColourAutomatic}" />
+
+                                            <TextBlock Grid.Row="0"
+                                                       Grid.Column="2"
+                                                       Classes="FieldLabel"
+                                                       Text="Custom:" />
+
+                                            <ColorPicker Grid.Row="0"
+                                                         Grid.Column="3"
+                                                         Classes="ColourSelector"
+                                                         IsEnabled="{Binding !IsWidgetDropShadowColourAutomatic}"
+                                                         Color="{Binding WidgetCustomDropShadowColour,
+                                                                         Converter={StaticResource DoNothingForNullConverter}}" />
+
+                                        </Grid>
+
+                                    </Expander>
+
+                                </StackPanel>
+
+                            </Border>
+
+                        </StackPanel>
+
+                    </Border>
+
+                </StackPanel>
 
             </StackPanel>
 
-            <StackPanel HorizontalAlignment="Center"
-                        Orientation="Horizontal">
+            <Border Classes="SettingsInnerBorder">
 
-                <Border Width="702"
-                        Classes="SettingsInnerBorder">
+                <StackPanel Orientation="Vertical">
 
-                    <StackPanel Orientation="Vertical">
+                    <TextBlock Classes="FieldGroupLabel"
+                               Text="Date Display" />
 
-                        <TextBlock Classes="FieldGroupLabel"
-                                   Text="Date Display" />
+                    <Border Classes="FieldGroupBorder">
 
-                        <Border Classes="FieldGroupBorder">
+                        <Grid ColumnDefinitions="Auto, 327, Auto"
+                              RowDefinitions="Auto, Auto"
+                              RowSpacing="15">
 
-                            <Grid ColumnDefinitions="Auto, 447, Auto"
-                                  RowDefinitions="Auto, Auto">
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="0"
+                                       Classes="FieldLabel"
+                                       Text="Format:" />
 
-                                <TextBlock Grid.Row="0"
-                                           Grid.Column="0"
-                                           Classes="FieldLabel"
-                                           Text="Format:" />
+                            <TextBox Name="SettingsDateFormatField"
+                                     Grid.Row="0"
+                                     Grid.Column="1"
+                                     Grid.ColumnSpan="2"
+                                     Width="476"
+                                     Classes="TextField"
+                                     Text="{Binding WidgetDateFormatUserInput}" />
 
-                                <TextBox x:Name="SettingsDateFormatField"
-                                         Grid.Row="0"
-                                         Grid.Column="1"
-                                         Grid.ColumnSpan="2"
-                                         Width="550"
-                                         Classes="TextField"
-                                         Text="{Binding WidgetDateFormatUserInput}" />
+                            <TextBlock Grid.Row="1"
+                                       Grid.Column="1"
+                                       Classes="FieldLabel">
+                                (Optional)<LineBreak />
+                                Append ordinal suffix to day of month at position:</TextBlock>
 
-                                <TextBlock Grid.Row="1"
-                                           Grid.Column="1"
-                                           Classes="FieldLabel"
-                                           Text="(Optional) Append ordinal suffix to day of month at position:" />
+                            <NumericUpDown Grid.Row="1"
+                                           Grid.Column="2"
+                                           Classes="OrdinalDaySuffixPositionField"
+                                           Maximum="{Binding WidgetDateFormatUserInput.Length}"
+                                           Value="{Binding WidgetOrdinalDaySuffixPosition}" />
 
-                                <NumericUpDown Grid.Row="1"
-                                               Grid.Column="2"
-                                               Classes="OrdinalDaySuffixPositionField"
-                                               Maximum="{Binding WidgetDateFormatUserInput.Length}"
-                                               Value="{Binding WidgetOrdinalDaySuffixPosition}" />
+                        </Grid>
 
-                            </Grid>
+                    </Border>
 
-                        </Border>
+                </StackPanel>
 
-                    </StackPanel>
-
-                </Border>
-
-            </StackPanel>
+            </Border>
 
         </StackPanel>
 

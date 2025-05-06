@@ -23,6 +23,8 @@ namespace DateToday.ViewModels
         FontFamily FontFamily { get; set; }
         string FontWeightLookupKey { get; set; }
         Color? CustomFontColour { get; set; }
+        bool IsDropShadowEnabled { get; set; }
+        Color? CustomDropShadowColour { get; set; }
         string DateFormat { get; set; }
         byte? OrdinalDaySuffixPosition { get; set; }
 
@@ -49,7 +51,13 @@ namespace DateToday.ViewModels
         private readonly Color _automaticFontColour;
 
         [IgnoreDataMember]
-        private Color? _customFontColour;
+        private Color? _customFontColour, _customDropShadowColour;
+
+        [IgnoreDataMember]
+        private bool _isDropShadowEnabled;
+
+        [IgnoreDataMember]
+        private DropShadowEffect? _dropShadow;
 
         [IgnoreDataMember]
         private PixelPoint _windowPosition, _windowPositionMax;
@@ -82,8 +90,8 @@ namespace DateToday.ViewModels
             /* Assigning the 'modelInterface' argument to a private WidgetViewModel field here is
              * not strictly necessary; the argument object can be disposed of with the
              * WidgetViewModel CompositeDisposable collection. However, if I don't assign it to a
-             * WidgetViewModel field, the compiler raises warning CA2000. I suspect this warning is
-             * raised in error, but I'm not certain. */
+             * WidgetViewModel field, the compiler raises warning CA2000. I suspect that this
+             * warning is raised in error, but I'm not certain. */
 
             _modelInterface = modelInterface;
             _automaticFontColour = viewInterface.ThemedTextColour;
@@ -92,6 +100,8 @@ namespace DateToday.ViewModels
             _fontSize = restoredSettings.FontSize;
             _fontWeightLookupKey = restoredSettings.FontWeightLookupKey;
             _customFontColour = restoredSettings.CustomFontColour;
+            _isDropShadowEnabled = restoredSettings.IsDropShadowEnabled;
+            _customDropShadowColour = restoredSettings.CustomDropShadowColour;
             _dateFormat = _dateFormatUserInput = restoredSettings.DateFormat;
             _ordinalDaySuffixPosition = restoredSettings.OrdinalDaySuffixPosition;
             _fontFamily =
@@ -115,9 +125,23 @@ namespace DateToday.ViewModels
                 this.HandleActivation();
 
                 _modelInterface.NewMinuteEventObservable?
-                              .ObserveOn(RxApp.MainThreadScheduler)
-                              .Subscribe(_ => RefreshDateText())
-                              .DisposeWith(disposables);
+                               .ObserveOn(RxApp.MainThreadScheduler)
+                               .Subscribe(_ => RefreshDateText())
+                               .DisposeWith(disposables);
+
+                this.WhenAnyValue(widgetViewModel => widgetViewModel.IsDropShadowEnabled)
+                    // Does not need explicit disposal.
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .Subscribe(isEnabled =>
+                        IsDropShadowEnabled_OnChange(
+                            isEnabled, viewInterface.ThemedTextShadowColour));
+
+                this.WhenAnyValue(widgetViewModel => widgetViewModel.CustomDropShadowColour)
+                    // Does not need explicit disposal.
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .Subscribe(newColourOrNull =>
+                        CustomDropShadowColour_OnChange(
+                            newColourOrNull, viewInterface.ThemedTextShadowColour));
             });
 
             ReceiveNewSettings = ReactiveCommand.CreateFromTask(async () =>
@@ -211,6 +235,39 @@ namespace DateToday.ViewModels
             return null;
         }
 
+        private void IsDropShadowEnabled_OnChange(bool isEnabled, Color initialColour)
+        {
+            if (isEnabled)
+            {
+                DropShadow =
+                    new DropShadowEffect()
+                    {
+                        BlurRadius = 0,
+                        Color = initialColour
+                    };
+            }
+            else
+            {
+                DropShadow = null;
+                _customDropShadowColour = null;
+            }
+        }
+
+        private void CustomDropShadowColour_OnChange(Color? newColourOrNull, Color fallback)
+        {
+            if (DropShadow != null)
+            {
+                if (newColourOrNull is Color newColour)
+                {
+                    DropShadow.Color = newColour;
+                }
+                else
+                {
+                    DropShadow.Color = fallback;
+                }
+            }
+        }
+
         public void SetDateFormat(string newDateFormat, byte? ordinalDaySuffixPosition)
         {
             // TODO: Make this a Command?
@@ -221,7 +278,7 @@ namespace DateToday.ViewModels
             }
             catch (System.FormatException)
             {
-                // The provided date format or ordinal day suffix position are together invalid.
+                // The provided date format or ordinal day suffix position are invalid.
                 throw;
             }
 
@@ -287,6 +344,27 @@ namespace DateToday.ViewModels
         {
             get => _customFontColour;
             set => this.RaiseAndSetIfChanged(ref _customFontColour, value);
+        }
+
+        [DataMember]
+        public bool IsDropShadowEnabled
+        {
+            get => _isDropShadowEnabled;
+            set => this.RaiseAndSetIfChanged(ref _isDropShadowEnabled, value);
+        }
+
+        [DataMember]
+        public Color? CustomDropShadowColour
+        {
+            get => _customDropShadowColour;
+            set => this.RaiseAndSetIfChanged(ref _customDropShadowColour, value);
+        }
+
+        [IgnoreDataMember]
+        public DropShadowEffect? DropShadow
+        {
+            get => _dropShadow;
+            set => this.RaiseAndSetIfChanged(ref _dropShadow, value);
         }
 
         [IgnoreDataMember]

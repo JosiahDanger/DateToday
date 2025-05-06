@@ -17,6 +17,7 @@ namespace DateToday.Views
     {
         PixelPoint Position { get; }
         Color ThemedTextColour { get; }
+        Color ThemedTextShadowColour { get; }
 
         void Close(object? dialogResult);
     }
@@ -24,8 +25,9 @@ namespace DateToday.Views
     internal partial class WidgetWindow : ReactiveWindow<WidgetViewModel>, IWidgetWindow
     {
         private const string RESOURCE_KEY_THEMED_TEXT_COLOUR = "SystemBaseHighColor";
+        private const string RESOURCE_KEY_THEMED_TEXT_SHADOW_COLOUR = "SystemRegionColor";
 
-        private readonly Color _themedTextColour;
+        private readonly Color _themedTextColour, _themedTextShadowColour;
 
         public WidgetWindow()
         {
@@ -37,37 +39,28 @@ namespace DateToday.Views
                 return;
             }
 
-            this.TryFindResource(
-                RESOURCE_KEY_THEMED_TEXT_COLOUR, 
-                ActualThemeVariant, 
-                out var potentialThemedTextColourResource);
+            _themedTextColour = 
+                InitialiseThemedColour(RESOURCE_KEY_THEMED_TEXT_COLOUR, Colors.Black);
 
-            if (potentialThemedTextColourResource is Color themedTextColourResource)
-            {
-                _themedTextColour = themedTextColourResource;
-            }
-            else
-            {
-                Debug.WriteLine("Failed to discern a thematically-appropriate text colour.");
-                _themedTextColour = Colors.Black;
-            }
+            _themedTextShadowColour = 
+                InitialiseThemedColour(RESOURCE_KEY_THEMED_TEXT_SHADOW_COLOUR, Colors.White);
 
             this.WhenActivated(disposables =>
             {
                 this.HandleActivation();
 
-                ViewModel.WhenAnyValue(x => x.WindowPosition)
+                ViewModel.WhenAnyValue(widgetViewModel => widgetViewModel.WindowPosition)
                          .ObserveOn(RxApp.MainThreadScheduler)
-                         .BindTo(this, x => x.Position)
+                         .BindTo(this, widgetWindow => widgetWindow.Position)
                          .DisposeWith(disposables);
 
                 Observable.FromEventPattern<SizeChangedEventArgs>(
                     handler => SizeChanged += handler,
                     handler => SizeChanged -= handler
                 )
+                // Does not need explicit disposal.
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(x => OnWidgetSizeChanged(x.EventArgs))
-                .DisposeWith(disposables);
+                .Subscribe(x => WidgetWindow_OnSizeChanged(x.EventArgs));
             });
         }
 
@@ -76,7 +69,7 @@ namespace DateToday.Views
             ViewModel!.InteractionReceiveNewSettings.RegisterHandler(DoShowSettingsDialogAsync);
         }
 
-        private void OnWidgetSizeChanged(SizeChangedEventArgs e)
+        private void WidgetWindow_OnSizeChanged(SizeChangedEventArgs e)
         {
             static PixelPoint GetNewWidgetPositionMax(PixelSize monitorSize, Rect widgetBounds)
             {
@@ -136,7 +129,30 @@ namespace DateToday.Views
             }
         }
 
+        private Color InitialiseThemedColour(string resourceKey, Color fallback)
+        {
+            this.TryFindResource(
+                resourceKey,
+                ActualThemeVariant,
+                out var themedColourResourceOrNull);
+
+            if (themedColourResourceOrNull is Color themedColourResource)
+            {
+                return themedColourResource;
+            }
+            else
+            {
+                Debug.WriteLine(
+                    $"Failed to discern thematically-appropriate colour associated with key: " +
+                    $"'{resourceKey}'. Using {fallback} instead.");
+
+                return fallback;
+            }
+        }
+
         public Color ThemedTextColour => _themedTextColour;
+
+        public Color ThemedTextShadowColour => _themedTextShadowColour;
 
         public void CloseView(object? dialogResult)
         {

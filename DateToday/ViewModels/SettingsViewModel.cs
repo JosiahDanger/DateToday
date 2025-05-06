@@ -25,8 +25,11 @@ namespace DateToday.ViewModels
         private readonly List<FontFamily> _availableFonts;
         private readonly Dictionary<string, FontWeight> _fontWeightDictionary;
 
-        private Color? _widgetFontColour;
-        private bool _isWidgetFontColourAutomatic;
+        private Color? _widgetCustomFontColour, _widgetCustomDropShadowColour;
+
+        private bool 
+            _isWidgetFontColourAutomatic, _isWidgetDropShadowEnabled, 
+            _isWidgetDropShadowColourAutomatic;
 
 #pragma warning disable IDE0079
 #pragma warning disable CA2213
@@ -72,8 +75,12 @@ namespace DateToday.ViewModels
             _widgetFontFamily = widgetViewModel.FontFamily;
             _widgetFontWeightLookupKey = widgetViewModel.FontWeightLookupKey;
 
-            _widgetFontColour = widgetViewModel.CustomFontColour;
             _isWidgetFontColourAutomatic = widgetViewModel.CustomFontColour == null;
+            _widgetCustomFontColour = widgetViewModel.CustomFontColour;
+
+            _isWidgetDropShadowEnabled = widgetViewModel.IsDropShadowEnabled;
+            _isWidgetDropShadowColourAutomatic = widgetViewModel.CustomDropShadowColour == null;
+            _widgetCustomDropShadowColour = widgetViewModel.CustomDropShadowColour;
 
             _widgetDateFormatUserInput = widgetViewModel.DateFormat;
             _widgetOrdinalDaySuffixPosition = widgetViewModel.OrdinalDaySuffixPosition;
@@ -132,32 +139,59 @@ namespace DateToday.ViewModels
                     .DisposeWith(disposables);
 
                 this.WhenAnyValue(svm => svm.IsWidgetFontColourAutomatic)
+                    // Does not need explicit disposal.
                     .ObserveOn(RxApp.MainThreadScheduler)
                     .Subscribe(isAutomatic => { 
                         if (isAutomatic)
                         {
-                            WidgetFontColour = null;
+                            WidgetCustomFontColour = null;
                         }
-                    })
-                    .DisposeWith(disposables);
+                    });
 
-                this.WhenAnyValue(settingsViewModel => settingsViewModel.WidgetFontColour)
+                this.WhenAnyValue(settingsViewModel => settingsViewModel.WidgetCustomFontColour)
                     .ObserveOn(RxApp.MainThreadScheduler)
                     .BindTo(widgetViewModel, widgetViewModel => widgetViewModel.CustomFontColour)
                     .DisposeWith(disposables);
 
+                this.WhenAnyValue(settingsViewModel => settingsViewModel.IsWidgetDropShadowEnabled)
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .Do(isEnabled => {
+                        if (!isEnabled)
+                        {
+                            IsWidgetDropShadowColourAutomatic = true;
+                        }
+                    })
+                    .BindTo(widgetViewModel, widgetViewModel => widgetViewModel.IsDropShadowEnabled)
+                    .DisposeWith(disposables);
+
+                this.WhenAnyValue(svm => svm.IsWidgetDropShadowColourAutomatic)
+                    // Does not need explicit disposal.
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .Subscribe(isAutomatic => {
+                        if (isAutomatic)
+                        {
+                            WidgetCustomDropShadowColour = null;
+                        }
+                    });
+
+                this.WhenAnyValue(svm => svm.WidgetCustomDropShadowColour)
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .BindTo(widgetViewModel, wvm => wvm.CustomDropShadowColour)
+                    .DisposeWith(disposables);
+
                 _dataErrorsChanged =
+                    // Does not need explicit disposal.
                     Observable.FromEventPattern<DataErrorsChangedEventArgs>(
                         handler => ErrorsChanged += handler,
                         handler => ErrorsChanged -= handler
                         )
                         .ObserveOn(RxApp.MainThreadScheduler)
-                        .ToProperty(this, nameof(DataErrorsChanged))
-                        .DisposeWith(disposables);
+                        .ToProperty(this, nameof(DataErrorsChanged));
 
                 this.WhenAnyValue(
                         settingsViewModel => settingsViewModel.WidgetDateFormatUserInput,
                         settingsViewModel => settingsViewModel.WidgetOrdinalDaySuffixPosition)
+                    // Does not need explicit disposal.
                     .ObserveOn(RxApp.MainThreadScheduler) // Continued below.
 
                     /* TODO: 
@@ -165,12 +199,12 @@ namespace DateToday.ViewModels
 
                     .Skip(1)
                     .Throttle(TimeSpan.FromMilliseconds(1))
-                    .InvokeCommand(this, svm => svm.ParseDateFormatUserInput)
-                    .DisposeWith(disposables);
+                    .InvokeCommand(this, svm => svm.ParseDateFormatUserInput);
             });
 
             IObservable<bool> isDateFormatPopulated =
                 this.WhenAnyValue(settingsViewModel => settingsViewModel.WidgetDateFormatUserInput)
+                    // Does not need explicit disposal.
                     .ObserveOn(RxApp.MainThreadScheduler)
                     .Select(inputString => !string.IsNullOrEmpty(inputString))
                     .Do(isPopulated => {
@@ -189,10 +223,12 @@ namespace DateToday.ViewModels
                         settingsViewModel => settingsViewModel.WidgetOrdinalDaySuffixPosition,
                         (dateFormat, suffixPosition) =>
                             !(suffixPosition != null && suffixPosition > dateFormat.Length))
+                    // Does not need explicit disposal.
                     .ObserveOn(RxApp.MainThreadScheduler);
 
             IObservable<bool> isDateFormatValid =
                 this.WhenAnyValue(settingsViewModel => settingsViewModel.IsDateTextSetSuccessfully)
+                    // Does not need explicit disposal.
                     .ObserveOn(RxApp.MainThreadScheduler);
 
             string[] curlyBraces = ["{", "}"];
@@ -202,6 +238,7 @@ namespace DateToday.ViewModels
                         settingsViewModel => settingsViewModel.WidgetDateFormatUserInput, 
                         inputString => 
                             inputString != null && !curlyBraces.Any(inputString.Contains))
+                    // Does not need explicit disposal.
                     .ObserveOn(RxApp.MainThreadScheduler);
 
             // TODO: Deserialise validation strings from an external JSON file.
@@ -297,16 +334,34 @@ namespace DateToday.ViewModels
             set => this.RaiseAndSetIfChanged(ref _widgetFontWeightLookupKey, value);
         }
 
-        public Color? WidgetFontColour
+        public Color? WidgetCustomFontColour
         {
-            get => _widgetFontColour;
-            set => this.RaiseAndSetIfChanged(ref _widgetFontColour, value);
+            get => _widgetCustomFontColour;
+            set => this.RaiseAndSetIfChanged(ref _widgetCustomFontColour, value);
         }
 
         public bool IsWidgetFontColourAutomatic
         {
             get => _isWidgetFontColourAutomatic;
             set => this.RaiseAndSetIfChanged(ref _isWidgetFontColourAutomatic, value);
+        }
+
+        public bool IsWidgetDropShadowEnabled
+        {
+            get => _isWidgetDropShadowEnabled;
+            set => this.RaiseAndSetIfChanged(ref _isWidgetDropShadowEnabled, value);
+        }
+
+        public bool IsWidgetDropShadowColourAutomatic
+        {
+            get => _isWidgetDropShadowColourAutomatic;
+            set => this.RaiseAndSetIfChanged(ref _isWidgetDropShadowColourAutomatic, value);
+        }
+
+        public Color? WidgetCustomDropShadowColour
+        {
+            get => _widgetCustomDropShadowColour;
+            set => this.RaiseAndSetIfChanged(ref _widgetCustomDropShadowColour, value);
         }
 
         public string WidgetDateFormatUserInput

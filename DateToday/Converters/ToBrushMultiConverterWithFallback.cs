@@ -25,16 +25,15 @@ namespace DateToday.Converters
                 throw new NotSupportedException();
             }
 
-            foreach (object? potentialColour in values)
+            foreach (object? colourOrNull in values)
             {
                 /* Attempt to convert via 'ToBrushConverter' the current 'values' element into a
                  * SolidColorBrush. ToBrushConverter supports arguments of various different
                  * data types. */
 
-                object? potentialBrush =
-                    base.Convert(potentialColour, targetType, parameter, culture);
+                object? brushOrNull = base.Convert(colourOrNull, targetType, parameter, culture);
 
-                if (potentialBrush is IBrush brush)
+                if (brushOrNull is IBrush brush)
                 {
                     return brush;
                 }

@@ -7,6 +7,8 @@
 	"FontSize": 70,
 	"FontWeightLookupKey": "Normal",
 	"CustomFontColour": null,
+	"IsDropShadowEnabled": false,
+	"CustomDropShadowColour": null,
 	"DateFormat": "dddd, \"the\" d \"of\" MMMM",
 	"OrdinalDaySuffixPosition": 13
 }

@@ -34,7 +34,8 @@
         </ContextMenu>
     </Window.ContextMenu>
 
-    <TextBlock FontFamily="{Binding FontFamily}"
+    <TextBlock Effect="{Binding DropShadow}"
+               FontFamily="{Binding FontFamily}"
                FontSize="{Binding FontSize}"
                FontWeight="{Binding FontWeight}"
                Text="{Binding DateText}">
@@ -62,17 +63,5 @@
         </TextBlock.Foreground>
 
     </TextBlock>
-
-    <!-- Experimenting with Drop Shadow:
-	
-	        <TextBlock.Effect>
-		
-			    Drop shadow test.
-
-                <DropShadowEffect BlurRadius="0"
-                                  Opacity="1"
-                                  Color="Magenta" />
-
-            </TextBlock.Effect>-->
 
 </Window>
