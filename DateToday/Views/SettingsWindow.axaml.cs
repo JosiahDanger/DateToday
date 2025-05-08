@@ -12,8 +12,7 @@ namespace DateToday.Views;
 internal partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
 {
 #if OS_WINDOWS
-    private readonly Control? _settingsWindowDragHandle;
-    private bool _isWindowDragInEffect;
+    private bool _isWindowDragInEffect, _isWindowDragPrevented;
     private Point _cursorPositionAtWindowDragStart;
 #endif
 
@@ -28,10 +27,6 @@ internal partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
         }
 
         TextBox? settingsDateFormatField = this.FindControl<TextBox>("SettingsDateFormatField");
-
-#if OS_WINDOWS
-        _settingsWindowDragHandle = this.FindControl<Control>("SettingsWindowDragHandle");
-#endif
 
         this.WhenActivated(disposables =>
         {
@@ -54,43 +49,79 @@ internal partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
 
                 settingsDateFormatField.IsUndoEnabled = true;
             }
-            
+
 #if OS_WINDOWS
-            if (_settingsWindowDragHandle != null)
-            {
-                Observable.FromEventPattern<PointerEventArgs>(
-                    handler => _settingsWindowDragHandle.PointerMoved += handler,
-                    handler => _settingsWindowDragHandle.PointerMoved -= handler,
-                    RxApp.MainThreadScheduler)
-                // Does not need explicit disposal.
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(eventPattern => 
-                    WindowDragHandle_OnPointerMoved(eventPattern.Sender, eventPattern.EventArgs));
+            Control? settingsWindowDragRoot =
+                this.FindControl<Control>("SettingsWindowDragRoot");
 
-                Observable.FromEventPattern<PointerPressedEventArgs>(
-                    handler => _settingsWindowDragHandle.PointerPressed += handler,
-                    handler => _settingsWindowDragHandle.PointerPressed -= handler,
-                    RxApp.MainThreadScheduler)
-                // Does not need explicit disposal.
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(eventPattern => 
-                    WindowDragHandle_OnPointerPressed(eventPattern.Sender, eventPattern.EventArgs));
+            /* My implementation of window dragging will break for some reason when the user clicks
+             * a ComboBox. Therefore, I have introduced logic to prevent dragging while the cursor
+             * is hovering over any ComboBox identified here. */
 
-                Observable.FromEventPattern<PointerReleasedEventArgs>(
-                    handler => _settingsWindowDragHandle.PointerReleased += handler,
-                    handler => _settingsWindowDragHandle.PointerReleased -= handler,
-                    RxApp.MainThreadScheduler)
-                // Does not need explicit disposal.
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(eventPattern => 
-                    WindowDragHandle_OnPointerReleased(
-                        eventPattern.Sender, eventPattern.EventArgs));
-            }
+            ComboBox?[] comboBoxes = 
+                [
+                    this.FindControl<ComboBox>("FontFamilySelector"),
+                    this.FindControl<ComboBox>("FontWeightSelector")
+                ];
+
+            ConfigureWindowDragBehaviour(settingsWindowDragRoot, comboBoxes);
 #endif
         });
     }
 
 #if OS_WINDOWS
+    private void ConfigureWindowDragBehaviour(
+        Control? settingsWindowDragRoot, ComboBox?[] comboBoxes)
+    {
+        if (settingsWindowDragRoot != null)
+        {
+            Observable.FromEventPattern<PointerEventArgs>(
+                handler => settingsWindowDragRoot.PointerMoved += handler,
+                handler => settingsWindowDragRoot.PointerMoved -= handler)
+            // Does not need explicit disposal.
+            .ObserveOn(RxApp.MainThreadScheduler)
+            .Subscribe(eventPattern =>
+                WindowDragHandle_OnPointerMoved(eventPattern.Sender, eventPattern.EventArgs));
+
+            Observable.FromEventPattern<PointerPressedEventArgs>(
+                handler => settingsWindowDragRoot.PointerPressed += handler,
+                handler => settingsWindowDragRoot.PointerPressed -= handler)
+            // Does not need explicit disposal.
+            .ObserveOn(RxApp.MainThreadScheduler)
+            .Subscribe(eventPattern =>
+                WindowDragHandle_OnPointerPressed(eventPattern.Sender, eventPattern.EventArgs));
+
+            Observable.FromEventPattern<PointerReleasedEventArgs>(
+                handler => settingsWindowDragRoot.PointerReleased += handler,
+                handler => settingsWindowDragRoot.PointerReleased -= handler)
+            // Does not need explicit disposal.
+            .ObserveOn(RxApp.MainThreadScheduler)
+            .Subscribe(eventPattern =>
+                WindowDragHandle_OnPointerReleased(
+                    eventPattern.Sender, eventPattern.EventArgs));
+
+            foreach (ComboBox? comboBoxOrNull in comboBoxes)
+            {
+                if (comboBoxOrNull is ComboBox currentComboBox)
+                {
+                    Observable.FromEventPattern<PointerEventArgs>(
+                        handler => currentComboBox.PointerEntered += handler,
+                        handler => currentComboBox.PointerEntered -= handler)
+                    // Does not need explicit disposal.
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .Subscribe(_ => _isWindowDragPrevented = true);
+
+                    Observable.FromEventPattern<PointerEventArgs>(
+                        handler => currentComboBox.PointerExited += handler,
+                        handler => currentComboBox.PointerExited -= handler)
+                    // Does not need explicit disposal.
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .Subscribe(_ => _isWindowDragPrevented = false);
+                }
+            }
+        }
+    }
+
     private void WindowDragHandle_OnPointerMoved(object? sender, PointerEventArgs e)
     {
         if (_isWindowDragInEffect)
@@ -104,7 +135,7 @@ internal partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
 
     private void WindowDragHandle_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if ((e.Source is Control sourceControl) && (sourceControl == _settingsWindowDragHandle))
+        if (!_isWindowDragPrevented)
         {
             _isWindowDragInEffect = true;
             _cursorPositionAtWindowDragStart = e.GetPosition(this);

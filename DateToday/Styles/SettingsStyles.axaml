@@ -15,10 +15,11 @@
         <Setter Property="FontSize" Value="10" />
         <Setter Property="FontWeight" Value="Thin" />
         <Setter Property="Height" Value="20" />
-        <Setter Property="HorizontalAlignment" Value="Right" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="Width" Value="20" />
+        <Setter Property="VerticalAlignment" Value="Top" />
     </Style>
 
     <Style Selector="Border.SettingsOuterBorder">
@@ -26,36 +27,30 @@
         <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
         <Setter Property="BorderThickness" Value="3" />
         <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-        <Setter Property="Padding" Value="15" />
+        <Setter Property="Padding" Value="0" />
     </Style>
 
     <Style Selector="Border.SettingsInnerBorder">
         <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColorDark1}" />
         <Setter Property="BorderThickness" Value="2" />
         <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-        <Setter Property="HorizontalAlignment" Value="Left" />
-        <Setter Property="Margin" Value="10" />
-        <Setter Property="Padding" Value="15 15 15 5" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0 10" />
+        <Setter Property="MinWidth" Value="400" />
+        <Setter Property="Padding" Value="15" />
     </Style>
 
-    <Style Selector="Border.FieldGroupBorder">
-        <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColorDark2}" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-        <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="Margin" Value="10 15 10 10" />
-        <Setter Property="Padding" Value="10" />
-    </Style>
-
-    <Style Selector="StackPanel.GroupBox">
-        <Setter Property="Margin" Value="25 15" />
-        <Setter Property="Orientation" Value="Horizontal" />
-    </Style>
-
-    <Style Selector="TextBlock.FieldGroupLabel">
+    <Style Selector="TabItem.SettingsTabHeader">
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="Margin" Value="5 0" />
-        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0 5 0 0" />
+        <Setter Property="Padding" Value="35 0" />
+    </Style>
+
+    <Style Selector="Expander.ColourFieldsContainer">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0 15" />
+        <Setter Property="Width" Value="298" />
     </Style>
 
     <Style Selector="TextBlock.FieldLabel">
@@ -109,6 +104,12 @@
         <Setter Property="Margin" Value="10 5" />
     </Style>
 
+    <Style Selector="ComboBox.StringSelector">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Margin" Value="10 5" />
+        <Setter Property="VerticalContentAlignment" Value="Bottom" />
+    </Style>
+
     <Style Selector="ColorPicker.ColourSelector">
         <Setter Property="ColorModel" Value="Rgba" />
         <Setter Property="Margin" Value="10 5" />
@@ -116,19 +117,6 @@
         <Setter Property="IsColorPreviewVisible" Value="False" />
         <Setter Property="IsColorSpectrumSliderVisible" Value="False" />
         <Setter Property="IsColorModelVisible" Value="False" />
-    </Style>
-
-    <Style Selector="ComboBox.StringSelector">
-        <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="Margin" Value="10 5" />
-        <Setter Property="VerticalContentAlignment" Value="Bottom" />
-    </Style>
-
-    <Style Selector="Expander.ColourFieldsContainer">
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="Margin" Value="0 25 0 0" />
-        <Setter Property="Width" Value="294" />
     </Style>
 
 </Styles>

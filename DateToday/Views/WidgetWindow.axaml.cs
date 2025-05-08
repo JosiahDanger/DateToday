@@ -154,11 +154,6 @@ namespace DateToday.Views
 
         public Color ThemedTextShadowColour => _themedTextShadowColour;
 
-        public void CloseView(object? dialogResult)
-        {
-            Close(dialogResult);
-        }
-
         private async Task DoShowSettingsDialogAsync(
             IInteractionContext<SettingsViewModel, bool> interaction)
         {

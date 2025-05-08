@@ -18,282 +18,26 @@
 
     <Design.DataContext />
 
-    <Border Name="SettingsWindowDragHandle"
+    <Border Name="SettingsWindowDragRoot"
+            Width="600"
+            Height="400"
             Classes="SettingsOuterBorder">
 
-        <StackPanel Orientation="Vertical">
+        <Canvas>
 
-            <Button Classes="CloseButton"
-                    Command="{Binding CloseSettingsView}"
-                    CommandParameter="{x:False}">
-                🗙
-            </Button>
+            <TabControl Width="584"
+                        Height="384"
+                        Margin="5"
+                        Padding="10">
 
-            <StackPanel Orientation="Vertical">
+                <TabItem Classes="SettingsTabHeader"
+                         Header="Date Display">
 
-                <Border HorizontalAlignment="Center"
-                        Classes="SettingsInnerBorder">
-
-                    <StackPanel Orientation="Vertical">
-
-                        <TextBlock Classes="FieldGroupLabel"
-                                   Text="Font" />
-
-                        <Border Classes="FieldGroupBorder">
-
-                            <StackPanel Orientation="Vertical">
-
-                                <Grid ColumnDefinitions="Auto, Auto, Auto, Auto"
-                                      RowDefinitions="Auto, Auto">
-
-                                    <TextBlock Grid.Row="0"
-                                               Grid.Column="0"
-                                               Classes="FieldLabel"
-                                               Text="Name:" />
-
-                                    <ComboBox Name="FontFamilySelector"
-                                              Grid.Row="0"
-                                              Grid.Column="1"
-                                              Grid.ColumnSpan="3"
-                                              Classes="StringSelector"
-                                              ItemsSource="{Binding AvailableFonts,
-                                                                    Mode=OneTime}"
-                                              SelectedItem="{Binding WidgetFontFamily}">
-
-                                        <ComboBox.ItemTemplate>
-
-                                            <DataTemplate>
-
-                                                <TextBlock FontFamily="{Binding}"
-                                                           Text="{Binding Name}" />
-
-                                            </DataTemplate>
-
-                                        </ComboBox.ItemTemplate>
-
-                                    </ComboBox>
-
-                                    <TextBlock Grid.Row="1"
-                                               Grid.Column="0"
-                                               Classes="FieldLabel"
-                                               Text="Size:" />
-
-                                    <NumericUpDown Grid.Row="1"
-                                                   Grid.Column="1"
-                                                   Classes="FontSizeField"
-                                                   Value="{Binding WidgetFontSizeUserInput}" />
-
-                                    <TextBlock Grid.Row="1"
-                                               Grid.Column="2"
-                                               Classes="FieldLabel"
-                                               Text="Weight:" />
-
-                                    <ComboBox Name="FontWeightSelector"
-                                              Grid.Row="1"
-                                              Grid.Column="3"
-                                              Width="126"
-                                              Classes="StringSelector"
-                                              ItemsSource="{Binding AvailableFontWeights,
-                                                                    Mode=OneTime}"
-                                              MaxDropDownHeight="750"
-                                              SelectedValue="{Binding WidgetFontWeightLookupKey}"
-                                              SelectedValueBinding="{Binding Key}">
-
-                                        <ComboBox.ItemTemplate>
-
-                                            <DataTemplate>
-
-                                                <TextBlock FontFamily="{Binding #FontFamilySelector.SelectedItem}"
-                                                           FontWeight="{Binding Value}"
-                                                           Text="{Binding Key}" />
-
-                                            </DataTemplate>
-
-                                        </ComboBox.ItemTemplate>
-
-                                    </ComboBox>
-
-                                </Grid>
-
-                                <Expander Classes="ColourFieldsContainer">
-
-                                    <Expander.Header>
-                                        Colour
-                                    </Expander.Header>
-
-                                    <Grid HorizontalAlignment="Center"
-                                          ColumnDefinitions="Auto, Auto, Auto, Auto"
-                                          RowDefinitions="Auto">
-
-                                        <TextBlock Grid.Row="0"
-                                                   Grid.Column="0"
-                                                   Classes="FieldLabel"
-                                                   Text="Automatic:" />
-
-                                        <CheckBox Grid.Row="0"
-                                                  Grid.Column="1"
-                                                  Classes="CheckBoxField"
-                                                  IsChecked="{Binding IsWidgetFontColourAutomatic}" />
-
-                                        <TextBlock Grid.Row="0"
-                                                   Grid.Column="2"
-                                                   Classes="FieldLabel"
-                                                   Text="Custom:" />
-
-                                        <ColorPicker Grid.Row="0"
-                                                     Grid.Column="3"
-                                                     Classes="ColourSelector"
-                                                     IsEnabled="{Binding !IsWidgetFontColourAutomatic}"
-                                                     Color="{Binding WidgetCustomFontColour,
-                                                                     Converter={StaticResource DoNothingForNullConverter}}" />
-
-                                    </Grid>
-
-                                </Expander>
-
-                            </StackPanel>
-
-                        </Border>
-
-                    </StackPanel>
-
-                </Border>
-
-                <StackPanel HorizontalAlignment="Center"
-                            Orientation="Horizontal">
-
-                    <Border Height="203"
-                            VerticalAlignment="Top"
+                    <Border Width="544"
                             Classes="SettingsInnerBorder">
 
-                        <StackPanel Orientation="Vertical">
-
-                            <TextBlock Classes="FieldGroupLabel"
-                                       Text="Position" />
-
-                            <Border Height="137"
-                                    Classes="FieldGroupBorder">
-
-                                <Grid VerticalAlignment="Center"
-                                      ColumnDefinitions="Auto, Auto"
-                                      RowDefinitions="Auto, Auto">
-
-                                    <TextBlock Grid.Row="0"
-                                               Grid.Column="0"
-                                               Classes="FieldLabel"
-                                               Text="𝑥:" />
-
-                                    <NumericUpDown Grid.Row="0"
-                                                   Grid.Column="1"
-                                                   Classes="PositionField"
-                                                   Maximum="{Binding WidgetPositionMax.X}"
-                                                   Value="{Binding WidgetPositionUserInputX}" />
-
-                                    <TextBlock Grid.Row="1"
-                                               Grid.Column="0"
-                                               Classes="FieldLabel"
-                                               Text="𝑦:" />
-
-                                    <NumericUpDown Grid.Row="1"
-                                                   Grid.Column="1"
-                                                   Classes="PositionField"
-                                                   Maximum="{Binding WidgetPositionMax.Y}"
-                                                   Value="{Binding WidgetPositionUserInputY}" />
-
-                                </Grid>
-
-                            </Border>
-
-                        </StackPanel>
-
-                    </Border>
-
-                    <Border Width="370"
-                            Classes="SettingsInnerBorder">
-
-                        <StackPanel Orientation="Vertical">
-
-                            <TextBlock Classes="FieldGroupLabel"
-                                       Text="Drop Shadow" />
-
-                            <Border Classes="FieldGroupBorder">
-
-                                <StackPanel Orientation="Vertical">
-
-                                    <Grid ColumnDefinitions="Auto, Auto"
-                                          RowDefinitions="Auto">
-
-                                        <TextBlock Grid.Row="0"
-                                                   Grid.Column="0"
-                                                   Classes="FieldLabel"
-                                                   Text="Enabled:" />
-
-                                        <CheckBox Grid.Row="0"
-                                                  Grid.Column="1"
-                                                  Classes="CheckBoxField"
-                                                  IsChecked="{Binding IsWidgetDropShadowEnabled}" />
-
-                                    </Grid>
-
-                                    <Expander Classes="ColourFieldsContainer">
-
-                                        <Expander.Header>
-                                            Colour
-                                        </Expander.Header>
-
-                                        <Grid HorizontalAlignment="Center"
-                                              ColumnDefinitions="Auto, Auto, Auto, Auto"
-                                              RowDefinitions="Auto">
-
-                                            <TextBlock Grid.Row="0"
-                                                       Grid.Column="0"
-                                                       Classes="FieldLabel"
-                                                       Text="Automatic:" />
-
-                                            <CheckBox Grid.Row="0"
-                                                      Grid.Column="1"
-                                                      Classes="CheckBoxField"
-                                                      IsChecked="{Binding IsWidgetDropShadowColourAutomatic}"
-                                                      IsEnabled="{Binding IsWidgetDropShadowEnabled}" />
-
-                                            <TextBlock Grid.Row="0"
-                                                       Grid.Column="2"
-                                                       Classes="FieldLabel"
-                                                       Text="Custom:" />
-
-                                            <ColorPicker Grid.Row="0"
-                                                         Grid.Column="3"
-                                                         Classes="ColourSelector"
-                                                         IsEnabled="{Binding !IsWidgetDropShadowColourAutomatic}"
-                                                         Color="{Binding WidgetCustomDropShadowColour,
-                                                                         Converter={StaticResource DoNothingForNullConverter}}" />
-
-                                        </Grid>
-
-                                    </Expander>
-
-                                </StackPanel>
-
-                            </Border>
-
-                        </StackPanel>
-
-                    </Border>
-
-                </StackPanel>
-
-            </StackPanel>
-
-            <Border Classes="SettingsInnerBorder">
-
-                <StackPanel Orientation="Vertical">
-
-                    <TextBlock Classes="FieldGroupLabel"
-                               Text="Date Display" />
-
-                    <Border Classes="FieldGroupBorder">
-
-                        <Grid ColumnDefinitions="Auto, 327, Auto"
+                        <Grid HorizontalAlignment="Center"
+                              ColumnDefinitions="Auto, Auto, Auto"
                               RowDefinitions="Auto, Auto"
                               RowSpacing="15">
 
@@ -306,7 +50,8 @@
                                      Grid.Row="0"
                                      Grid.Column="1"
                                      Grid.ColumnSpan="2"
-                                     Width="476"
+                                     Width="430"
+                                     HorizontalAlignment="Stretch"
                                      Classes="TextField"
                                      Text="{Binding WidgetDateFormatUserInput}" />
 
@@ -326,11 +71,243 @@
 
                     </Border>
 
-                </StackPanel>
+                </TabItem>
 
-            </Border>
+                <TabItem Classes="SettingsTabHeader"
+                         Header="Position">
 
-        </StackPanel>
+                    <Border Classes="SettingsInnerBorder">
+
+                        <Grid ColumnDefinitions="Auto, Auto"
+                              RowDefinitions="Auto, Auto"
+                              RowSpacing="10">
+
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="0"
+                                       Classes="FieldLabel"
+                                       Text="𝑥:" />
+
+                            <NumericUpDown Grid.Row="0"
+                                           Grid.Column="1"
+                                           Classes="PositionField"
+                                           Maximum="{Binding WidgetPositionMax.X}"
+                                           Value="{Binding WidgetPositionUserInputX}" />
+
+                            <TextBlock Grid.Row="1"
+                                       Grid.Column="0"
+                                       Classes="FieldLabel"
+                                       Text="𝑦:" />
+
+                            <NumericUpDown Grid.Row="1"
+                                           Grid.Column="1"
+                                           Classes="PositionField"
+                                           Maximum="{Binding WidgetPositionMax.Y}"
+                                           Value="{Binding WidgetPositionUserInputY}" />
+
+                        </Grid>
+
+                    </Border>
+
+                </TabItem>
+
+                <TabItem Classes="SettingsTabHeader"
+                         Header="Font">
+
+                    <Border Classes="SettingsInnerBorder">
+
+                        <StackPanel Orientation="Vertical">
+
+                            <Grid ColumnDefinitions="Auto, Auto, Auto, Auto"
+                                  RowDefinitions="Auto, Auto">
+
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="0"
+                                           Classes="FieldLabel"
+                                           Text="Name:" />
+
+                                <ComboBox Name="FontFamilySelector"
+                                          Grid.Row="0"
+                                          Grid.Column="1"
+                                          Grid.ColumnSpan="3"
+                                          Classes="StringSelector"
+                                          ItemsSource="{Binding AvailableFonts,
+                                                                Mode=OneTime}"
+                                          SelectedItem="{Binding WidgetFontFamily}">
+
+                                    <ComboBox.ItemTemplate>
+
+                                        <DataTemplate>
+
+                                            <TextBlock FontFamily="{Binding}"
+                                                       Text="{Binding Name}" />
+
+                                        </DataTemplate>
+
+                                    </ComboBox.ItemTemplate>
+
+                                </ComboBox>
+
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="0"
+                                           Classes="FieldLabel"
+                                           Text="Size:" />
+
+                                <NumericUpDown Grid.Row="1"
+                                               Grid.Column="1"
+                                               Classes="FontSizeField"
+                                               Value="{Binding WidgetFontSizeUserInput}" />
+
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="2"
+                                           Classes="FieldLabel"
+                                           Text="Weight:" />
+
+                                <ComboBox Name="FontWeightSelector"
+                                          Grid.Row="1"
+                                          Grid.Column="3"
+                                          Classes="StringSelector"
+                                          ItemsSource="{Binding AvailableFontWeights,
+                                                                Mode=OneTime}"
+                                          MaxDropDownHeight="750"
+                                          SelectedValue="{Binding WidgetFontWeightLookupKey}"
+                                          SelectedValueBinding="{Binding Key}">
+
+                                    <ComboBox.ItemTemplate>
+
+                                        <DataTemplate>
+
+                                            <TextBlock FontFamily="{Binding #FontFamilySelector.SelectedItem}"
+                                                       FontWeight="{Binding Value}"
+                                                       Text="{Binding Key}" />
+
+                                        </DataTemplate>
+
+                                    </ComboBox.ItemTemplate>
+
+                                </ComboBox>
+
+                            </Grid>
+
+                            <Expander Margin="0 28 0 0"
+                                      Classes="ColourFieldsContainer">
+
+                                <Expander.Header>
+                                    Colour
+                                </Expander.Header>
+
+                                <Grid HorizontalAlignment="Center"
+                                      ColumnDefinitions="Auto, Auto, Auto, Auto"
+                                      RowDefinitions="Auto">
+
+                                    <TextBlock Grid.Row="0"
+                                               Grid.Column="0"
+                                               Classes="FieldLabel"
+                                               Text="Automatic:" />
+
+                                    <CheckBox Grid.Row="0"
+                                              Grid.Column="1"
+                                              Classes="CheckBoxField"
+                                              IsChecked="{Binding IsWidgetFontColourAutomatic}" />
+
+                                    <TextBlock Grid.Row="0"
+                                               Grid.Column="2"
+                                               Classes="FieldLabel"
+                                               Text="Custom:" />
+
+                                    <ColorPicker Grid.Row="0"
+                                                 Grid.Column="3"
+                                                 Classes="ColourSelector"
+                                                 IsEnabled="{Binding !IsWidgetFontColourAutomatic}"
+                                                 Color="{Binding WidgetCustomFontColour,
+                                                                 Converter={StaticResource DoNothingForNullConverter}}" />
+
+                                </Grid>
+
+                            </Expander>
+
+                        </StackPanel>
+
+                    </Border>
+
+                </TabItem>
+
+                <TabItem Classes="SettingsTabHeader"
+                         Header="Drop Shadow">
+
+                    <Border Classes="SettingsInnerBorder">
+
+                        <StackPanel Orientation="Vertical">
+
+                            <Grid ColumnDefinitions="Auto, Auto"
+                                  RowDefinitions="Auto">
+
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="0"
+                                           Classes="FieldLabel"
+                                           Text="Enabled:" />
+
+                                <CheckBox Grid.Row="0"
+                                          Grid.Column="1"
+                                          Classes="CheckBoxField"
+                                          IsChecked="{Binding IsWidgetDropShadowEnabled}" />
+
+                            </Grid>
+
+                            <Expander Margin="0 70 0 0"
+                                      Classes="ColourFieldsContainer">
+
+                                <Expander.Header>
+                                    Colour
+                                </Expander.Header>
+
+                                <Grid HorizontalAlignment="Center"
+                                      ColumnDefinitions="Auto, Auto, Auto, Auto"
+                                      RowDefinitions="Auto">
+
+                                    <TextBlock Grid.Row="0"
+                                               Grid.Column="0"
+                                               Classes="FieldLabel"
+                                               Text="Automatic:" />
+
+                                    <CheckBox Grid.Row="0"
+                                              Grid.Column="1"
+                                              Classes="CheckBoxField"
+                                              IsChecked="{Binding IsWidgetDropShadowColourAutomatic}"
+                                              IsEnabled="{Binding IsWidgetDropShadowEnabled}" />
+
+                                    <TextBlock Grid.Row="0"
+                                               Grid.Column="2"
+                                               Classes="FieldLabel"
+                                               Text="Custom:" />
+
+                                    <ColorPicker Grid.Row="0"
+                                                 Grid.Column="3"
+                                                 Classes="ColourSelector"
+                                                 IsEnabled="{Binding !IsWidgetDropShadowColourAutomatic}"
+                                                 Color="{Binding WidgetCustomDropShadowColour,
+                                                                 Converter={StaticResource DoNothingForNullConverter}}" />
+
+                                </Grid>
+
+                            </Expander>
+
+                        </StackPanel>
+
+                    </Border>
+
+                </TabItem>
+
+            </TabControl>
+
+            <Button Canvas.Top="15"
+                    Canvas.Right="15"
+                    Classes="CloseButton"
+                    Command="{Binding CloseSettingsView}"
+                    CommandParameter="{x:False}">
+                🗙
+            </Button>
+
+        </Canvas>
 
     </Border>
 
