@@ -9,7 +9,7 @@ You will need to install as a prerequisite the [x64 .NET Desktop Runtime 8.0](ht
   
 ---
 
-DateToday is a desktop widget that displays the current date in a configurable format, featuring gorgeous text rendering. Settings may be adjusted through an intuitive GUI. Recommended for users of [ExplorerPatcher](https://github.com/valinet/ExplorerPatcher), [TranslucentTB](https://github.com/TranslucentTB/TranslucentTB), and [Wallpaper Engine](https://www.wallpaperengine.io/). The app's theme will adapt automatically to that of your operating system.
+DateToday is a desktop widget that displays the current date in a configurable format. Settings may be adjusted through an intuitive, minimalist GUI. Recommended for users of [ExplorerPatcher](https://github.com/valinet/ExplorerPatcher), [TranslucentTB](https://github.com/TranslucentTB/TranslucentTB), and [Wallpaper Engine](https://www.wallpaperengine.io/). The app's theme will adapt automatically to that of your operating system.
 
 \
 **All of my apps are proudly:**
@@ -20,7 +20,7 @@ DateToday is a desktop widget that displays the current date in a configurable f
 \
 ![Widget Screenshot](https://github.com/user-attachments/assets/43626d79-c1b2-4a98-8f4c-03e79050b469)
 
-![Settings Screenshot](https://github.com/user-attachments/assets/a7ecff73-3ed1-46c9-80a2-c3a9e0f57d0b)
+![Widget Settings Screenshot](https://github.com/user-attachments/assets/23b8b084-291a-4eb9-a0f2-1eb2b60b651e)
 
 ## Get Started
 
@@ -36,9 +36,6 @@ DateToday is a desktop widget that displays the current date in a configurable f
 4. Move your shortcut into this folder.
 
 ## Planned Features
-- Additional configuration options:
-  - Option to override automatic black / white font colour with a custom colour
-  - Text shadow
 - Multi-monitor support
 - Linux support
     
@@ -47,12 +44,6 @@ DateToday is a desktop widget that displays the current date in a configurable f
 - The app follows the MVVM architechtural pattern.
 - Persistence of settings is achieved through the ReactiveUI 'AutoSuspendHelper' class.
 - Widget text is refreshed every minute, on the minute.
-
-## More Screenshots
-
-![Screenshot 2025-03-22 030209](https://github.com/user-attachments/assets/ffcec9f1-1173-4d93-b04f-ba182a7b81a1)
-
-![Screenshot 2025-03-22 031345](https://github.com/user-attachments/assets/ba30fe7b-6408-438c-b4e2-518ddedcc1ca)
 
 \
 I am keen to receive feedback on this application, particularly on its codebase. Please let me know if you have any suggestions.
