@@ -315,7 +315,7 @@
                        Text="Format:" />
 
             <HyperlinkButton Canvas.Left="99"
-                             Canvas.Bottom="42"
+                             Canvas.Bottom="27"
                              Width="325"
                              HorizontalContentAlignment="Center"
                              xml:space="preserve"
