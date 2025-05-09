@@ -30,46 +30,47 @@
                         Margin="5"
                         Padding="10">
 
-                <TabItem Classes="SettingsTabHeader"
+                <TabItem Name="DateDisplayTab"
+                         Classes="SettingsTabHeader"
                          Header="Date Display">
 
                     <Border Width="544"
                             Classes="SettingsInnerBorder">
 
-                        <Grid HorizontalAlignment="Center"
-                              ColumnDefinitions="Auto, Auto, Auto"
+                        <Grid Height="255"
+                              Margin="52 0 0 0"
+                              HorizontalAlignment="Center"
+                              ColumnDefinitions="Auto, Auto"
                               RowDefinitions="Auto, Auto"
                               RowSpacing="15">
 
-                            <TextBlock Grid.Row="0"
-                                       Grid.Column="0"
-                                       Classes="FieldLabel"
-                                       Text="Format:" />
-
                             <TextBox Name="SettingsDateFormatField"
                                      Grid.Row="0"
-                                     Grid.Column="1"
+                                     Grid.Column="0"
                                      Grid.ColumnSpan="2"
                                      Width="430"
                                      HorizontalAlignment="Stretch"
-                                     Classes="TextField"
+                                     Classes="DateFormatField"
                                      Text="{Binding WidgetDateFormatUserInput}" />
 
                             <TextBlock Grid.Row="1"
-                                       Grid.Column="1"
+                                       Grid.Column="0"
                                        Classes="FieldLabel">
                                 (Optional)<LineBreak />
                                 Append ordinal suffix to day of month at position:</TextBlock>
 
                             <NumericUpDown Grid.Row="1"
-                                           Grid.Column="2"
+                                           Grid.Column="1"
                                            Classes="OrdinalDaySuffixPositionField"
                                            Maximum="{Binding WidgetDateFormatUserInput.Length}"
                                            Value="{Binding WidgetOrdinalDaySuffixPosition}" />
 
                         </Grid>
 
+
+
                     </Border>
+
 
                 </TabItem>
 
@@ -302,10 +303,29 @@
             <Button Canvas.Top="15"
                     Canvas.Right="15"
                     Classes="CloseButton"
-                    Command="{Binding CloseSettingsView}"
+                    Command="{Binding CloseWidgetSettings}"
                     CommandParameter="{x:False}">
                 🗙
             </Button>
+
+            <TextBlock Canvas.Left="47"
+                       Canvas.Top="105"
+                       Classes="FieldLabel"
+                       IsVisible="{Binding #DateDisplayTab.IsSelected}"
+                       Text="Format:" />
+
+            <HyperlinkButton Canvas.Left="99"
+                             Canvas.Bottom="42"
+                             Width="325"
+                             HorizontalContentAlignment="Center"
+                             xml:space="preserve"
+                             Foreground="CornflowerBlue"
+                             IsVisible="{Binding #DateDisplayTab.IsSelected}"
+                             NavigateUri="https://learn.microsoft.com/dotnet/standard/base-types/custom-date-and-time-format-strings"
+                             ZIndex="1">
+Microsoft Learn:
+'Custom date and time format strings'
+            </HyperlinkButton>
 
         </Canvas>
 

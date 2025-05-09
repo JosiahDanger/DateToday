@@ -9,6 +9,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 
 namespace DateToday.Views;
+
 internal partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
 {
 #if OS_WINDOWS
@@ -30,7 +31,7 @@ internal partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
 
         this.WhenActivated(disposables =>
         {
-            ViewModel!.CloseSettingsView
+            ViewModel!.CloseWidgetSettings
                       .ObserveOn(RxApp.MainThreadScheduler)
                       .Subscribe(dialogResult => Close(dialogResult))
                       .DisposeWith(disposables);

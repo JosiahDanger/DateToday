@@ -48,7 +48,7 @@ namespace DateToday.ViewModels
 
         public ReactiveCommand<ValueTuple<string, byte?>, Unit> ParseDateFormatUserInput { get; }
 
-        public ReactiveCommand<bool, bool> CloseSettingsView { get; } =
+        public ReactiveCommand<bool, bool> CloseWidgetSettings { get; } =
             ReactiveCommand.Create<bool, bool>(dialogResult =>
             {
                 /* This function will accept a dummy boolean value and pass it to the caller: the
@@ -263,9 +263,7 @@ namespace DateToday.ViewModels
 
             this.ValidationRule(
                 settingsViewModel => settingsViewModel.WidgetDateFormatUserInput,
-                isDateFormatValid,
-                "The entered date format is invalid.\n" +
-                "Please see Microsoft Learn: 'Custom date and time format strings'.");
+                isDateFormatValid, "The entered date format is invalid.");
 
             IObservable<bool> mayUserEnterNewDateFormat =
                 this.WhenAnyValue(settingsViewModel => settingsViewModel.DataErrorsChanged)
