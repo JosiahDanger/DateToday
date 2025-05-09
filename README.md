@@ -6,6 +6,8 @@ Beautiful, configurable desktop widget that displays the current date
 If you are here simply to download a Windows executable, please see [Releases](https://github.com/JosiahDanger/DateToday/releases/). I will add Linux support when I can.
 
 You will need to install as a prerequisite the [x64 .NET Desktop Runtime 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
+
+See [Get Started](https://github.com/JosiahDanger/DateToday/tree/master?tab=readme-ov-file#get-started) for further instructions on how to use the widget.
   
 ---
 
