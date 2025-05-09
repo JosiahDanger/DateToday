@@ -45,6 +45,7 @@ Recommended for users of:
 ## Planned Features
 - Multi-monitor support
 - Linux support
+- American English support
     
 ## Under the Hood
 - This is a .NET 8.0 application built with Avalonia and ReactiveUI.
