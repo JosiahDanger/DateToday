@@ -11,7 +11,7 @@ See [Get Started](https://github.com/JosiahDanger/DateToday/tree/master?tab=read
   
 ---
 
-DateToday is a desktop widget that displays the current date in a configurable format. Settings may be adjusted through an intuitive, minimalist GUI. Recommended for users of [ExplorerPatcher](https://github.com/valinet/ExplorerPatcher), [TranslucentTB](https://github.com/TranslucentTB/TranslucentTB), and [Wallpaper Engine](https://www.wallpaperengine.io/). The app's theme will adapt automatically to that of your operating system.
+DateToday is a desktop widget that displays the current date in a configurable format. Settings may be adjusted through an intuitive, minimalist GUI. Recommended for users of [ExplorerPatcher](https://github.com/valinet/ExplorerPatcher), [TranslucentTB](https://github.com/TranslucentTB/TranslucentTB), and [Wallpaper Engine](https://www.wallpaperengine.io/) (especially if the date display functionalities built into your wallpapers are inconsistent, absent, or missing features). The app's theme will adapt automatically to that of your operating system.
 
 \
 **All of my apps are proudly:**
