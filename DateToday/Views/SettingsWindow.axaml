@@ -42,7 +42,7 @@
                               HorizontalAlignment="Center"
                               ColumnDefinitions="Auto, Auto"
                               RowDefinitions="Auto, Auto"
-                              RowSpacing="15">
+                              RowSpacing="25">
 
                             <TextBox Name="SettingsDateFormatField"
                                      Grid.Row="0"
@@ -51,6 +51,7 @@
                                      Width="430"
                                      HorizontalAlignment="Stretch"
                                      Classes="DateFormatField"
+                                     IsUndoEnabled="False"
                                      Text="{Binding WidgetDateFormatUserInput}" />
 
                             <TextBlock Grid.Row="1"
@@ -304,9 +305,9 @@
                     Canvas.Right="15"
                     Classes="CloseButton"
                     Command="{Binding CloseWidgetSettings}"
-                    CommandParameter="{x:False}">
-                🗙
-            </Button>
+                    CommandParameter="{x:False}"
+                    Content="{Binding SettingsExitButtonContent,
+                                      Mode=OneWay}" />
 
             <TextBlock Canvas.Left="47"
                        Canvas.Top="105"

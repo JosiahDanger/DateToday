@@ -17,8 +17,9 @@
         <Setter Property="Height" Value="20" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="Margin" Value="0" />
-        <Setter Property="Padding" Value="0" />
+        <Setter Property="Padding" Value="0 0 0 1" />
         <Setter Property="Width" Value="20" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
 
     <Style Selector="Border.SettingsOuterBorder">
@@ -73,8 +74,8 @@
         <Setter Property="Margin" Value="10 5" />
         <Setter Property="Maximum" Value="9999" />
         <Setter Property="Minimum" Value="0" />
-        <Setter Property="ParsingNumberStyle" Value="Integer" />
-        <Setter Property="Width" Value="125" />
+        <Setter Property="ParsingNumberStyle" Value="Float" />
+        <Setter Property="Width" Value="136" />
     </Style>
 
     <Style Selector="NumericUpDown.OrdinalDaySuffixPositionField">

@@ -12,6 +12,8 @@ namespace DateToday.Views;
 
 internal partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
 {
+    const string UNICODE_CANCELLATION_X = "\xd83d\xddd9";
+
 #if OS_WINDOWS
     private bool _isWindowDragInEffect, _isWindowDragPrevented;
     private Point _cursorPositionAtWindowDragStart;
@@ -31,6 +33,14 @@ internal partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
 
         this.WhenActivated(disposables =>
         {
+            if (DesktopScaling == 1)
+            {
+                /* Only show text inside the exit button when the operating system display scaling 
+                 * is equal to 100%. Otherwise, the text isn't centered properly. */
+
+                ViewModel!.SettingsExitButtonContent = UNICODE_CANCELLATION_X;
+            }
+
             ViewModel!.CloseWidgetSettings
                       .ObserveOn(RxApp.MainThreadScheduler)
                       .Subscribe(dialogResult => Close(dialogResult))

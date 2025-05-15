@@ -17,8 +17,8 @@ namespace DateToday.ViewModels
 {
     internal interface IWidgetViewModel
     {
-        PixelPoint WindowPosition { get; set; }
-        PixelPoint WindowPositionMax { get; }
+        Point WidgetPosition { get; set; }
+        Point WidgetPositionMax { get; }
         int FontSize { get; set; }
         FontFamily FontFamily { get; set; }
         string FontWeightLookupKey { get; set; }
@@ -60,7 +60,7 @@ namespace DateToday.ViewModels
         private DropShadowEffect? _dropShadow;
 
         [IgnoreDataMember]
-        private PixelPoint _windowPosition, _windowPositionMax;
+        private Point _widgetPosition, _widgetPositionMax;
 
         [IgnoreDataMember]
         private int _fontSize;
@@ -96,7 +96,7 @@ namespace DateToday.ViewModels
             _modelInterface = modelInterface;
             _automaticFontColour = viewInterface.ThemedTextColour;
 
-            _windowPosition = restoredSettings.WindowPosition;
+            _widgetPosition = restoredSettings.WidgetPosition;
             _fontSize = restoredSettings.FontSize;
             _fontWeightLookupKey = restoredSettings.FontWeightLookupKey;
             _customFontColour = restoredSettings.CustomFontColour;
@@ -295,17 +295,17 @@ namespace DateToday.ViewModels
         public Color AutomaticFontColour => _automaticFontColour;
 
         [DataMember]
-        public PixelPoint WindowPosition
+        public Point WidgetPosition
         {
-            get => _windowPosition;
-            set => this.RaiseAndSetIfChanged(ref _windowPosition, value);
+            get => _widgetPosition;
+            set => this.RaiseAndSetIfChanged(ref _widgetPosition, value);
         }
 
         [IgnoreDataMember]
-        public PixelPoint WindowPositionMax
+        public Point WidgetPositionMax
         {
-            get => _windowPositionMax;
-            set => this.RaiseAndSetIfChanged(ref _windowPositionMax, value);
+            get => _widgetPositionMax;
+            set => this.RaiseAndSetIfChanged(ref _widgetPositionMax, value);
         }
 
         [DataMember]

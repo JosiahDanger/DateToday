@@ -4,14 +4,14 @@ using Avalonia.Media;
 namespace DateToday.Configuration
 {
     internal class WidgetConfiguration(
-        PixelPoint windowPosition, string fontFamilyName, int fontSize, string fontWeightLookupKey,
+        Point widgetPosition, string fontFamilyName, int fontSize, string fontWeightLookupKey,
         Color? customFontColour, bool isDropShadowEnabled, Color? customDropShadowColour, 
         string dateFormat, byte? ordinalDaySuffixPosition)
     {
         /* This class constitutes a simple data structure into which persisted settings may be 
          * deserialised. */
 
-        private readonly PixelPoint _windowPosition = windowPosition;
+        private readonly Point _widgetPosition = widgetPosition;
         private readonly string _fontFamilyName = fontFamilyName;
         private readonly int _fontSize = fontSize;
         private readonly string _fontWeightLookupKey = fontWeightLookupKey;
@@ -21,7 +21,7 @@ namespace DateToday.Configuration
         private readonly string _dateFormat = dateFormat;
         private readonly byte? _ordinalDaySuffixPosition = ordinalDaySuffixPosition;
 
-        public PixelPoint WindowPosition => _windowPosition;
+        public Point WidgetPosition => _widgetPosition;
 
         public string FontFamilyName => _fontFamilyName;
 

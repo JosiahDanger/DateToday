@@ -16,19 +16,21 @@ namespace DateToday.ViewModels
 {
     internal class SettingsViewModel : ReactiveValidationObject, IActivatableViewModel
     {
-        private int? _widgetPositionUserInputX, _widgetPositionUserInputY, _widgetFontSizeUserInput;
+        private int? _widgetFontSizeUserInput;
         private byte? _widgetOrdinalDaySuffixPosition;
+        private double? _widgetPositionUserInputX, _widgetPositionUserInputY;
 
         private FontFamily _widgetFontFamily;
         private string _widgetFontWeightLookupKey, _widgetDateFormatUserInput;
+        private string _settingsExitButtonContent = string.Empty;
 
         private readonly List<FontFamily> _availableFonts;
         private readonly Dictionary<string, FontWeight> _fontWeightDictionary;
 
         private Color? _widgetCustomFontColour, _widgetCustomDropShadowColour;
 
-        private bool 
-            _isWidgetFontColourAutomatic, _isWidgetDropShadowEnabled, 
+        private bool
+            _isWidgetFontColourAutomatic, _isWidgetDropShadowEnabled,
             _isWidgetDropShadowColourAutomatic;
 
 #pragma warning disable IDE0079
@@ -36,7 +38,7 @@ namespace DateToday.ViewModels
         /* This disposable field is indeed disposed of with SettingsViewModel CompositeDisposables,
          * but the compiler doesn't care, and throws warning CA2213 anyway. */
 
-        private readonly ObservableAsPropertyHelper<PixelPoint> _widgetPositionMax;
+        private readonly ObservableAsPropertyHelper<Point> _widgetPositionMax;
 #pragma warning restore CA2213, IDE0079
 
         private ObservableAsPropertyHelper<EventPattern<DataErrorsChangedEventArgs>>?
@@ -68,8 +70,8 @@ namespace DateToday.ViewModels
             _availableFonts = availableFonts;
             _fontWeightDictionary = fontWeightDictionary;
 
-            _widgetPositionUserInputX = widgetViewModel.WindowPosition.X;
-            _widgetPositionUserInputY = widgetViewModel.WindowPosition.Y;
+            _widgetPositionUserInputX = widgetViewModel.WidgetPosition.X;
+            _widgetPositionUserInputY = widgetViewModel.WidgetPosition.Y;
 
             _widgetFontSizeUserInput = widgetViewModel.FontSize;
             _widgetFontFamily = widgetViewModel.FontFamily;
@@ -86,7 +88,7 @@ namespace DateToday.ViewModels
             _widgetOrdinalDaySuffixPosition = widgetViewModel.OrdinalDaySuffixPosition;
 
             _widgetPositionMax = 
-                widgetViewModel.WhenAnyValue(wvm => wvm.WindowPositionMax)
+                widgetViewModel.WhenAnyValue(wvm => wvm.WidgetPositionMax)
                                .ObserveOn(RxApp.MainThreadScheduler)
                                .ToProperty(this, nameof(WidgetPositionMax));
 
@@ -94,13 +96,13 @@ namespace DateToday.ViewModels
             {
                 disposables.Add(_widgetPositionMax);
 
-                widgetViewModel.WhenAnyValue(wvm => wvm.WindowPosition)
+                widgetViewModel.WhenAnyValue(wvm => wvm.WidgetPosition)
                                .ObserveOn(RxApp.MainThreadScheduler)
                                .Select(position => position.X)
                                .BindTo(this, svm => svm.WidgetPositionUserInputX)
                                .DisposeWith(disposables);
 
-                widgetViewModel.WhenAnyValue(wvm => wvm.WindowPosition)
+                widgetViewModel.WhenAnyValue(wvm => wvm.WidgetPosition)
                                .ObserveOn(RxApp.MainThreadScheduler)
                                .Select(position => position.Y)
                                .BindTo(this, svm => svm.WidgetPositionUserInputY)
@@ -109,17 +111,17 @@ namespace DateToday.ViewModels
                 this.WhenAnyValue(settingsViewModel => settingsViewModel.WidgetPositionUserInputX)
                     .ObserveOn(RxApp.MainThreadScheduler)
                     .Where(input => input != null)
-                    .Select(validatedInput => (int)validatedInput!)
-                    .Select(positionX => widgetViewModel.WindowPosition.WithX(positionX))
-                    .BindTo(widgetViewModel, widgetViewModel => widgetViewModel.WindowPosition)
+                    .Select(validatedInput => (double)validatedInput!)
+                    .Select(positionX => widgetViewModel.WidgetPosition.WithX(positionX))
+                    .BindTo(widgetViewModel, widgetViewModel => widgetViewModel.WidgetPosition)
                     .DisposeWith(disposables);
 
                 this.WhenAnyValue(settingsViewModel => settingsViewModel.WidgetPositionUserInputY)
                     .ObserveOn(RxApp.MainThreadScheduler)
                     .Where(input => input != null)
-                    .Select(validatedInput => (int)validatedInput!)
-                    .Select(positionY => widgetViewModel.WindowPosition.WithY(positionY))
-                    .BindTo(widgetViewModel, widgetViewModel => widgetViewModel.WindowPosition)
+                    .Select(validatedInput => (double)validatedInput!)
+                    .Select(positionY => widgetViewModel.WidgetPosition.WithY(positionY))
+                    .BindTo(widgetViewModel, widgetViewModel => widgetViewModel.WidgetPosition)
                     .DisposeWith(disposables);
 
                 this.WhenAnyValue(settingsViewModel => settingsViewModel.WidgetFontFamily)
@@ -300,15 +302,15 @@ namespace DateToday.ViewModels
 
         public Dictionary<string, FontWeight> AvailableFontWeights => _fontWeightDictionary;
 
-        public PixelPoint WidgetPositionMax => _widgetPositionMax.Value;
+        public Point WidgetPositionMax => _widgetPositionMax.Value;
 
-        public int? WidgetPositionUserInputX
+        public double? WidgetPositionUserInputX
         {
             get => _widgetPositionUserInputX;
             set => this.RaiseAndSetIfChanged(ref _widgetPositionUserInputX, value);    
         }
 
-        public int? WidgetPositionUserInputY
+        public double? WidgetPositionUserInputY
         {
             get => _widgetPositionUserInputY;
             set => this.RaiseAndSetIfChanged(ref _widgetPositionUserInputY, value);
@@ -372,6 +374,12 @@ namespace DateToday.ViewModels
         {
             get => _widgetOrdinalDaySuffixPosition;
             set => this.RaiseAndSetIfChanged(ref _widgetOrdinalDaySuffixPosition, value);
+        }
+
+        public string SettingsExitButtonContent
+        {
+            get => _settingsExitButtonContent;
+            set => this.RaiseAndSetIfChanged(ref _settingsExitButtonContent, value);
         }
 
         private bool IsDateTextSetSuccessfully
