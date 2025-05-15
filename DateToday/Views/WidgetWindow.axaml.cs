@@ -22,7 +22,7 @@ namespace DateToday.Views
         void Close(object? dialogResult);
     }
 
-    internal partial class WidgetWindow : ReactiveWindow<WidgetViewModel>, IWidgetWindow
+    internal sealed partial class WidgetWindow : ReactiveWindow<WidgetViewModel>, IWidgetWindow
     {
         private const string RESOURCE_KEY_THEMED_TEXT_COLOUR = "SystemBaseHighColor";
         private const string RESOURCE_KEY_THEMED_TEXT_SHADOW_COLOUR = "SystemRegionColor";

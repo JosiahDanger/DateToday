@@ -14,7 +14,7 @@ using System.Reactive.Linq;
 
 namespace DateToday.ViewModels
 {
-    internal class SettingsViewModel : ReactiveValidationObject, IActivatableViewModel
+    internal sealed class SettingsViewModel : ReactiveValidationObject, IActivatableViewModel
     {
         private int? _widgetFontSizeUserInput;
         private byte? _widgetOrdinalDaySuffixPosition;

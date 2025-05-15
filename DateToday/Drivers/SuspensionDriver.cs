@@ -7,7 +7,7 @@ using System.Reactive.Linq;
 
 namespace DateToday.Drivers
 {
-    internal class SuspensionDriver(string filePath, Type stateType) : ISuspensionDriver
+    internal sealed class SuspensionDriver(string filePath, Type stateType) : ISuspensionDriver
     {
         public IObservable<Unit> InvalidateState()
         {

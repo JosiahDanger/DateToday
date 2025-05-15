@@ -32,7 +32,7 @@ namespace DateToday.ViewModels
     }
 
     [DataContract]
-    internal class WidgetViewModel : ReactiveObject, IActivatableViewModel, IWidgetViewModel
+    internal sealed class WidgetViewModel : ReactiveObject, IActivatableViewModel, IWidgetViewModel
     {
         [IgnoreDataMember]
         private readonly INewMinuteEventGenerator _modelInterface;

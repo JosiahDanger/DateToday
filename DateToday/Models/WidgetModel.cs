@@ -11,7 +11,7 @@ namespace DateToday.Models
             NewMinuteEventObservable { get; }
     }
 
-    internal class WidgetModel : INewMinuteEventGenerator
+    internal sealed class WidgetModel : INewMinuteEventGenerator
     {
         private readonly Timer _newMinuteEventGenerator;
         private readonly IObservable<System.Reactive.EventPattern<ElapsedEventArgs>> 

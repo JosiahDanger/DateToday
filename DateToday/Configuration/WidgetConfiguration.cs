@@ -3,7 +3,7 @@ using Avalonia.Media;
 
 namespace DateToday.Configuration
 {
-    internal class WidgetConfiguration(
+    internal sealed class WidgetConfiguration(
         Point widgetPosition, string fontFamilyName, int fontSize, string fontWeightLookupKey,
         Color? customFontColour, bool isDropShadowEnabled, Color? customDropShadowColour, 
         string dateFormat, byte? ordinalDaySuffixPosition)

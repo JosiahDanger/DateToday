@@ -16,7 +16,7 @@ using System.Linq;
 
 namespace DateToday
 {
-    internal partial class App : Application
+    internal sealed partial class App : Application
     {
         private const string FILEPATH_DEFAULT_WIDGET_CONFIGURATION =
             "DefaultWidgetConfiguration.json";

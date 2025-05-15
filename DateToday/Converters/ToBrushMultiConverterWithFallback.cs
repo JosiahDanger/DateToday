@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace DateToday.Converters
 {
-    internal class ToBrushMultiConverterWithFallback : ToBrushConverter, IMultiValueConverter
+    internal sealed class ToBrushMultiConverterWithFallback : ToBrushConverter, IMultiValueConverter
     {
         public object? Convert(
             IList<object?> values, Type targetType, object? parameter, CultureInfo culture)

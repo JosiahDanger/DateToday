@@ -10,7 +10,7 @@ using System.Reactive.Linq;
 
 namespace DateToday.Views;
 
-internal partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
+internal sealed partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
 {
     const string UNICODE_CANCELLATION_X = "\xd83d\xddd9";
 

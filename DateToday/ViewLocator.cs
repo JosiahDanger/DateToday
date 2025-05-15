@@ -6,7 +6,7 @@ using System;
 
 namespace DateToday
 {
-    internal class ViewLocator : IDataTemplate
+    internal sealed class ViewLocator : IDataTemplate
     {
         public Control? Build(object? data)
         {
