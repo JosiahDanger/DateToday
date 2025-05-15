@@ -57,3 +57,5 @@ Recommended for users of:
 
 \
 I am keen to receive feedback on this application, particularly on its codebase. Please let me know if you have any suggestions.
+
+I can be contacted by email at: joedangergithub.coherence596@passmail.net
