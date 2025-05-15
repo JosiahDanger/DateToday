@@ -16,7 +16,9 @@ DateToday is a desktop widget that displays the current date and/or time in a co
 Recommended for users of:
 - [ExplorerPatcher](https://github.com/valinet/ExplorerPatcher)
 - [TranslucentTB](https://github.com/TranslucentTB/TranslucentTB)
-- [Wallpaper Engine](https://www.wallpaperengine.io/) (especially if date display functionalities built into your wallpapers are absent, inconsistent, or missing features).
+- [Wallpaper Engine](https://www.wallpaperengine.io/)
+  
+  (especially if date display features built into your wallpapers are absent, inconsistent, or missing features)
 
 \
 **All of my apps are proudly:**
