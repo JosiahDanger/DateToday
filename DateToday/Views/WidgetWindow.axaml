@@ -34,7 +34,13 @@
         </ContextMenu>
     </Window.ContextMenu>
 
-    <TextBlock Effect="{Binding DropShadow}"
+    <!--
+        Specifying a Padding value here prevents the extent of text drop shadow from exceeding the
+        bounds of the widget window.
+    -->
+
+    <TextBlock Padding="5"
+               Effect="{Binding DropShadow}"
                FontFamily="{Binding FontFamily}"
                FontSize="{Binding FontSize}"
                FontWeight="{Binding FontWeight}"
@@ -51,7 +57,7 @@
                     
                     In effect, if the user has selected a custom font colour, then it will be
                     applied to the widget, otherwise a thematically-appropriate automatic font
-                    colour will be used.
+                    colour will be used instead.
                 -->
 
                 <Binding Path="CustomFontColour" />
