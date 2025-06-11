@@ -29,6 +29,7 @@ DateToday is a desktop widget that displays the current date and/or time in a pr
 1. Ensure that the [x64 .NET Desktop Runtime 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) is installed on your computer.
 2. Run 'DateToday.exe'. The widget will be displayed. You may right-click the widget to open a context menu. Select 'Widget Settings' for configuration options.
 3. To customise the format in which the date and/or time is displayed, you may enter a valid date/time format string. See [this Microsoft Learn page](https://learn.microsoft.com/dotnet/standard/base-types/custom-date-and-time-format-strings).
+4. If you would prefer for the widget to omit display of the ordinal day suffix ('st', 'nd', 'rd', 'th'), you may simply erase the contents of its position field.
 
 ### (Optional) Configure DateToday To Run Upon Signing in to Windows
 
@@ -38,7 +39,8 @@ DateToday is a desktop widget that displays the current date and/or time in a pr
 4. Move your shortcut into this folder.
 
 ## Planned Features
-- User may choose one of four corners at which to anchor text. (Currently working on this as of June 2025; having some difficulty.)
+- User may choose one of four corners at which to anchor text. 
+(Currently working on this as of June 2025; having some difficulty.)
 - Multi-monitor support
 - Linux support
     
