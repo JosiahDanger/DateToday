@@ -36,7 +36,7 @@ internal sealed partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
             if (DesktopScaling == 1)
             {
                 /* Only show text inside the exit button when the operating system display scaling 
-                 * is equal to 100%. Otherwise, the text isn't centered properly. */
+                 * factor is equal to 100%. Otherwise, the text isn't centered properly. */
 
                 ViewModel!.SettingsExitButtonContent = UNICODE_CANCELLATION_X;
             }
@@ -92,7 +92,7 @@ internal sealed partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
             // Does not need explicit disposal.
             .ObserveOn(RxApp.MainThreadScheduler)
             .Subscribe(eventPattern =>
-                WindowDragHandle_OnPointerMoved(eventPattern.Sender, eventPattern.EventArgs));
+                WindowDragHandle_PointerMoved(eventPattern.Sender, eventPattern.EventArgs));
 
             Observable.FromEventPattern<PointerPressedEventArgs>(
                 handler => settingsWindowDragRoot.PointerPressed += handler,
@@ -100,7 +100,7 @@ internal sealed partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
             // Does not need explicit disposal.
             .ObserveOn(RxApp.MainThreadScheduler)
             .Subscribe(eventPattern =>
-                WindowDragHandle_OnPointerPressed(eventPattern.Sender, eventPattern.EventArgs));
+                WindowDragHandle_PointerPressed(eventPattern.Sender, eventPattern.EventArgs));
 
             Observable.FromEventPattern<PointerReleasedEventArgs>(
                 handler => settingsWindowDragRoot.PointerReleased += handler,
@@ -108,7 +108,7 @@ internal sealed partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
             // Does not need explicit disposal.
             .ObserveOn(RxApp.MainThreadScheduler)
             .Subscribe(eventPattern =>
-                WindowDragHandle_OnPointerReleased(
+                WindowDragHandle_PointerReleased(
                     eventPattern.Sender, eventPattern.EventArgs));
 
             foreach (ComboBox? comboBoxOrNull in comboBoxes)
@@ -133,7 +133,7 @@ internal sealed partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
         }
     }
 
-    private void WindowDragHandle_OnPointerMoved(object? sender, PointerEventArgs e)
+    private void WindowDragHandle_PointerMoved(object? sender, PointerEventArgs e)
     {
         if (_isWindowDragInEffect)
         {
@@ -144,7 +144,7 @@ internal sealed partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
         }
     }
 
-    private void WindowDragHandle_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    private void WindowDragHandle_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (!_isWindowDragPrevented)
         {
@@ -153,7 +153,7 @@ internal sealed partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
         }
     }
 
-    private void WindowDragHandle_OnPointerReleased(object? sender, PointerReleasedEventArgs e) =>
+    private void WindowDragHandle_PointerReleased(object? sender, PointerReleasedEventArgs e) =>
         _isWindowDragInEffect = false;
 #endif
 }

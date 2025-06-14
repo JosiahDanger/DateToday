@@ -1,9 +1,10 @@
 {
-	"WidgetPosition":
+	"AnchoredCornerScaledPosition":
 	{
 		X: 100,
 		Y: 100
 	},
+	"AnchoredCorner": 0,
 	"FontSize": 70,
 	"FontWeightLookupKey": "Normal",
 	"CustomFontColour": null,

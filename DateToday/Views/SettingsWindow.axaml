@@ -1,8 +1,10 @@
 <Window x:Class="DateToday.Views.SettingsWindow"
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:conv="using:DateToday.Converters"
+        xmlns:enum="using:DateToday.Enums"
         xmlns:vm="using:DateToday.ViewModels"
-        Title="Settings"
+        Title="Widget Settings"
         x:DataType="vm:SettingsViewModel"
         Background="Transparent"
         CanResize="False"
@@ -11,6 +13,10 @@
         SizeToContent="WidthAndHeight"
         SystemDecorations="None"
         WindowStartupLocation="CenterOwner">
+
+    <Window.Resources>
+        <conv:EnumToBooleanConverter x:Key="EnumSelector" />
+    </Window.Resources>
 
     <Window.Styles>
         <StyleInclude Source="/Styles/SettingsStyles.axaml" />
@@ -32,7 +38,7 @@
 
                 <TabItem Name="DateDisplayTab"
                          Classes="SettingsTabHeader"
-                         Header="Date Display">
+                         Header="Date / Time Display">
 
                     <Border Width="544"
                             Classes="SettingsInnerBorder">
@@ -80,33 +86,81 @@
 
                     <Border Classes="SettingsInnerBorder">
 
-                        <Grid ColumnDefinitions="Auto, Auto"
-                              RowDefinitions="Auto, Auto"
-                              RowSpacing="10">
+                        <StackPanel Orientation="Vertical">
 
-                            <TextBlock Grid.Row="0"
-                                       Grid.Column="0"
-                                       Classes="FieldLabel"
-                                       Text="𝑥:" />
+                            <Grid ColumnDefinitions="Auto, Auto"
+                                  RowDefinitions="Auto, Auto"
+                                  RowSpacing="10">
 
-                            <NumericUpDown Grid.Row="0"
-                                           Grid.Column="1"
-                                           Classes="PositionField"
-                                           Maximum="{Binding WidgetPositionMax.X}"
-                                           Value="{Binding WidgetPositionUserInputX}" />
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="0"
+                                           Classes="FieldLabel"
+                                           Text="𝑥:" />
 
-                            <TextBlock Grid.Row="1"
-                                       Grid.Column="0"
-                                       Classes="FieldLabel"
-                                       Text="𝑦:" />
+                                <NumericUpDown Grid.Row="0"
+                                               Grid.Column="1"
+                                               Classes="PositionField"
+                                               Maximum="{Binding WidgetPositionMax.X}"
+                                               Value="{Binding WidgetPositionUserInputX}" />
 
-                            <NumericUpDown Grid.Row="1"
-                                           Grid.Column="1"
-                                           Classes="PositionField"
-                                           Maximum="{Binding WidgetPositionMax.Y}"
-                                           Value="{Binding WidgetPositionUserInputY}" />
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="0"
+                                           Classes="FieldLabel"
+                                           Text="𝑦:" />
 
-                        </Grid>
+                                <NumericUpDown Grid.Row="1"
+                                               Grid.Column="1"
+                                               Classes="PositionField"
+                                               Maximum="{Binding WidgetPositionMax.Y}"
+                                               Value="{Binding WidgetPositionUserInputY}" />
+
+                            </Grid>
+
+                            <Grid Margin="0 80 0 0"
+                                  ColumnDefinitions="Auto, Auto, Auto"
+                                  ColumnSpacing="31"
+                                  RowDefinitions="Auto, Auto, Auto">
+
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="0"
+                                           Classes="FieldLabel"
+                                           Text="Anchored corner:" />
+
+                                <RadioButton Grid.Row="1"
+                                             Grid.Column="1"
+                                             Classes="AnchorSelector"
+                                             GroupName="Anchor Group"
+                                             IsChecked="{Binding WidgetAnchoredCorner,
+                                                                 Converter={StaticResource EnumSelector},
+                                                                 ConverterParameter={x:Static enum:WindowVertexIdentifier.TopLeft}}" />
+
+                                <RadioButton Grid.Row="1"
+                                             Grid.Column="2"
+                                             Classes="AnchorSelector"
+                                             GroupName="Anchor Group"
+                                             IsChecked="{Binding WidgetAnchoredCorner,
+                                                                 Converter={StaticResource EnumSelector},
+                                                                 ConverterParameter={x:Static enum:WindowVertexIdentifier.TopRight}}" />
+
+                                <RadioButton Grid.Row="2"
+                                             Grid.Column="1"
+                                             Classes="AnchorSelector"
+                                             GroupName="Anchor Group"
+                                             IsChecked="{Binding WidgetAnchoredCorner,
+                                                                 Converter={StaticResource EnumSelector},
+                                                                 ConverterParameter={x:Static enum:WindowVertexIdentifier.BottomLeft}}" />
+
+                                <RadioButton Grid.Row="2"
+                                             Grid.Column="2"
+                                             Classes="AnchorSelector"
+                                             GroupName="Anchor Group"
+                                             IsChecked="{Binding WidgetAnchoredCorner,
+                                                                 Converter={StaticResource EnumSelector},
+                                                                 ConverterParameter={x:Static enum:WindowVertexIdentifier.BottomRight}}" />
+
+                            </Grid>
+
+                        </StackPanel>
 
                     </Border>
 
@@ -301,6 +355,12 @@
 
             </TabControl>
 
+            <TextBlock Canvas.Right="1"
+                       Canvas.Bottom="1"
+                       Classes="AssemblyVersion"
+                       Text="{Binding ProductVersion,
+                                      Mode=OneTime}" />
+
             <Button Canvas.Top="15"
                     Canvas.Right="15"
                     Classes="CloseButton"
@@ -316,8 +376,9 @@
                        Text="Format:" />
 
             <HyperlinkButton Canvas.Left="99"
-                             Canvas.Bottom="27"
+                             Canvas.Bottom="32"
                              Width="325"
+                             Padding="0"
                              HorizontalContentAlignment="Center"
                              xml:space="preserve"
                              Foreground="CornflowerBlue"

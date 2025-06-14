@@ -34,7 +34,7 @@ namespace DateToday.Drivers
 
         public IObservable<Unit> SaveState(object state)
         {
-            string jsonText = JsonConvert.SerializeObject(state);
+            string jsonText = JsonConvert.SerializeObject(state, Formatting.Indented);
             File.WriteAllText(filePath, jsonText);
 
             return Observable.Return(Unit.Default);

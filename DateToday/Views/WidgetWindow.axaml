@@ -5,7 +5,7 @@
         xmlns:vm="using:DateToday.ViewModels"
         Title="Date Today"
         x:DataType="vm:WidgetViewModel"
-        Background="Transparent"
+        Background="blue"
         Focusable="False"
         Icon="/Assets/jd-logo.ico"
         ShowInTaskbar="False"
@@ -39,7 +39,7 @@
         bounds of the widget window.
     -->
 
-    <TextBlock Padding="5"
+    <TextBlock Padding="5 0 5 5"
                Effect="{Binding DropShadow}"
                FontFamily="{Binding FontFamily}"
                FontSize="{Binding FontSize}"
@@ -57,7 +57,7 @@
                     
                     In effect, if the user has selected a custom font colour, then it will be
                     applied to the widget, otherwise a thematically-appropriate automatic font
-                    colour will be used instead.
+                    colour will instead be used.
                 -->
 
                 <Binding Path="CustomFontColour" />

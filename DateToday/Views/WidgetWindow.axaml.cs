@@ -1,8 +1,8 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
-using Avalonia.Platform;
 using Avalonia.ReactiveUI;
+using DateToday.Enums;
 using DateToday.ViewModels;
 using ReactiveUI;
 using System;
@@ -15,7 +15,6 @@ namespace DateToday.Views
 {
     internal interface IWidgetWindow
     {
-        PixelPoint Position { get; }
         Color ThemedTextColour { get; }
         Color ThemedTextShadowColour { get; }
 
@@ -47,97 +46,142 @@ namespace DateToday.Views
 
             this.WhenActivated(disposables =>
             {
-                this.HandleActivation();
+                ViewModel!.InteractionReceiveNewSettings.RegisterHandler(DoShowSettingsDialogAsync);
 
-                ViewModel.WhenAnyValue(widgetViewModel => widgetViewModel.WidgetPosition)
-                         .ObserveOn(RxApp.MainThreadScheduler)
-                         .Select(point => PixelPoint.FromPoint(point, this.DesktopScaling))
-                         .BindTo(this, widgetWindow => widgetWindow.Position)
-                         .DisposeWith(disposables);
+                IObservable<PixelPoint> newPositionFromSizeChangeObservable =
+                    Observable.FromEventPattern<SizeChangedEventArgs>(
+                        handler => SizeChanged += handler,
+                        handler => SizeChanged -= handler
+                    )
+                    // Does not need explicit disposal.
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .Do(_ => 
+                            ViewModel.AnchoredCornerScaledPositionMax =
+                                CalculateScaledPositionMax(ClientSize, DesktopWorkingAreaOrNull))
+                    .Select(_ => 
+                                CalculateOverallScaledPosition(
+                                    ViewModel.AnchoredCorner, 
+                                    ViewModel.AnchoredCornerScaledPosition, 
+                                    ClientSize, DesktopWorkingAreaOrNull))
+                    .Select(newScaledPosition => 
+                                ClampScaledPosition(
+                                    newScaledPosition, ViewModel.AnchoredCornerScaledPositionMax))
+                    .Select(clampedScaledPosition => 
+                                PixelPoint.FromPoint(clampedScaledPosition, DesktopScaling));
 
-                Observable.FromEventPattern<SizeChangedEventArgs>(
-                    handler => SizeChanged += handler,
-                    handler => SizeChanged -= handler
+                IObservable<PixelPoint> newPositionFromAnchoredCornerChangeObservable =
+                    ViewModel.WhenAnyValue(wvm => wvm.AnchoredCorner,
+                                           wvm => wvm.AnchoredCornerScaledPosition)
+                             .ObserveOn(RxApp.MainThreadScheduler)
+                             .Select(args =>
+                                        CalculateOverallScaledPosition(
+                                            args.Item1, args.Item2,
+                                            ClientSize, DesktopWorkingAreaOrNull))
+                             .Select(scaledPosition =>
+                                        PixelPoint.FromPoint(scaledPosition, DesktopScaling));
+
+                Observable.FromEventPattern(
+                    handler => LayoutUpdated += handler,
+                    handler => LayoutUpdated -= handler
                 )
                 // Does not need explicit disposal.
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(x => WidgetWindow_OnSizeChanged(x.EventArgs));
+                .Take(1) // Do this only once.
+                .Subscribe(_ => 
+                {
+                    ViewModel.AnchoredCornerScaledPositionMax =
+                        /* A new SizeChanged event will not occur as a direct result of binding its 
+                         * Observable stream. Therefore, this property on the view model must be 
+                         * initialised here. */
+                        CalculateScaledPositionMax(ClientSize, DesktopWorkingAreaOrNull);
+
+                    newPositionFromSizeChangeObservable
+                    .BindTo(this, widgetWindow => widgetWindow.Position);
+
+                    newPositionFromAnchoredCornerChangeObservable
+                    .BindTo(this, widgetWindow => widgetWindow.Position)
+                    .DisposeWith(disposables);
+                });
             });
         }
 
-        private void HandleActivation()
+        private static Point CalculateScaledPositionMax(
+            Size widgetSize, Size? desktopWorkingAreaOrNull)
         {
-            ViewModel!.InteractionReceiveNewSettings.RegisterHandler(DoShowSettingsDialogAsync);
-        }
+            /* Calculate the maximum on-screen coordinate at which the widget will be fully visible, 
+             * taking into account the operating system desktop scaling factors reflected in the 
+             * input Size structs. */
 
-        private void WidgetWindow_OnSizeChanged(SizeChangedEventArgs e)
-        {
-            static Point GetNewWidgetPositionMax(Size monitorSize, Rect widgetBounds)
+            if (desktopWorkingAreaOrNull is Size desktopWorkingArea)
             {
-                /* Calculate the maximum on-screen coordinate at which the widget will be fully 
-                 * visible. */
-
                 return
-                    new(monitorSize.Width - widgetBounds.Width, 
-                        monitorSize.Height - widgetBounds.Height);
+                    new(desktopWorkingArea.Width - widgetSize.Width,
+                        desktopWorkingArea.Height - widgetSize.Height);
             }
 
-            Screen? monitor = Screens.Primary;
-
-            if (monitor != null)
-            {
-                Size screenRealEstate = monitor.WorkingArea.Size.ToSize(DesktopScaling);
-
-                ViewModel!.WidgetPositionMax = GetNewWidgetPositionMax(screenRealEstate, Bounds);
-                ConfineWidgetWithinScreenRealEstate(e, screenRealEstate);
-            }
+            return new(double.PositiveInfinity, double.PositiveInfinity);
         }
 
-        private void ConfineWidgetWithinScreenRealEstate(
-            SizeChangedEventArgs e, Size screenRealEstate)
+        private static Point ClampScaledPosition(Point currentPosition, Point maxPosition)
         {
-            /* Avalonia's Point Struct takes into account operating system display scaling, whereas 
-             * PixelPoint does not. 
-             * 
-             * 'widgetClientPosition' will be used to store the widget's position in a 
-             * "device-independent" Point value. */
+            /* When the widget is automatically resized to fit its contents, the application will 
+             * henceforth adjust the widget's position according to which corner is anchored. In 
+             * doing so, the widget can move off-screen. The purpose of this function is to limit 
+             * the overall position of the widget such that it is enclosed entirely within the 
+             * bounds of the desktop working area. */
 
-            Point widgetClientPosition;
-            
-            bool hasWidthIncreased = e.NewSize.Width > e.PreviousSize.Width;
-            bool hasHeightIncreased = e.NewSize.Height > e.PreviousSize.Height;
+            double newPositionX = Math.Clamp(currentPosition.X, 0, maxPosition.X);
+            double newPositionY = Math.Clamp(currentPosition.Y, 0, maxPosition.Y);
 
-            if (hasWidthIncreased)
+            return new(newPositionX, newPositionY);
+        }
+
+        private static Point CalculateOverallScaledPosition(
+            WindowVertexIdentifier anchoredCorner, Point anchoredCornerScaledPosition,
+            Size widgetSize, Size? desktopWorkingAreaOrNull)
+        {
+            /* Given the scaled position of a specified widget corner, calculate the scaled position 
+             * of the top-left corner. If the top-left corner is anchored, this function doesn't 
+             * need to do anything. */
+
+            if (desktopWorkingAreaOrNull is Size desktopWorkingArea)
             {
-                widgetClientPosition = Position.ToPoint(DesktopScaling);
+                double newScaledPositionX;
+                double newScaledPositionY;
 
-                double widgetRightEdgeX = widgetClientPosition.X + e.NewSize.Width;
-                double deltaX = widgetRightEdgeX - screenRealEstate.Width;
-
-                if (deltaX > 0)
+                switch (anchoredCorner)
                 {
-                    double newPositionX = Math.Max(ViewModel!.WidgetPositionMax.X, 0);
-                    ViewModel!.WidgetPosition = widgetClientPosition.WithX(newPositionX);
+                    case WindowVertexIdentifier.TopRight:
 
-                    Debug.WriteLine("Adjusted widget X position within monitor real estate.");
+                        newScaledPositionX =
+                            desktopWorkingArea.Width - widgetSize.Width -
+                            anchoredCornerScaledPosition.X;
+
+                        return new(newScaledPositionX, anchoredCornerScaledPosition.Y);
+
+                    case WindowVertexIdentifier.BottomLeft:
+
+                        newScaledPositionY =
+                            desktopWorkingArea.Height - widgetSize.Height -
+                            anchoredCornerScaledPosition.Y;
+
+                        return new(anchoredCornerScaledPosition.X, newScaledPositionY);
+
+                    case WindowVertexIdentifier.BottomRight:
+
+                        newScaledPositionX =
+                            desktopWorkingArea.Width - widgetSize.Width -
+                            anchoredCornerScaledPosition.X;
+
+                        newScaledPositionY =
+                            desktopWorkingArea.Height - widgetSize.Height -
+                            anchoredCornerScaledPosition.Y;
+
+                        return new(newScaledPositionX, newScaledPositionY);
                 }
             }
 
-            if (hasHeightIncreased)
-            {
-                widgetClientPosition = Position.ToPoint(DesktopScaling);
-
-                double widgetBottomEdgeY = widgetClientPosition.Y + e.NewSize.Height;
-                double deltaY = widgetBottomEdgeY - screenRealEstate.Height;
-
-                if (deltaY > 0)
-                {
-                    double newPositionY = Math.Max(ViewModel!.WidgetPositionMax.Y, 0);
-                    ViewModel!.WidgetPosition = widgetClientPosition.WithY(newPositionY);
-
-                    Debug.WriteLine("Adjusted widget Y position within monitor real estate.");
-                }
-            }
+            return anchoredCornerScaledPosition;
         }
 
         private Color InitialiseThemedColour(string resourceKey, Color fallback)
@@ -161,10 +205,6 @@ namespace DateToday.Views
             }
         }
 
-        public Color ThemedTextColour => _themedTextColour;
-
-        public Color ThemedTextShadowColour => _themedTextShadowColour;
-
         private async Task DoShowSettingsDialogAsync(
             IInteractionContext<SettingsViewModel, bool> interaction)
         {
@@ -173,5 +213,12 @@ namespace DateToday.Views
             bool dialogResult = await dialog.ShowDialog<bool>(this).ConfigureAwait(true);
             interaction.SetOutput(dialogResult);
         }
+
+        private Size? DesktopWorkingAreaOrNull => 
+            Screens.Primary?.WorkingArea.Size.ToSize(DesktopScaling);
+
+        public Color ThemedTextColour => _themedTextColour;
+
+        public Color ThemedTextShadowColour => _themedTextShadowColour;
     }
 }

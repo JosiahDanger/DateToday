@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Media;
 using DateToday.Configuration;
+using DateToday.Enums;
 using DateToday.Models;
 using DateToday.Views;
 using ReactiveUI;
@@ -17,8 +18,9 @@ namespace DateToday.ViewModels
 {
     internal interface IWidgetViewModel
     {
-        Point WidgetPosition { get; set; }
-        Point WidgetPositionMax { get; }
+        Point AnchoredCornerScaledPosition { get; set; }
+        Point AnchoredCornerScaledPositionMax { get; set; }
+        WindowVertexIdentifier AnchoredCorner { get; set; }
         int FontSize { get; set; }
         FontFamily FontFamily { get; set; }
         string FontWeightLookupKey { get; set; }
@@ -34,50 +36,37 @@ namespace DateToday.ViewModels
     [DataContract]
     internal sealed class WidgetViewModel : ReactiveObject, IActivatableViewModel, IWidgetViewModel
     {
-        [IgnoreDataMember]
         private readonly INewMinuteEventGenerator _modelInterface;
 
-        [IgnoreDataMember]
         private string
             _dateText = string.Empty, _dateFormat, _dateFormatUserInput, _fontWeightLookupKey;
 
-        [IgnoreDataMember]
         private readonly ObservableAsPropertyHelper<int?> _fontWeight;
 
-        [IgnoreDataMember]
         private FontFamily _fontFamily;
 
-        [IgnoreDataMember]
         private readonly Color _automaticFontColour;
 
-        [IgnoreDataMember]
         private Color? _customFontColour, _customDropShadowColour;
 
-        [IgnoreDataMember]
         private bool _isDropShadowEnabled;
 
-        [IgnoreDataMember]
         private DropShadowEffect? _dropShadow;
 
-        [IgnoreDataMember]
-        private Point _widgetPosition, _widgetPositionMax;
+        private Point _anchoredCornerScaledPosition, _anchoredCornerScaledPositionMax;
 
-        [IgnoreDataMember]
+        private WindowVertexIdentifier _anchoredCorner;
+
         private int _fontSize;
 
-        [IgnoreDataMember]
         private byte? _ordinalDaySuffixPosition;
 
-        [IgnoreDataMember]
         public ViewModelActivator Activator { get; } = new();
 
-        [IgnoreDataMember]
         public Interaction<SettingsViewModel, bool> InteractionReceiveNewSettings { get; } = new();
 
-        [IgnoreDataMember]
         public ICommand ReceiveNewSettings { get; }
 
-        [IgnoreDataMember]
         public ICommand ExitApplication { get; }
 
         public WidgetViewModel(
@@ -96,7 +85,8 @@ namespace DateToday.ViewModels
             _modelInterface = modelInterface;
             _automaticFontColour = viewInterface.ThemedTextColour;
 
-            _widgetPosition = restoredSettings.WidgetPosition;
+            _anchoredCornerScaledPosition = restoredSettings.AnchoredCornerScaledPosition;
+            _anchoredCorner = restoredSettings.AnchoredCorner;
             _fontSize = restoredSettings.FontSize;
             _fontWeightLookupKey = restoredSettings.FontWeightLookupKey;
             _customFontColour = restoredSettings.CustomFontColour;
@@ -122,9 +112,9 @@ namespace DateToday.ViewModels
             {
                 disposables.Add(_modelInterface);
 
-                this.HandleActivation();
+                RefreshDateText();
 
-                _modelInterface.NewMinuteEventObservable?
+                _modelInterface.NewMinuteEventObservable
                                .ObserveOn(RxApp.MainThreadScheduler)
                                .Subscribe(_ => RefreshDateText())
                                .DisposeWith(disposables);
@@ -133,14 +123,14 @@ namespace DateToday.ViewModels
                     // Does not need explicit disposal.
                     .ObserveOn(RxApp.MainThreadScheduler)
                     .Subscribe(isEnabled =>
-                        IsDropShadowEnabled_OnChange(
+                        IsDropShadowEnabled_Changed(
                             isEnabled, viewInterface.ThemedTextShadowColour));
 
                 this.WhenAnyValue(widgetViewModel => widgetViewModel.CustomDropShadowColour)
                     // Does not need explicit disposal.
                     .ObserveOn(RxApp.MainThreadScheduler)
                     .Subscribe(newColourOrNull =>
-                        CustomDropShadowColour_OnChange(
+                        CustomDropShadowColour_Changed(
                             newColourOrNull, viewInterface.ThemedTextShadowColour));
             });
 
@@ -157,11 +147,6 @@ namespace DateToday.ViewModels
             {
                 viewInterface?.Close(0);
             });
-        }
-
-        private void HandleActivation()
-        {
-            RefreshDateText();
         }
 
         private void RefreshDateText()
@@ -218,55 +203,6 @@ namespace DateToday.ViewModels
             return formattedDateOutput;
         }
 
-        private static int? AttemptFontWeightLookup(
-            Dictionary<string, FontWeight>? fontWeightDictionary, string lookupKey)
-        {
-            if (fontWeightDictionary != null)
-            {
-                bool isFontWeightValueFound =
-                    fontWeightDictionary.TryGetValue(lookupKey, out FontWeight newFontWeightValue);
-
-                if (isFontWeightValueFound)
-                {
-                    return (int)newFontWeightValue;
-                }
-            }
-
-            return null;
-        }
-
-        private void IsDropShadowEnabled_OnChange(bool isEnabled, Color initialColour)
-        {
-            if (isEnabled)
-            {
-                DropShadow =
-                    new DropShadowEffect()
-                    {
-                        BlurRadius = 0,
-                        Color = initialColour
-                    };
-            }
-            else
-            {
-                DropShadow = null;
-            }
-        }
-
-        private void CustomDropShadowColour_OnChange(Color? newColourOrNull, Color fallback)
-        {
-            if (DropShadow != null)
-            {
-                if (newColourOrNull is Color newColour)
-                {
-                    DropShadow.Color = newColour;
-                }
-                else
-                {
-                    DropShadow.Color = fallback;
-                }
-            }
-        }
-
         public void SetDateFormat(string newDateFormat, byte? ordinalDaySuffixPosition)
         {
             // TODO: Make this a Command?
@@ -288,6 +224,55 @@ namespace DateToday.ViewModels
             OrdinalDaySuffixPosition = ordinalDaySuffixPosition;
         }
 
+        private static int? AttemptFontWeightLookup(
+            Dictionary<string, FontWeight>? fontWeightDictionary, string lookupKey)
+        {
+            if (fontWeightDictionary != null)
+            {
+                bool isFontWeightValueFound =
+                    fontWeightDictionary.TryGetValue(lookupKey, out FontWeight newFontWeightValue);
+
+                if (isFontWeightValueFound)
+                {
+                    return (int)newFontWeightValue;
+                }
+            }
+
+            return null;
+        }
+
+        private void IsDropShadowEnabled_Changed(bool isEnabled, Color initialColour)
+        {
+            if (isEnabled)
+            {
+                DropShadow =
+                    new DropShadowEffect()
+                    {
+                        BlurRadius = 0,
+                        Color = initialColour
+                    };
+            }
+            else
+            {
+                DropShadow = null;
+            }
+        }
+
+        private void CustomDropShadowColour_Changed(Color? newColourOrNull, Color fallback)
+        {
+            if (DropShadow != null)
+            {
+                if (newColourOrNull is Color newColour)
+                {
+                    DropShadow.Color = newColour;
+                }
+                else
+                {
+                    DropShadow.Color = fallback;
+                }
+            }
+        }
+
         [IgnoreDataMember]
         public int? FontWeight => _fontWeight.Value;
 
@@ -295,17 +280,24 @@ namespace DateToday.ViewModels
         public Color AutomaticFontColour => _automaticFontColour;
 
         [DataMember]
-        public Point WidgetPosition
+        public Point AnchoredCornerScaledPosition
         {
-            get => _widgetPosition;
-            set => this.RaiseAndSetIfChanged(ref _widgetPosition, value);
+            get => _anchoredCornerScaledPosition;
+            set => this.RaiseAndSetIfChanged(ref _anchoredCornerScaledPosition, value);
         }
 
         [IgnoreDataMember]
-        public Point WidgetPositionMax
+        public Point AnchoredCornerScaledPositionMax
         {
-            get => _widgetPositionMax;
-            set => this.RaiseAndSetIfChanged(ref _widgetPositionMax, value);
+            get => _anchoredCornerScaledPositionMax;
+            set => this.RaiseAndSetIfChanged(ref _anchoredCornerScaledPositionMax, value);
+        }
+
+        [DataMember]
+        public WindowVertexIdentifier AnchoredCorner
+        {
+            get => _anchoredCorner;
+            set => this.RaiseAndSetIfChanged(ref _anchoredCorner, value);
         }
 
         [DataMember]

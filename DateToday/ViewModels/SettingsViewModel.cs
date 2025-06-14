@@ -1,16 +1,19 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using DateToday.Enums;
 using ReactiveUI;
 using ReactiveUI.Validation.Extensions;
 using ReactiveUI.Validation.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Reflection;
 
 namespace DateToday.ViewModels
 {
@@ -18,7 +21,9 @@ namespace DateToday.ViewModels
     {
         private int? _widgetFontSizeUserInput;
         private byte? _widgetOrdinalDaySuffixPosition;
+
         private double? _widgetPositionUserInputX, _widgetPositionUserInputY;
+        private WindowVertexIdentifier _widgetAnchoredCorner;
 
         private FontFamily _widgetFontFamily;
         private string _widgetFontWeightLookupKey, _widgetDateFormatUserInput;
@@ -70,8 +75,10 @@ namespace DateToday.ViewModels
             _availableFonts = availableFonts;
             _fontWeightDictionary = fontWeightDictionary;
 
-            _widgetPositionUserInputX = widgetViewModel.WidgetPosition.X;
-            _widgetPositionUserInputY = widgetViewModel.WidgetPosition.Y;
+            _widgetPositionUserInputX = widgetViewModel.AnchoredCornerScaledPosition.X;
+            _widgetPositionUserInputY = widgetViewModel.AnchoredCornerScaledPosition.Y;
+
+            _widgetAnchoredCorner = widgetViewModel.AnchoredCorner;
 
             _widgetFontSizeUserInput = widgetViewModel.FontSize;
             _widgetFontFamily = widgetViewModel.FontFamily;
@@ -88,7 +95,7 @@ namespace DateToday.ViewModels
             _widgetOrdinalDaySuffixPosition = widgetViewModel.OrdinalDaySuffixPosition;
 
             _widgetPositionMax = 
-                widgetViewModel.WhenAnyValue(wvm => wvm.WidgetPositionMax)
+                widgetViewModel.WhenAnyValue(wvm => wvm.AnchoredCornerScaledPositionMax)
                                .ObserveOn(RxApp.MainThreadScheduler)
                                .ToProperty(this, nameof(WidgetPositionMax));
 
@@ -96,32 +103,27 @@ namespace DateToday.ViewModels
             {
                 disposables.Add(_widgetPositionMax);
 
-                widgetViewModel.WhenAnyValue(wvm => wvm.WidgetPosition)
-                               .ObserveOn(RxApp.MainThreadScheduler)
-                               .Select(position => position.X)
-                               .BindTo(this, svm => svm.WidgetPositionUserInputX)
-                               .DisposeWith(disposables);
-
-                widgetViewModel.WhenAnyValue(wvm => wvm.WidgetPosition)
-                               .ObserveOn(RxApp.MainThreadScheduler)
-                               .Select(position => position.Y)
-                               .BindTo(this, svm => svm.WidgetPositionUserInputY)
-                               .DisposeWith(disposables);
-
                 this.WhenAnyValue(settingsViewModel => settingsViewModel.WidgetPositionUserInputX)
                     .ObserveOn(RxApp.MainThreadScheduler)
                     .Where(input => input != null)
                     .Select(validatedInput => (double)validatedInput!)
-                    .Select(positionX => widgetViewModel.WidgetPosition.WithX(positionX))
-                    .BindTo(widgetViewModel, widgetViewModel => widgetViewModel.WidgetPosition)
+                    .Select(positionX => 
+                                widgetViewModel.AnchoredCornerScaledPosition.WithX(positionX))
+                    .BindTo(widgetViewModel, wvm => wvm.AnchoredCornerScaledPosition)
                     .DisposeWith(disposables);
 
                 this.WhenAnyValue(settingsViewModel => settingsViewModel.WidgetPositionUserInputY)
                     .ObserveOn(RxApp.MainThreadScheduler)
                     .Where(input => input != null)
                     .Select(validatedInput => (double)validatedInput!)
-                    .Select(positionY => widgetViewModel.WidgetPosition.WithY(positionY))
-                    .BindTo(widgetViewModel, widgetViewModel => widgetViewModel.WidgetPosition)
+                    .Select(positionY => 
+                                widgetViewModel.AnchoredCornerScaledPosition.WithY(positionY))
+                    .BindTo(widgetViewModel, wvm => wvm.AnchoredCornerScaledPosition)
+                    .DisposeWith(disposables);
+
+                this.WhenAnyValue(settingsViewModel => settingsViewModel.WidgetAnchoredCorner)
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .BindTo(widgetViewModel, widgetViewModel => widgetViewModel.AnchoredCorner)
                     .DisposeWith(disposables);
 
                 this.WhenAnyValue(settingsViewModel => settingsViewModel.WidgetFontFamily)
@@ -186,15 +188,15 @@ namespace DateToday.ViewModels
                     Observable.FromEventPattern<DataErrorsChangedEventArgs>(
                         handler => ErrorsChanged += handler,
                         handler => ErrorsChanged -= handler
-                        )
-                        .ObserveOn(RxApp.MainThreadScheduler)
-                        .ToProperty(this, nameof(DataErrorsChanged));
+                    )
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .ToProperty(this, nameof(DataErrorsChanged));
 
                 this.WhenAnyValue(
                         settingsViewModel => settingsViewModel.WidgetDateFormatUserInput,
                         settingsViewModel => settingsViewModel.WidgetOrdinalDaySuffixPosition)
                     // Does not need explicit disposal.
-                    .ObserveOn(RxApp.MainThreadScheduler) // Continued below.
+                    .ObserveOn(RxApp.MainThreadScheduler)
 
                     /* TODO: 
                      * https://stackoverflow.com/questions/29636910/possible-to-ignore-the-initial-value-for-a-reactiveobject */
@@ -295,6 +297,26 @@ namespace DateToday.ViewModels
                     });
         }
 
+        private static string? GetProductVersion()
+        {
+            Assembly? processExecutable = Assembly.GetEntryAssembly();
+
+            if (processExecutable != null)
+            {
+                string? productVersion = 
+                    FileVersionInfo.GetVersionInfo(processExecutable.Location).ProductVersion;
+
+                if (productVersion != null)
+                {
+                    return $"Ver. {productVersion}";
+                }
+            }
+
+            return null;
+        }
+
+        public static string? ProductVersion => GetProductVersion();
+
         private EventPattern<DataErrorsChangedEventArgs>? DataErrorsChanged =>
             _dataErrorsChanged?.Value;
 
@@ -314,6 +336,12 @@ namespace DateToday.ViewModels
         {
             get => _widgetPositionUserInputY;
             set => this.RaiseAndSetIfChanged(ref _widgetPositionUserInputY, value);
+        }
+
+        public WindowVertexIdentifier WidgetAnchoredCorner
+        {
+            get => _widgetAnchoredCorner;
+            set => this.RaiseAndSetIfChanged(ref _widgetAnchoredCorner, value);
         }
 
         public FontFamily WidgetFontFamily

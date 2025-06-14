@@ -1,17 +1,20 @@
 ﻿using Avalonia;
 using Avalonia.Media;
+using DateToday.Enums;
 
 namespace DateToday.Configuration
 {
     internal sealed class WidgetConfiguration(
-        Point widgetPosition, string fontFamilyName, int fontSize, string fontWeightLookupKey,
-        Color? customFontColour, bool isDropShadowEnabled, Color? customDropShadowColour, 
-        string dateFormat, byte? ordinalDaySuffixPosition)
+        Point anchoredCornerScaledPosition, WindowVertexIdentifier anchoredCorner, 
+        string fontFamilyName, int fontSize, string fontWeightLookupKey, Color? customFontColour, 
+        bool isDropShadowEnabled, Color? customDropShadowColour, string dateFormat, 
+        byte? ordinalDaySuffixPosition)
     {
         /* This class constitutes a simple data structure into which persisted settings may be 
          * deserialised. */
 
-        private readonly Point _widgetPosition = widgetPosition;
+        private readonly Point _anchoredCornerScaledPosition = anchoredCornerScaledPosition;
+        private readonly WindowVertexIdentifier _anchoredCorner = anchoredCorner;
         private readonly string _fontFamilyName = fontFamilyName;
         private readonly int _fontSize = fontSize;
         private readonly string _fontWeightLookupKey = fontWeightLookupKey;
@@ -21,7 +24,9 @@ namespace DateToday.Configuration
         private readonly string _dateFormat = dateFormat;
         private readonly byte? _ordinalDaySuffixPosition = ordinalDaySuffixPosition;
 
-        public Point WidgetPosition => _widgetPosition;
+        public Point AnchoredCornerScaledPosition => _anchoredCornerScaledPosition;
+
+        public WindowVertexIdentifier AnchoredCorner => _anchoredCorner;
 
         public string FontFamilyName => _fontFamilyName;
 
