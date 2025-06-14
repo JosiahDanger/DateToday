@@ -54,6 +54,10 @@ DateToday is a desktop widget that displays the current date and/or time in a pr
 
    If, for example, the widget lives in the bottom-right corner of your desktop, you will probably want to select the bottom-right button. This will allow the widget to grow towards the centre of your monitor.
 
+3. *I messed up the date / time format.*
+
+   lmao
+
 ## Planned Features
 - Multi-monitor support
 - Linux support
