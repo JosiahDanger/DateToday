@@ -38,9 +38,24 @@ DateToday is a desktop widget that displays the current date and/or time in a pr
 3. Enter `shell:startup`. This will open an instance of File Explorer inside a folder named 'Startup'.
 4. Move your shortcut into this folder.
 
+### FAQ
+
+1. *How may I omit the displayed ordinal day suffix?* ('st', 'nd', 'rd', 'th')
+
+   Navigate to the field labelled 'Append ordinal suffix to day of month at position', and erase its contents.
+
+2. *What's the deal with the 'Anchored corner' buttons?*
+
+   #### TL;DR
+   Just click the button corresponding to the corner of your desktop in which the widget lives. Okay, Jerry?
+
+   *Tell me more.*
+
+   The widget is secretly a rectangular window. Each of the buttons under 'Anchored corner' corresponds to one of its four corners. When the widget automatically resizes, the selected corner will remain fixed in place.
+
+   If, for example, the widget lives in the bottom-right corner of your desktop, you will probably want to select the bottom-right button. This will allow the widget to grow towards the centre of your monitor.
+
 ## Planned Features
-- User may choose one of four corners at which to anchor text. 
-(Currently working on this as of June 2025; having some difficulty.)
 - Multi-monitor support
 - Linux support
     
