@@ -5,7 +5,7 @@
         xmlns:vm="using:DateToday.ViewModels"
         Title="Date Today"
         x:DataType="vm:WidgetViewModel"
-        Background="blue"
+        Background="Transparent"
         Focusable="False"
         Icon="/Assets/jd-logo.ico"
         ShowInTaskbar="False"

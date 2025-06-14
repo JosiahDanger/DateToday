@@ -15,7 +15,6 @@
 	<Title>DateToday</Title>
 	<Description>Beautiful, highly configurable desktop widget that displays the current date and/or time</Description>
 	<RepositoryUrl>https://github.com/JosiahDanger/DateToday</RepositoryUrl>
-	<AssemblyVersion>1.3.2.*</AssemblyVersion>
 
 	<!-- See: https://stackoverflow.com/a/42078226 -->
 	<AssemblyInformationalVersion>1.3.2</AssemblyInformationalVersion>
