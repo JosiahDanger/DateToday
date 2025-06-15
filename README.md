@@ -22,7 +22,7 @@ DateToday is a desktop widget that displays the current date and/or time in a pr
 \
 ![Widget Screenshot](https://github.com/user-attachments/assets/43626d79-c1b2-4a98-8f4c-03e79050b469)
 
-![Widget Settings Screenshot](https://github.com/user-attachments/assets/23b8b084-291a-4eb9-a0f2-1eb2b60b651e)
+![Widget Settings Screenshot](https://github.com/user-attachments/assets/e07e92ba-4b8d-4279-b5f4-0833b4728768)
 
 ## Get Started
 
