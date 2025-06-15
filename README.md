@@ -69,6 +69,4 @@ DateToday is a desktop widget that displays the current date and/or time in a pr
 - Widget text is refreshed every minute, on the minute.
 
 \
-I am keen to receive feedback on this application, particularly on its codebase. Please let me know if you have any suggestions.
-
-I can be contacted by email at: joedangergithub.coherence596@passmail.net
+Should you have any queries or suggestions, feel free to contact me by email: joedangergithub.coherence596@passmail.net
