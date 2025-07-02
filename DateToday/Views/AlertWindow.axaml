@@ -1,0 +1,45 @@
+<Window x:Class="DateToday.AlertWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:DateToday.ViewModels"
+        Title="{Binding WindowTitle,
+                        Mode=OneTime}"
+        x:DataType="vm:AlertViewModel"
+        CanResize="False"
+        Icon="/Assets/jd-logo.ico"
+        ShowInTaskbar="True"
+        SizeToContent="WidthAndHeight"
+        SystemDecorations="None"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Styles>
+        <StyleInclude Source="/Styles/AlertStyles.axaml" />
+    </Window.Styles>
+
+    <Border Width="400"
+            Background="{Binding BackgroundBrush,
+                                 Mode=OneTime}"
+            Classes="AlertOuterBorder">
+
+        <StackPanel Orientation="Vertical">
+
+            <TextBlock Classes="AlertCaption" />
+
+            <Border Classes="AlertInnerBorder">
+
+                <TextBlock Classes="AlertMessage"
+                           Text="{Binding AlertMessage,
+                                          Mode=OneTime}" />
+
+            </Border>
+
+            <Button Classes="CloseButton"
+                    Command="{Binding CloseAlert}"
+                    Content="{Binding ActionButtonContent,
+                                      Mode=OneTime}" />
+
+        </StackPanel>
+
+    </Border>
+
+</Window>

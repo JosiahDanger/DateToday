@@ -6,7 +6,7 @@ using DateToday.Enums;
 using DateToday.ViewModels;
 using ReactiveUI;
 using System;
-using System.Diagnostics;
+using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -39,10 +39,12 @@ namespace DateToday.Views
             }
 
             _themedTextColour = 
-                InitialiseThemedColour(RESOURCE_KEY_THEMED_TEXT_COLOUR, Colors.Black);
+                Utilities.InitialiseThemedColour(
+                    this, RESOURCE_KEY_THEMED_TEXT_COLOUR, Colors.Black);
 
-            _themedTextShadowColour = 
-                InitialiseThemedColour(RESOURCE_KEY_THEMED_TEXT_SHADOW_COLOUR, Colors.White);
+            _themedTextShadowColour =
+                Utilities.InitialiseThemedColour(
+                    this, RESOURCE_KEY_THEMED_TEXT_SHADOW_COLOUR, Colors.White);
 
             this.WhenActivated(disposables =>
             {
@@ -184,34 +186,13 @@ namespace DateToday.Views
             return anchoredCornerScaledPosition;
         }
 
-        private Color InitialiseThemedColour(string resourceKey, Color fallback)
-        {
-            this.TryFindResource(
-                resourceKey,
-                ActualThemeVariant,
-                out var themedColourResourceOrNull);
-
-            if (themedColourResourceOrNull is Color themedColourResource)
-            {
-                return themedColourResource;
-            }
-            else
-            {
-                Debug.WriteLine(
-                    $"Failed to discern thematically-appropriate colour associated with key: " +
-                    $"'{resourceKey}'. Using {fallback} instead.");
-
-                return fallback;
-            }
-        }
-
         private async Task DoShowSettingsDialogAsync(
-            IInteractionContext<SettingsViewModel, bool> interaction)
+            IInteractionContext<SettingsViewModel, Unit> interaction)
         {
             SettingsWindow dialog = new() { DataContext = interaction.Input };
 
-            bool dialogResult = await dialog.ShowDialog<bool>(this).ConfigureAwait(true);
-            interaction.SetOutput(dialogResult);
+            await dialog.ShowDialog(this).ConfigureAwait(true);
+            interaction.SetOutput(Unit.Default);
         }
 
         private Size? DesktopWorkingAreaOrNull => 

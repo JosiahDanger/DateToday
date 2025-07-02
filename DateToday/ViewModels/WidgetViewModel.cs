@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Runtime.Serialization;
@@ -38,6 +39,8 @@ namespace DateToday.ViewModels
     {
         private readonly INewMinuteEventGenerator _modelInterface;
 
+        private readonly CultureInfo _culture;
+
         private string
             _dateText = string.Empty, _dateFormat, _dateFormatUserInput, _fontWeightLookupKey;
 
@@ -63,7 +66,7 @@ namespace DateToday.ViewModels
 
         public ViewModelActivator Activator { get; } = new();
 
-        public Interaction<SettingsViewModel, bool> InteractionReceiveNewSettings { get; } = new();
+        public Interaction<SettingsViewModel, Unit> InteractionReceiveNewSettings { get; } = new();
 
         public ICommand ReceiveNewSettings { get; }
 
@@ -74,7 +77,8 @@ namespace DateToday.ViewModels
             INewMinuteEventGenerator modelInterface,
             List<FontFamily> availableFonts,
             Dictionary<string, FontWeight> fontWeightDictionary,
-            WidgetConfiguration restoredSettings)
+            WidgetConfiguration restoredSettings,
+            CultureInfo culture)
         {
             /* Assigning the 'modelInterface' argument to a private WidgetViewModel field here is
              * not strictly necessary; the argument object can be disposed of with the
@@ -83,6 +87,7 @@ namespace DateToday.ViewModels
              * warning is raised in error, but I'm not certain. */
 
             _modelInterface = modelInterface;
+            _culture = culture;
             _automaticFontColour = viewInterface.ThemedTextColour;
 
             _anchoredCornerScaledPosition = restoredSettings.AnchoredCornerScaledPosition;
@@ -153,10 +158,11 @@ namespace DateToday.ViewModels
         {
             // TODO: This could probably be a ReactiveCommand or ICommand.
 
-            DateText = GetNewDateText(DateFormat, OrdinalDaySuffixPosition);
+            DateText = GetNewDateText(DateFormat, OrdinalDaySuffixPosition, _culture);
         }
 
-        private static string GetNewDateText(string dateFormat, byte? ordinalDaySuffixPosition)
+        private static string GetNewDateText(
+            string dateFormat, byte? ordinalDaySuffixPosition, CultureInfo culture)
         {
             static string GetOrdinalDaySuffix(int dayNumberInWeek)
             {
@@ -169,7 +175,6 @@ namespace DateToday.ViewModels
                 };
             }
 
-            CultureInfo operatingSystemCulture = CultureInfo.CurrentCulture;
             DateTime currentDateTime = DateTime.Now;
 
             string formattedDateOutput;
@@ -188,15 +193,14 @@ namespace DateToday.ViewModels
                     dateFormat.Insert((int)ordinalDaySuffixPosition, "{0}");
 
                 string formattedDateIncludingFormatItem =
-                    currentDateTime.ToString(dateFormatIncludingFormatItem, operatingSystemCulture);
+                    currentDateTime.ToString(dateFormatIncludingFormatItem, culture);
 
                 formattedDateOutput =
-                    string.Format(
-                        operatingSystemCulture, formattedDateIncludingFormatItem, ordinalDaySuffix);
+                    string.Format(culture, formattedDateIncludingFormatItem, ordinalDaySuffix);
             }
             else
             {
-                formattedDateOutput = currentDateTime.ToString(dateFormat, operatingSystemCulture);
+                formattedDateOutput = currentDateTime.ToString(dateFormat, culture);
             }
 
             Debug.WriteLine($"Refreshed widget text at {currentDateTime}.");
@@ -209,7 +213,7 @@ namespace DateToday.ViewModels
 
             try
             {
-                DateText = GetNewDateText(newDateFormat, ordinalDaySuffixPosition);
+                DateText = GetNewDateText(newDateFormat, ordinalDaySuffixPosition, _culture);
             }
             catch (System.FormatException)
             {

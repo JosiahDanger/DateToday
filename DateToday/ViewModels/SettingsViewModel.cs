@@ -55,17 +55,8 @@ namespace DateToday.ViewModels
 
         public ReactiveCommand<ValueTuple<string, byte?>, Unit> ParseDateFormatUserInput { get; }
 
-        public ReactiveCommand<bool, bool> CloseWidgetSettings { get; } =
-            ReactiveCommand.Create<bool, bool>(dialogResult =>
-            {
-                /* This function will accept a dummy boolean value and pass it to the caller: the
-                 * WidgetViewModel instance. This behaviour is a vestige of cut functionality in
-                 * which the user would be able to manually save or revert changes to settings. I
-                 * will keep this here for now in case I want the SettingsWindow dialogue in the
-                 * future to return something meaningful. */
-
-                return dialogResult;
-            });
+        public ReactiveCommand<Unit, Unit> CloseWidgetSettings { get; } = 
+            ReactiveCommand.Create(() => Unit.Default);
 
         public SettingsViewModel(
             IWidgetViewModel widgetViewModel,

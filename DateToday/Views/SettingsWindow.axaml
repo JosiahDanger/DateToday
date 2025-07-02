@@ -10,7 +10,6 @@
         CanResize="False"
         Icon="/Assets/jd-logo.ico"
         ShowInTaskbar="False"
-        SizeToContent="WidthAndHeight"
         SystemDecorations="None"
         WindowStartupLocation="CenterOwner">
 
@@ -365,7 +364,6 @@
                     Canvas.Right="15"
                     Classes="CloseButton"
                     Command="{Binding CloseWidgetSettings}"
-                    CommandParameter="{x:False}"
                     Content="{Binding SettingsExitButtonContent,
                                       Mode=OneWay}" />
 

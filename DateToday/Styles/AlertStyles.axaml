@@ -1,0 +1,49 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <!--  Add Controls for Previewer Here  -->
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="Border.AlertOuterBorder">
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
+        <Setter Property="BorderThickness" Value="3" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+
+    <Style Selector="Border.AlertInnerBorder">
+        <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundAltMediumHighBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColorDark1}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+        <Setter Property="Margin" Value="25 15" />
+    </Style>
+
+    <Style Selector="TextBlock.AlertCaption">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Margin" Value="25 25 25 15" />
+        <Setter Property="Text" Value="DateToday has encountered a problem." />
+    </Style>
+
+    <Style Selector="TextBlock.AlertMessage">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Light" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="LineSpacing" Value="5" />
+        <Setter Property="Margin" Value="5 10 5 5" />
+        <Setter Property="Text" Value="OOPSIE WOOPSIE!! Uwu We made a fucky wucky!! A wittle fucko boingo! The code monkeys at our headquarters are working VEWY HAWD to fix this!" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <Style Selector="Button.CloseButton">
+        <Setter Property="Content" Value="Sample Text" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="15 10 15 20" />
+        <Setter Property="Padding" Value="15 10" />
+    </Style>
+
+</Styles>

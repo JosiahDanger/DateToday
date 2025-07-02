@@ -16,7 +16,7 @@
 	<Description>Beautiful, highly configurable desktop widget that displays the current date and/or time</Description>
 	<RepositoryUrl>https://github.com/JosiahDanger/DateToday</RepositoryUrl>
 
-	<Version>1.4.0</Version>
+	<Version>1.4.1</Version>
 	<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 	
   </PropertyGroup>
@@ -45,14 +45,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.3.1" />
-    <PackageReference Include="Avalonia.Controls.ColorPicker" Version="11.3.1" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.3.1" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.1" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.1" />
+    <PackageReference Include="Avalonia" Version="11.3.2" />
+    <PackageReference Include="Avalonia.Controls.ColorPicker" Version="11.3.2" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.2" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.2" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.2" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.1" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="11.3.1" />
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.2" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.3.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="ReactiveUI.Validation" Version="4.1.1" />
   </ItemGroup>

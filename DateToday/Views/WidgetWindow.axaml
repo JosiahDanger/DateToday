@@ -39,7 +39,7 @@
         bounds of the widget window.
     -->
 
-    <TextBlock Padding="5 0 5 5"
+    <TextBlock Padding="10 0 10 10"
                Effect="{Binding DropShadow}"
                FontFamily="{Binding FontFamily}"
                FontSize="{Binding FontSize}"

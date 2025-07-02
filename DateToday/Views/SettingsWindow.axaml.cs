@@ -43,7 +43,7 @@ internal sealed partial class SettingsWindow : ReactiveWindow<SettingsViewModel>
 
             ViewModel!.CloseWidgetSettings
                       .ObserveOn(RxApp.MainThreadScheduler)
-                      .Subscribe(dialogResult => Close(dialogResult))
+                      .Subscribe(_ => Close())
                       .DisposeWith(disposables);
 
             if (settingsDateFormatField != null)
