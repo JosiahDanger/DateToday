@@ -20,9 +20,9 @@ DateToday is a desktop widget that displays the current date and/or time in a pr
 - Developed without the use of generative AI
 
 \
-![Widget Screenshot](https://github.com/user-attachments/assets/43626d79-c1b2-4a98-8f4c-03e79050b469)
+![Widget Screenshot](https://github.com/user-attachments/assets/60beb62d-827d-4ed2-a175-65bbc6fe57d3)
 
-![Widget Settings Screenshot](https://github.com/user-attachments/assets/23b8b084-291a-4eb9-a0f2-1eb2b60b651e)
+![Widget Settings Screenshot](https://github.com/user-attachments/assets/4345e90b-9e29-4db3-8792-324816e04347)
 
 ## Get Started
 
@@ -69,6 +69,4 @@ DateToday is a desktop widget that displays the current date and/or time in a pr
 - Widget text is refreshed every minute, on the minute.
 
 \
-I am keen to receive feedback on this application, particularly on its codebase. Please let me know if you have any suggestions.
-
-I can be contacted by email at: joedangergithub.coherence596@passmail.net
+Should you have any queries or suggestions, feel free to contact me by email: joedangergithub.coherence596@passmail.net
