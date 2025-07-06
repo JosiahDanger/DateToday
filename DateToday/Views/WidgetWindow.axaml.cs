@@ -18,6 +18,8 @@ namespace DateToday.Views
         Color ThemedTextColour { get; }
         Color ThemedTextShadowColour { get; }
 
+        // TODO. Rework Close() method into a command.
+
         void Close(object? dialogResult);
     }
 

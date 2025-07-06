@@ -44,7 +44,7 @@ namespace DateToday.ViewModels
         private string
             _dateText = string.Empty, _dateFormat, _dateFormatUserInput, _fontWeightLookupKey;
 
-        private readonly ObservableAsPropertyHelper<int?> _fontWeight;
+        private readonly ObservableAsPropertyHelper<FontWeight> _fontWeight;
 
         private FontFamily _fontFamily;
 
@@ -110,7 +110,9 @@ namespace DateToday.ViewModels
 
                 this.WhenAnyValue(widgetViewModel => widgetViewModel.FontWeightLookupKey)
                     .ObserveOn(RxApp.MainThreadScheduler)
-                    .Select(key => AttemptFontWeightLookup(fontWeightDictionary, key))
+                    .Select(key => 
+                                AttemptFontWeightLookup(
+                                    fontWeightDictionary, key, FontWeight.Normal))
                     .ToProperty(this, nameof(FontWeight));
 
             this.WhenActivated(disposables =>
@@ -184,9 +186,9 @@ namespace DateToday.ViewModels
                 Byte dayOfMonth = (byte)currentDateTime.Day;
                 string ordinalDaySuffix = GetOrdinalDaySuffix(dayOfMonth);
 
-                /* This code makes use of .NET composite formatting.
+                /* This code makes use of .NET composite formatting. 
                  * 
-                 * See the following Microsoft Learn article:
+                 * See the following Microsoft Learn article: 
                  * https://learn.microsoft.com/dotnet/standard/base-types/composite-formatting */
 
                 string dateFormatIncludingFormatItem =
@@ -221,28 +223,33 @@ namespace DateToday.ViewModels
                 throw;
             }
 
-            /* A new valid date format, which may include an ordinal day suffix, has been applied
+            /* A new valid date format, which may include an ordinal day suffix, has been applied 
              * successfully. The method arguments are persisted here. */
 
             DateFormat = newDateFormat;
             OrdinalDaySuffixPosition = ordinalDaySuffixPosition;
         }
 
-        private static int? AttemptFontWeightLookup(
-            Dictionary<string, FontWeight>? fontWeightDictionary, string lookupKey)
+        private static FontWeight AttemptFontWeightLookup(
+            Dictionary<string, FontWeight>? fontWeightDictionary, string lookupKey, 
+            FontWeight fallback)
         {
-            if (fontWeightDictionary != null)
+            if (fontWeightDictionary != null && !string.IsNullOrEmpty(lookupKey))
             {
                 bool isFontWeightValueFound =
                     fontWeightDictionary.TryGetValue(lookupKey, out FontWeight newFontWeightValue);
 
                 if (isFontWeightValueFound)
                 {
-                    return (int)newFontWeightValue;
+                    return newFontWeightValue;
                 }
             }
 
-            return null;
+            Debug.WriteLine(
+                $"Failed to discern font weight value associated with key: '{lookupKey}'. Using " +
+                $"{fallback} instead.");
+
+            return fallback;
         }
 
         private void IsDropShadowEnabled_Changed(bool isEnabled, Color initialColour)
@@ -278,7 +285,7 @@ namespace DateToday.ViewModels
         }
 
         [IgnoreDataMember]
-        public int? FontWeight => _fontWeight.Value;
+        public FontWeight FontWeight => _fontWeight.Value;
 
         [IgnoreDataMember]
         public Color AutomaticFontColour => _automaticFontColour;

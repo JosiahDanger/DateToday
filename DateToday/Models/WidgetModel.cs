@@ -21,14 +21,14 @@ namespace DateToday.Models
         {
             _newMinuteEventGenerator = new() { AutoReset = false };
 
-            /* The Timer object will be configured such that it generates an Elapsed event every
+            /* The Timer object will be configured such that it generates an Elapsed event every 
              * minute, on the minute. My implementation of this behaviour relies on resetting its 
              * Interval property on each Elapsed event. This approach will prevent the Timer from 
              * drifting. */
 
             ResetMinuteEventGeneratorInterval();
 
-            /* I have converted the Timer Elapsed event into a Rx.NET observable.
+            /* I have converted the Timer Elapsed event into a Rx.NET observable. 
              * See: https://www.reactiveui.net/docs/handbook/events.html#how-do-i-convert-my-own-c-events-into-observables */
 
             _newMinuteEventObservable = 
@@ -44,7 +44,7 @@ namespace DateToday.Models
         private void ResetMinuteEventGeneratorInterval()
         {
             /* This function has been adapted from code posted to Stack Overflow by Jared. 
-             * Thanks Jared!
+             * Thanks Jared! 
              * See: https://stackoverflow.com/a/2075022 */
 
             DateTime currentDateTime = DateTime.Now;
