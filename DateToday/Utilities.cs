@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Media;
 using DateToday.Configuration;
 using DateToday.Enums;
@@ -215,10 +216,11 @@ namespace DateToday
             return isValid;
         }
 
-        public static Color InitialiseThemedColour(Window view, string resourceKey, Color fallback)
+        public static Color InitialiseThemedColour(
+            StyledElement element, string resourceKey, Color fallback)
         {
-            view.TryFindResource(
-                resourceKey, view.ActualThemeVariant, out var themedColourResourceOrNull);
+            element.TryFindResource(
+                resourceKey, element.ActualThemeVariant, out var themedColourResourceOrNull);
 
             if (themedColourResourceOrNull is Color themedColourResource)
             {

@@ -3,14 +3,13 @@ using Avalonia.Media;
 using DateToday.Configuration;
 using DateToday.Enums;
 using DateToday.Models;
-using DateToday.Views;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Reactive;
-using System.Reactive.Disposables;
+using System.Reactive.Disposables.Fluent;
 using System.Reactive.Linq;
 using System.Runtime.Serialization;
 using System.Windows.Input;
@@ -48,13 +47,9 @@ namespace DateToday.ViewModels
 
         private FontFamily _fontFamily;
 
-        private readonly Color _automaticFontColour;
-
         private Color? _customFontColour, _customDropShadowColour;
 
         private bool _isDropShadowEnabled;
-
-        private DropShadowEffect? _dropShadow;
 
         private Point _anchoredCornerScaledPosition, _anchoredCornerScaledPositionMax;
 
@@ -70,10 +65,9 @@ namespace DateToday.ViewModels
 
         public ICommand ReceiveNewSettings { get; }
 
-        public ICommand ExitApplication { get; }
+        public ReactiveCommand<Unit, Unit> ExitApplication { get; }
 
         public WidgetViewModel(
-            IWidgetWindow viewInterface,
             INewMinuteEventGenerator modelInterface,
             List<FontFamily> availableFonts,
             Dictionary<string, FontWeight> fontWeightDictionary,
@@ -88,7 +82,6 @@ namespace DateToday.ViewModels
 
             _modelInterface = modelInterface;
             _culture = culture;
-            _automaticFontColour = viewInterface.ThemedTextColour;
 
             _anchoredCornerScaledPosition = restoredSettings.AnchoredCornerScaledPosition;
             _anchoredCorner = restoredSettings.AnchoredCorner;
@@ -125,35 +118,20 @@ namespace DateToday.ViewModels
                                .ObserveOn(RxApp.MainThreadScheduler)
                                .Subscribe(_ => RefreshDateText())
                                .DisposeWith(disposables);
-
-                this.WhenAnyValue(widgetViewModel => widgetViewModel.IsDropShadowEnabled)
-                    // Does not need explicit disposal.
-                    .ObserveOn(RxApp.MainThreadScheduler)
-                    .Subscribe(isEnabled =>
-                        IsDropShadowEnabled_Changed(
-                            isEnabled, viewInterface.ThemedTextShadowColour));
-
-                this.WhenAnyValue(widgetViewModel => widgetViewModel.CustomDropShadowColour)
-                    // Does not need explicit disposal.
-                    .ObserveOn(RxApp.MainThreadScheduler)
-                    .Subscribe(newColourOrNull =>
-                        CustomDropShadowColour_Changed(
-                            newColourOrNull, viewInterface.ThemedTextShadowColour));
             });
 
-            ReceiveNewSettings = ReactiveCommand.CreateFromTask(async () =>
-            {
-                SettingsViewModel settingsViewModel =
-                    new(this, availableFonts, fontWeightDictionary);
-                await InteractionReceiveNewSettings.Handle(settingsViewModel);
+            ReceiveNewSettings = 
+                ReactiveCommand.CreateFromTask(async () =>
+                {
+                    SettingsViewModel settingsViewModel =
+                        new(this, availableFonts, fontWeightDictionary);
+                    await InteractionReceiveNewSettings.Handle(settingsViewModel);
 
-                RxApp.SuspensionHost.AppState = this;
-            });
+                    RxApp.SuspensionHost.AppState = this;
+                });
 
-            ExitApplication = ReactiveCommand.Create(() =>
-            {
-                viewInterface?.Close(0);
-            });
+            ExitApplication = 
+                ReactiveCommand.Create<Unit>(_ => Observable.Return(Unit.Default));
         }
 
         private void RefreshDateText()
@@ -252,43 +230,8 @@ namespace DateToday.ViewModels
             return fallback;
         }
 
-        private void IsDropShadowEnabled_Changed(bool isEnabled, Color initialColour)
-        {
-            if (isEnabled)
-            {
-                DropShadow =
-                    new DropShadowEffect()
-                    {
-                        BlurRadius = 0,
-                        Color = initialColour
-                    };
-            }
-            else
-            {
-                DropShadow = null;
-            }
-        }
-
-        private void CustomDropShadowColour_Changed(Color? newColourOrNull, Color fallback)
-        {
-            if (DropShadow != null)
-            {
-                if (newColourOrNull is Color newColour)
-                {
-                    DropShadow.Color = newColour;
-                }
-                else
-                {
-                    DropShadow.Color = fallback;
-                }
-            }
-        }
-
         [IgnoreDataMember]
         public FontWeight FontWeight => _fontWeight.Value;
-
-        [IgnoreDataMember]
-        public Color AutomaticFontColour => _automaticFontColour;
 
         [DataMember]
         public Point AnchoredCornerScaledPosition
@@ -360,13 +303,6 @@ namespace DateToday.ViewModels
         {
             get => _customDropShadowColour;
             set => this.RaiseAndSetIfChanged(ref _customDropShadowColour, value);
-        }
-
-        [IgnoreDataMember]
-        public DropShadowEffect? DropShadow
-        {
-            get => _dropShadow;
-            set => this.RaiseAndSetIfChanged(ref _dropShadow, value);
         }
 
         [IgnoreDataMember]

@@ -2,13 +2,13 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
-using Avalonia.ReactiveUI;
 using DateToday.Configuration;
 using DateToday.Drivers;
 using DateToday.Models;
 using DateToday.ViewModels;
 using DateToday.Views;
 using ReactiveUI;
+using ReactiveUI.Avalonia;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -121,11 +121,7 @@ namespace DateToday
                 WidgetModel model = new();
 
                 WidgetViewModel viewModel =
-
-                    // TODO: Remove IWidgetWindow dependency from constructor.
-
-                    new(view, 
-                        model, 
+                    new(model, 
                         availableFonts, 
                         fontWeightDictionary, 
                         userConfiguration, 

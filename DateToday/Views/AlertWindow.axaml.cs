@@ -1,9 +1,9 @@
 using Avalonia.Controls;
-using Avalonia.ReactiveUI;
 using DateToday.ViewModels;
 using ReactiveUI;
+using ReactiveUI.Avalonia;
 using System;
-using System.Reactive.Disposables;
+using System.Reactive.Disposables.Fluent;
 using System.Reactive.Linq;
 
 namespace DateToday;

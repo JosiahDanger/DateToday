@@ -39,35 +39,11 @@
         bounds of the widget window.
     -->
 
-    <TextBlock Padding="10 0 10 10"
-               Effect="{Binding DropShadow}"
+    <TextBlock Name="WidgetText"
+               Padding="10 0 10 10"
                FontFamily="{Binding FontFamily}"
                FontSize="{Binding FontSize}"
                FontWeight="{Binding FontWeight}"
-               Text="{Binding DateText}">
-
-        <TextBlock.Foreground>
-
-            <MultiBinding Converter="{StaticResource BrushSelector}">
-
-                <!--
-                    The application will choose one of the two following Color values for conversion
-                    into a SolidColorBrush. The chosen Color is determined by
-                    'ToBrushMultiConverterWithFallback'; it will be the first non-null colour.
-                    
-                    In effect, if the user has selected a custom font colour, then it will be
-                    applied to the widget, otherwise a thematically-appropriate automatic font
-                    colour will instead be used.
-                -->
-
-                <Binding Path="CustomFontColour" />
-
-                <Binding Path="AutomaticFontColour" />
-
-            </MultiBinding>
-
-        </TextBlock.Foreground>
-
-    </TextBlock>
+               Text="{Binding DateText}" />
 
 </Window>

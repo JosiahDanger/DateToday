@@ -1,34 +1,22 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
-using Avalonia.ReactiveUI;
 using DateToday.Enums;
 using DateToday.ViewModels;
 using ReactiveUI;
+using ReactiveUI.Avalonia;
 using System;
 using System.Reactive;
-using System.Reactive.Disposables;
+using System.Reactive.Disposables.Fluent;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
 namespace DateToday.Views
 {
-    internal interface IWidgetWindow
-    {
-        Color ThemedTextColour { get; }
-        Color ThemedTextShadowColour { get; }
-
-        // TODO. Rework Close() method into a command.
-
-        void Close(object? dialogResult);
-    }
-
-    internal sealed partial class WidgetWindow : ReactiveWindow<WidgetViewModel>, IWidgetWindow
+    internal sealed partial class WidgetWindow : ReactiveWindow<WidgetViewModel>
     {
         private const string RESOURCE_KEY_THEMED_TEXT_COLOUR = "SystemBaseHighColor";
         private const string RESOURCE_KEY_THEMED_TEXT_SHADOW_COLOUR = "SystemRegionColor";
-
-        private readonly Color _themedTextColour, _themedTextShadowColour;
 
         public WidgetWindow()
         {
@@ -40,17 +28,38 @@ namespace DateToday.Views
                 return;
             }
 
-            _themedTextColour = 
+            Color themedTextColour =
                 Utilities.InitialiseThemedColour(
                     this, RESOURCE_KEY_THEMED_TEXT_COLOUR, Colors.Black);
 
-            _themedTextShadowColour =
+            Color themedTextShadowColour =
                 Utilities.InitialiseThemedColour(
                     this, RESOURCE_KEY_THEMED_TEXT_SHADOW_COLOUR, Colors.White);
 
             this.WhenActivated(disposables =>
             {
                 ViewModel!.InteractionReceiveNewSettings.RegisterHandler(DoShowSettingsDialogAsync);
+
+                ViewModel.WhenAnyValue(widgetViewModel => widgetViewModel.CustomFontColour)
+                         .ObserveOn(RxApp.MainThreadScheduler)
+                         .Select(fontColourOrNull => 
+                                    GenerateTextBrush(fontColourOrNull, themedTextColour))
+                         .BindTo(this, widgetWindow => widgetWindow.WidgetText.Foreground)
+                         .DisposeWith(disposables);
+
+                ViewModel.WhenAnyValue(widgetViewModel => widgetViewModel.IsDropShadowEnabled,
+                                       widgetViewModel => widgetViewModel.CustomDropShadowColour)
+                         .ObserveOn(RxApp.MainThreadScheduler)
+                         .Select(args => 
+                                    GenerateDropShadow(
+                                        args.Item1, args.Item2, themedTextShadowColour))
+                         .BindTo(this, widgetWindow => widgetWindow.WidgetText.Effect)
+                         .DisposeWith(disposables);
+
+                ViewModel.ExitApplication
+                         .ObserveOn(RxApp.MainThreadScheduler)
+                         .Subscribe(_ => Close())
+                         .DisposeWith(disposables);
 
                 IObservable<PixelPoint> newPositionFromSizeChangeObservable =
                     Observable.FromEventPattern<SizeChangedEventArgs>(
@@ -188,6 +197,40 @@ namespace DateToday.Views
             return anchoredCornerScaledPosition;
         }
 
+        private static SolidColorBrush GenerateTextBrush(
+            Color? fontColourOrNull, Color fallbackColour)
+        {
+            if (fontColourOrNull is Color fontColour)
+            {
+                return new SolidColorBrush(fontColour);
+            }
+
+            return new SolidColorBrush(fallbackColour);
+        }
+
+        private static DropShadowEffect? GenerateDropShadow(
+            bool isEnabled, Color? newColourOrNull, Color fallbackColour)
+        {
+            if (isEnabled)
+            {
+                Color dropShadowColour = fallbackColour;
+
+                if (newColourOrNull is Color newColour)
+                {
+                    dropShadowColour = newColour;
+                }
+
+                return
+                    new DropShadowEffect()
+                    {
+                        BlurRadius = 0,
+                        Color = dropShadowColour
+                    };
+            }
+
+            return null;
+        }
+
         private async Task DoShowSettingsDialogAsync(
             IInteractionContext<SettingsViewModel, Unit> interaction)
         {
@@ -199,9 +242,5 @@ namespace DateToday.Views
 
         private Size? DesktopWorkingAreaOrNull => 
             Screens.Primary?.WorkingArea.Size.ToSize(DesktopScaling);
-
-        public Color ThemedTextColour => _themedTextColour;
-
-        public Color ThemedTextShadowColour => _themedTextShadowColour;
     }
 }
