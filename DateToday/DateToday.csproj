@@ -58,12 +58,51 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Resources\BaseErrorMessageFormats.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>BaseErrorMessageFormats.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\DebugMessageFormats.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DebugMessageFormats.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\DefaultConfigurationValidationErrorMessageFormats.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DefaultConfigurationValidationErrorMessageFormats.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\DeserialisationErrorMessageFormats.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DeserialisationErrorMessageFormats.resx</DependentUpon>
+    </Compile>
     <Compile Update="Views\WidgetWindow.axaml.cs">
       <DependentUpon>WidgetWindow.axaml</DependentUpon>
     </Compile>
     <Compile Update="Views\SettingsWindow.axaml.cs">
       <DependentUpon>SettingsWindow.axaml</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\BaseErrorMessageFormats.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>BaseErrorMessageFormats.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\DebugMessageFormats.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DebugMessageFormats.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\DefaultConfigurationValidationErrorMessageFormats.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DefaultConfigurationValidationErrorMessageFormats.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\DeserialisationErrorMessageFormats.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DeserialisationErrorMessageFormats.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

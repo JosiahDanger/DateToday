@@ -3,6 +3,7 @@ using Avalonia.Media;
 using DateToday.Configuration;
 using DateToday.Enums;
 using DateToday.Models;
+using DateToday.Resources;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ using System.Reactive;
 using System.Reactive.Disposables.Fluent;
 using System.Reactive.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Windows.Input;
 
 namespace DateToday.ViewModels
@@ -66,6 +68,11 @@ namespace DateToday.ViewModels
         public ICommand ReceiveNewSettings { get; }
 
         public ReactiveCommand<Unit, Unit> ExitApplication { get; }
+
+#if DEBUG
+        private static readonly CompositeFormat DEBUG_MESSAGE_REFRESHED_WIDGET_TEXT =
+            CompositeFormat.Parse(DebugMessageFormats.RefreshedWidgetText);
+#endif
 
         public WidgetViewModel(
             INewMinuteEventGenerator modelInterface,
@@ -183,7 +190,14 @@ namespace DateToday.ViewModels
                 formattedDateOutput = currentDateTime.ToString(dateFormat, culture);
             }
 
-            Debug.WriteLine($"Refreshed widget text at {currentDateTime}.");
+#if DEBUG
+            string debugMessageRefreshedWidgetText =
+                string.Format(
+                    culture, DEBUG_MESSAGE_REFRESHED_WIDGET_TEXT, currentDateTime.ToLocalTime());
+#endif
+
+            Debug.WriteLine(debugMessageRefreshedWidgetText);
+
             return formattedDateOutput;
         }
 
@@ -222,6 +236,8 @@ namespace DateToday.ViewModels
                     return newFontWeightValue;
                 }
             }
+
+            // TODO: Make this a warning alert dialog.
 
             Debug.WriteLine(
                 $"Failed to discern font weight value associated with key: '{lookupKey}'. Using " +

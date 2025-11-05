@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using DateToday.Configuration;
 using DateToday.Enums;
+using DateToday.Resources;
 using DateToday.ViewModels;
 using Newtonsoft.Json;
 using System;
@@ -15,59 +16,27 @@ namespace DateToday
 {
     internal static class Utilities
     {
-        private const string FATAL_ERROR_INVALID_JSON_FILE_INNER_MESSAGE_FILE_IS_EMPTY =
-            "Is this your idea of a joke? This file is empty. You did this on purpose, didn't " +
-            "you? You fucking cretin.";
+        private static readonly CompositeFormat BASE_ERROR_MESSAGE_DESERIALISATION_EXCEPTION =
+            CompositeFormat.Parse(BaseErrorMessageFormats.DeserialisationException);
 
-        private static readonly CompositeFormat FATAL_ERROR_MESSAGE_UNHANDLED_FILE_EXCEPTION =
+        private static readonly CompositeFormat ERROR_MESSAGE_DESERIALISED_FILE_IS_EMPTY =
+            CompositeFormat.Parse(DeserialisationErrorMessageFormats.FileIsEmpty);
+
+        private static readonly CompositeFormat ERROR_MESSAGE_FILE_NOT_FOUND =
+            CompositeFormat.Parse(DeserialisationErrorMessageFormats.FileNotFound);
+
+        private static readonly CompositeFormat ERROR_MESSAGE_FILE_IO_EXCEPTION =
+            CompositeFormat.Parse(DeserialisationErrorMessageFormats.InputOutputException);
+
+        private static readonly CompositeFormat ERROR_MESSAGE_FILE_ACCESS_DENIED =
+            CompositeFormat.Parse(DeserialisationErrorMessageFormats.AccessDenied);
+
+        private static readonly CompositeFormat BASE_ERROR_MESSAGE_DEFAULT_CONFIGURATION_INVALID =
+            CompositeFormat.Parse(BaseErrorMessageFormats.DefaultConfigurationInvalid);
+
+        private static readonly CompositeFormat ERROR_MESSAGE_FONT_SIZE_INVALID =
             CompositeFormat.Parse(
-
-                // TODO: This probably isn't necessary?
-
-                "An unexpected error occurred in attempting to parse file '{0}'. If you are " +
-                "reading this message, then the application's error-handling functionality has " +
-                "failed. Please raise an issue.");
-
-        private static readonly CompositeFormat FATAL_ERROR_MESSAGE_FILE_NOT_FOUND =
-            CompositeFormat.Parse(
-                "You absolute donkey. You've lost '{0}', haven't you? " +
-                Environment.NewLine +
-                "Go stand in the corner and think about what you've done. You fucking donut.");
-
-        private static readonly CompositeFormat FATAL_ERROR_MESSAGE_FILE_IO_EXCEPTION =
-            CompositeFormat.Parse(
-                "An I/O error occurred in trying to parse file '{0}': " +
-                Environment.NewLine +
-                Environment.NewLine +
-                "{1}");
-
-        private static readonly CompositeFormat FATAL_ERROR_MESSAGE_FILE_ACCESS_DENIED =
-            CompositeFormat.Parse(
-                "The application is not permitted access to file '{0}': " +
-                Environment.NewLine +
-                Environment.NewLine +
-                "{1}");
-
-        private static readonly CompositeFormat FATAL_ERROR_MESSAGE_JSON_EXCEPTION =
-            CompositeFormat.Parse(
-                "An error has occurred during deserialisation of file '{0}'. " +
-                Environment.NewLine +
-                Environment.NewLine +
-                "Exception message: " +
-                Environment.NewLine +
-                Environment.NewLine +
-                "{1}");
-
-        private static readonly CompositeFormat FATAL_ERROR_MESSAGE_DEFAULT_CONFIGURATION_INVALID =
-            CompositeFormat.Parse(
-                "Default widget configuration is invalid: " +
-                Environment.NewLine +
-                Environment.NewLine +
-                "{0}");
-
-        private static readonly CompositeFormat
-            FATAL_ERROR_DEFAULT_CONFIGURATION_INVALID_INNER_MESSAGE_FONT_SIZE =
-                CompositeFormat.Parse("FontSize must be greater than {0}.");
+                DefaultConfigurationValidationErrorMessageFormats.FontSizeInvalid);
 
         public static AlertWindow AlertFactory(AlertType importance, string alertMessage)
         {
@@ -128,56 +97,43 @@ namespace DateToday
         {
             deserialisedObject = default;
             bool hasFileDeserialisedSuccessfully = false;
-
-            string deserialisationErrorMessage =
-                string.Format(
-                    culture,
-                    FATAL_ERROR_MESSAGE_UNHANDLED_FILE_EXCEPTION,
-                    filepath);
+            string deserialisationErrorMessage = string.Empty;
 
             try
             {
-                deserialisedObject =
-                    DeserialiseFile<T>(filepath) ??
+                deserialisedObject = DeserialiseFile<T>(filepath);
+
+                if (deserialisedObject == null)
+                {
+                    deserialisationErrorMessage =
+                        string.Format(culture, ERROR_MESSAGE_DESERIALISED_FILE_IS_EMPTY, filepath);
+
                     throw new Newtonsoft.Json.JsonSerializationException(
-                        FATAL_ERROR_INVALID_JSON_FILE_INNER_MESSAGE_FILE_IS_EMPTY);
+                        deserialisationErrorMessage);
+                }
 
                 hasFileDeserialisedSuccessfully = true;
             }
             catch (FileNotFoundException)
             {
                 deserialisationErrorMessage =
-                    string.Format(
-                        culture,
-                        FATAL_ERROR_MESSAGE_FILE_NOT_FOUND,
-                        filepath);
+                    string.Format(culture, ERROR_MESSAGE_FILE_NOT_FOUND, filepath);
             }
             catch (IOException e)
             {
                 deserialisationErrorMessage =
-                    string.Format(
-                        culture,
-                        FATAL_ERROR_MESSAGE_FILE_IO_EXCEPTION,
-                        filepath,
-                        e.Message);
+                    string.Format(culture, ERROR_MESSAGE_FILE_IO_EXCEPTION, filepath, e.Message);
             }
             catch (UnauthorizedAccessException e)
             {
                 deserialisationErrorMessage =
-                    string.Format(
-                        culture,
-                        FATAL_ERROR_MESSAGE_FILE_ACCESS_DENIED,
-                        filepath,
-                        e.Message);
+                    string.Format(culture, ERROR_MESSAGE_FILE_ACCESS_DENIED, filepath, e.Message);
             }
             catch (Newtonsoft.Json.JsonException e)
             {
                 deserialisationErrorMessage =
                     string.Format(
-                        culture,
-                        FATAL_ERROR_MESSAGE_JSON_EXCEPTION,
-                        filepath,
-                        e.Message);
+                        culture, BASE_ERROR_MESSAGE_DESERIALISATION_EXCEPTION, filepath, e.Message);
             }
 
             errorDialog = AlertFactory(AlertType.FatalError, deserialisationErrorMessage);
@@ -191,27 +147,24 @@ namespace DateToday
             const byte FONT_SIZE_MIN = 10;
 
             bool isValid = true;
-            string widgetConfigurationValidationErrorMessage = string.Empty;
+            string configurationValidationErrorInnerMessage = string.Empty;
 
             if (configuration.FontSize < FONT_SIZE_MIN)
             {
                 isValid = false;
 
-                string invalidFontSizeErrorInnerMessage =
-                    string.Format(
-                        culture,
-                        FATAL_ERROR_DEFAULT_CONFIGURATION_INVALID_INNER_MESSAGE_FONT_SIZE,
-                        FONT_SIZE_MIN);
-
-                widgetConfigurationValidationErrorMessage =
-                    string.Format(
-                        culture,
-                        FATAL_ERROR_MESSAGE_DEFAULT_CONFIGURATION_INVALID,
-                        invalidFontSizeErrorInnerMessage);
+                configurationValidationErrorInnerMessage =
+                    string.Format(culture, ERROR_MESSAGE_FONT_SIZE_INVALID, FONT_SIZE_MIN);
             }
 
+            string configurationValidationErrorMessage =
+                string.Format(
+                    culture, 
+                    BASE_ERROR_MESSAGE_DEFAULT_CONFIGURATION_INVALID, 
+                    configurationValidationErrorInnerMessage);
+
             errorDialog =
-                AlertFactory(AlertType.FatalError, widgetConfigurationValidationErrorMessage);
+                AlertFactory(AlertType.FatalError, configurationValidationErrorMessage);
 
             return isValid;
         }

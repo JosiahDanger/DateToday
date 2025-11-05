@@ -21,10 +21,6 @@
         -->
     </Design.DataContext>
 
-    <Window.Resources>
-        <conv:ToBrushMultiConverterWithFallback x:Key="BrushSelector" />
-    </Window.Resources>
-
     <Window.ContextMenu>
         <ContextMenu>
             <MenuItem Command="{Binding ReceiveNewSettings}"

@@ -50,8 +50,6 @@ namespace DateToday.Models
             DateTime currentDateTime = DateTime.Now;
             _newMinuteEventGenerator.Interval =
                 -1000 * currentDateTime.Second - currentDateTime.Millisecond + 60000;
-
-            Debug.WriteLine($"Reset tick generator interval at {currentDateTime}.");
         }
 
         public IObservable<System.Reactive.EventPattern<ElapsedEventArgs>> NewMinuteEventObservable
@@ -60,7 +58,6 @@ namespace DateToday.Models
         public void Dispose()
         {
             _newMinuteEventGenerator.Dispose();
-            Debug.WriteLine("Disposed of Model.");
         }
     }
 }
