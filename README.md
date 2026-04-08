@@ -1,5 +1,14 @@
 # DateToday
-Beautiful, highly configurable desktop widget that displays the current date and/or time
+A beautiful, highly configurable desktop widget that displays the current date and/or time.
+
+**DateToday is currently being rewritten from scratch. If you would like to check out my progress on version 2.0.0, please see the [DT-Version-2.0 branch](https://github.com/JosiahDanger/DateToday/tree/DT-Version-2.0).**
+
+Version 2.0.0 will feature:
+- Strict MVVM architechture
+- .NET 10, and Avalonia 12
+- A smaller memory footprint, thanks to ahead-of-time compilation
+- Releases that consist of only one file, which is the executable itself
+- Support for future localisation into different languages
 
 ---
 
@@ -17,7 +26,6 @@ DateToday is a desktop widget that displays the current date and/or time in a pr
 **All of my apps are proudly:**
 - Open-source under the MIT Licence
 - Free forever
-- Developed without the use of generative AI
 - Respectful of your privacy
 
 \
