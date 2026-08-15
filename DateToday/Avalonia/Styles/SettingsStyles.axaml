@@ -1,0 +1,120 @@
+<Styles
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Design.PreviewWith>
+
+		<!--  Add Controls for Previewer Here  -->
+
+		<Border
+			Width="600"
+			Height="400"
+			Classes="SettingsOuterBorder">
+
+			<Canvas>
+
+				<Button
+					Canvas.Top="10"
+					Canvas.Right="10"
+					Classes="CloseButton" />
+
+			</Canvas>
+
+		</Border>
+
+	</Design.PreviewWith>
+
+	<!--  Add Styles Here  -->
+
+	<Style Selector="Window.SettingsWindow">
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="CanMaximize" Value="False" />
+		<Setter Property="CanMinimize" Value="False" />
+		<Setter Property="CanResize" Value="True" />
+		<Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
+		<Setter Property="MaxHeight" Value="400" />
+		<Setter Property="MaxWidth" Value="800" />
+		<Setter Property="MinHeight" Value="400" />
+		<Setter Property="MinWidth" Value="600" />
+		<Setter Property="ShowInTaskbar" Value="False" />
+		<Setter Property="WindowDecorationProperties.ElementRole" Value="TitleBar" />
+		<Setter Property="WindowDecorations" Value="BorderOnly" />
+		<Setter Property="WindowStartupLocation" Value="CenterOwner" />
+	</Style>
+
+	<Style Selector="Button.CloseButton">
+		<Setter Property="Background" Value="Red" />
+		<Setter Property="BorderBrush" Value="{DynamicResource SystemBaseLowColor}" />
+		<Setter Property="BorderThickness" Value="2" />
+		<Setter Property="Content" Value="🗙" />
+		<Setter Property="CornerRadius" Value="9" />
+		<Setter Property="FontSize" Value="10" />
+		<Setter Property="Height" Value="20" />
+		<Setter Property="HorizontalContentAlignment" Value="Center" />
+		<Setter Property="Margin" Value="0" />
+		<Setter Property="Padding" Value="0" />
+		<Setter Property="UseLayoutRounding" Value="False" />
+		<Setter Property="VerticalContentAlignment" Value="Top" />
+		<Setter Property="Width" Value="20" />
+		<Setter Property="WindowDecorationProperties.ElementRole" Value="CloseButton" />
+	</Style>
+
+	<Style Selector="Panel.CloseButtonPanel">
+		<Setter Property="Margin" Value="10" />
+		<Setter Property="HorizontalAlignment" Value="Right" />
+		<Setter Property="VerticalAlignment" Value="Top" />
+	</Style>
+
+	<Style Selector="Panel.TabPanel">
+		<Setter Property="Height" Value="400" />
+		<Setter Property="Margin" Value="0" />
+		<Setter Property="HorizontalAlignment" Value="Left" />
+		<Setter Property="VerticalAlignment" Value="Top" />
+	</Style>
+
+	<Style Selector="TabControl.TabGroup">
+		<Setter Property="Background" Value="{DynamicResource SystemBaseLowColor}" />
+		<Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+		<Setter Property="Margin" Value="5" />
+		<Setter Property="Padding" Value="0" />
+		<Setter Property="TabStripPlacement" Value="Left" />
+	</Style>
+
+	<Style Selector="TabItem.TabHeader">
+		<Setter Property="FontFamily" Value="fonts:FontCollection#Libre Franklin" />
+		<Setter Property="FontSize" Value="16" />
+		<Setter Property="FontWeight" Value="Regular" />
+		<Setter Property="Margin" Value="0 10 0 0" />
+		<Setter Property="Padding" Value="10 0 17.5 0" />
+	</Style>
+
+	<Style Selector="Panel.AppVersionPanel">
+		<Setter Property="MaxWidth" Value="100" />
+		<Setter Property="Margin" Value="5" />
+		<Setter Property="VerticalAlignment" Value="Bottom" />
+	</Style>
+
+	<Style Selector="TextBlock.AppVersion">
+		<Setter Property="Margin" Value="1" />
+		<Setter Property="HorizontalAlignment" Value="Center" />
+		<Setter Property="FontFamily" Value="fonts:FontCollection#Drafting* Mono" />
+		<Setter Property="FontSize" Value="9" />
+		<Setter Property="FontWeight" Value="ExtraLight" />
+	</Style>
+
+	<Style Selector="Border.SettingsOuterBorder">
+		<Setter Property="Background" Value="{DynamicResource SystemAltMediumHighColor}" />
+		<Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
+		<Setter Property="BorderThickness" Value="3" />
+		<Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+	</Style>
+
+	<Style Selector="Border.SettingsInnerBorder">
+		<Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColorDark1}" />
+		<Setter Property="BorderThickness" Value="2" />
+		<Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+		<Setter Property="Height" Value="350" />
+		<Setter Property="Margin" Value="20" />
+		<Setter Property="Width" Value="550" />
+	</Style>
+
+</Styles>

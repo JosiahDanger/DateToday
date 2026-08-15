@@ -1,0 +1,46 @@
+﻿<!-- This file, 'Directory.Build.props', is a source of exclusive control over configuration for:
+	 ahead-of-time (AOT) compilation, trimming, and self-contained publishing.
+
+	 The contents of this file have been adapted from an example on GitHub provided by PeaceShi.
+	 Thank you!
+
+	 See: https://github.com/peaceshi/Avalonia-NativeAOT-SingleFile -->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<!-- Publishing Configuration -->
+	<PropertyGroup Label="Publishing Configuration" Condition="'$(Configuration)'=='Release'">
+		<PublishAot>true</PublishAot>
+	</PropertyGroup>
+
+	<!-- AOT Compilation Configuration -->
+	<PropertyGroup Label="AOT Compilation Configuration" Condition="'$(PublishAot)' == 'true'">
+		<PublishSingleFile>true</PublishSingleFile>
+		<SelfContained>true</SelfContained>
+		<TrimMode>full</TrimMode>
+		<TrimmerRemoveSymbols>true</TrimmerRemoveSymbols>
+		<OptimizationPreference>Size</OptimizationPreference>
+		<StaticExecutable>true</StaticExecutable>
+		<BuiltInComInteropSupport>false</BuiltInComInteropSupport>
+		<DebugType>none</DebugType>
+		<StackTraceSupport>false</StackTraceSupport>
+		<UseSystemResourceKeys>true</UseSystemResourceKeys>
+		<NoWin32Manifest>true</NoWin32Manifest>
+	</PropertyGroup>
+
+	<!-- Windows x64 Native Linker Dependencies -->
+	<ItemGroup Label="Windows x64 Native Linker Dependencies" Condition="'$(RuntimeIdentifier)' == 'win-x64'">
+		<DirectPInvoke Include="libHarfBuzzSharp"/>
+		<DirectPInvoke Include="libSkiaSharp"/>
+		<DirectPInvoke Include="av_libglesv2"/>
+		<LinkerArg Include="d3d9.lib;dxguid.lib"/>
+		<LinkerArg Include="dxgi.lib"/>
+		<LinkerArg Include="Gdi32.lib;User32.lib"/>
+		<LinkerArg Include="synchronization.lib"/>
+		<LinkerArg Include="fontsub.lib;Ole32.lib;USP10.lib"/>
+		<LinkerArg Include="d3d12.lib;d3dcompiler.lib"/>
+		<PackageReference Include="2ndLAB.ANGLE.Static" Version="7151.0.0-10.0.26100.0-1.79e529b"/>
+		<PackageReference Include="2ndLAB.SkiaSharp.Static" Version="3.119.0-10.0.26100.0-1.1c7d845"/>
+	</ItemGroup>
+
+</Project>

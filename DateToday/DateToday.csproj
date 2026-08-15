@@ -1,116 +1,78 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0-windows7.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-    <StartupObject>DateToday.Program</StartupObject>
-    <ApplicationIcon>Assets\jd-logo.ico</ApplicationIcon>
-    <PlatformTarget>x64</PlatformTarget>
-	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-	<EnableNETAnalyzers>True</EnableNETAnalyzers>
-	<AnalysisLevel>latest-all</AnalysisLevel>
-	<Title>DateToday</Title>
-	<Description>Beautiful, highly configurable desktop widget that displays the current date and/or time</Description>
-	<RepositoryUrl>https://github.com/JosiahDanger/DateToday</RepositoryUrl>
 
-	<Version>1.4.1</Version>
-	<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
-	
-  </PropertyGroup>
+	<!-- See 'Directory.Build.props' for configuration related to AOT compilation, trimming, and
+		 self-contained publishing. -->
 
-	<PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-		
-		<!-- See: https://stackoverflow.com/a/74437276 -->
-		<DefineConstants>OS_WINDOWS</DefineConstants>
-		
+	<!-- Project Core Settings -->
+	<PropertyGroup Label="Project Core Settings">
+		<TargetFramework>net10.0</TargetFramework>
+		<OutputType>WinExe</OutputType>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<StartupObject>DateToday.Avalonia.Program</StartupObject>
+		<Nullable>enable</Nullable>
+		<NeutralLanguage>en-GB</NeutralLanguage>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	  <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+	<!-- Avalonia Configuration -->
+	<PropertyGroup Label="Avalonia Configuration">
+		<AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+	<!-- Analyser Configuration -->
+	<PropertyGroup Label="Analyser Configuration">
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<AnalysisLevel>latest-all</AnalysisLevel>
+		<IsAotCompatible>true</IsAotCompatible>
 	</PropertyGroup>
 
-  <ItemGroup>
-    <AvaloniaResource Include="Assets\**" />
-  </ItemGroup>
+	<!-- App Metadata -->
+	<PropertyGroup Label="App Metadata">
+		<Title>DateToday</Title>
+		<Version>2.0.0</Version>
+		<Description>A beautiful, lightweight desktop widget that displays the current date and/or time in a format of your choice.</Description>
+		<Copyright>© 2026 Josiah Danger Shaahin</Copyright>
+		<RepositoryUrl>https://github.com/JosiahDanger/DateToday</RepositoryUrl>
+		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+		<ApplicationIcon>DateToday Icon.ico</ApplicationIcon>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="Assets\jd-logo.ico" />
-  </ItemGroup>
+	<!-- App Dependencies -->
+	<ItemGroup Label="App Dependencies">
+		<PackageReference Include="Avalonia" Version="12.1.1" />
+		<PackageReference Include="Avalonia.Desktop" Version="12.1.1" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.1" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+		<PackageReference Include="IDisposableAnalyzers" Version="4.0.8">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.11" />
+		<PackageReference Include="PublishAotCompressed" Version="1.0.5" />
+		<PackageReference Include="System.Reactive" Version="7.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.3.7" />
-    <PackageReference Include="Avalonia.Controls.ColorPicker" Version="11.3.7" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.3.7" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.7" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.7" />
-    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.7" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="ReactiveUI.Avalonia" Version="11.3.0" />
-    <PackageReference Include="ReactiveUI.Validation" Version="6.0.5" />
-  </ItemGroup>
+	<!-- Embedded Strings -->
+	<ItemGroup Label="Embedded Strings">
+		<EmbeddedResource Update="Avalonia\Resources\Strings.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>Strings.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
 
-  <ItemGroup>
-    <Compile Update="Resources\BaseErrorMessageFormats.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>BaseErrorMessageFormats.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Resources\DebugMessageFormats.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>DebugMessageFormats.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Resources\DefaultConfigurationValidationErrorMessageFormats.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>DefaultConfigurationValidationErrorMessageFormats.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Resources\DeserialisationErrorMessageFormats.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>DeserialisationErrorMessageFormats.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Views\WidgetWindow.axaml.cs">
-      <DependentUpon>WidgetWindow.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\SettingsWindow.axaml.cs">
-      <DependentUpon>SettingsWindow.axaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
+		<Compile Update="Avalonia\Resources\Strings.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Strings.resx</DependentUpon>
+		</Compile>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Resources\BaseErrorMessageFormats.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>BaseErrorMessageFormats.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\DebugMessageFormats.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>DebugMessageFormats.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\DefaultConfigurationValidationErrorMessageFormats.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>DefaultConfigurationValidationErrorMessageFormats.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\DeserialisationErrorMessageFormats.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>DeserialisationErrorMessageFormats.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
+		<Compile Update="Avalonia\Views\WidgetView.axaml.cs">
+		  <DependentUpon>WidgetView.axaml</DependentUpon>
+		</Compile>
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Update="DefaultWidgetConfiguration.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="FontWeightDictionary.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+	<!-- Embedded Fonts -->
+	<ItemGroup Label="Embedded Fonts">
+		<AvaloniaResource Include="Avalonia\Fonts\*.otf" />
+		<AvaloniaResource Include="Avalonia\Fonts\*.ttf" />
+	</ItemGroup>
+
 </Project>

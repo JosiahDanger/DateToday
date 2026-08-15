@@ -1,0 +1,36 @@
+<Styles
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Design.PreviewWith>
+
+		<!--  Add Controls for Previewer Here  -->
+
+	</Design.PreviewWith>
+
+	<!--  Add Styles Here  -->
+
+	<Style Selector="Window.WidgetWindow">
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="Focusable" Value="False" />
+		<Setter Property="ShowInTaskbar" Value="False" />
+		<Setter Property="SizeToContent" Value="WidthAndHeight" />
+		<Setter Property="WindowDecorations" Value="None" />
+		<Setter Property="WindowStartupLocation" Value="Manual" />
+	</Style>
+
+	<Style Selector="ContextMenu.WidgetContextMenu">
+		<Setter Property="FontFamily" Value="fonts:FontCollection#Libre Franklin" />
+		<Setter Property="FontSize" Value="13" />
+	</Style>
+
+	<Style Selector="MenuItem.WidgetContextMenuItem">
+		<Setter Property="CornerRadius" Value="1" />
+		<Setter Property="Margin" Value="4 0" />
+		<Setter Property="Padding" Value="5" />
+	</Style>
+
+	<Style Selector="TextBlock.WidgetTextBlock">
+		<Setter Property="Padding" Value="10" />
+	</Style>
+
+</Styles>

@@ -1,0 +1,34 @@
+<Window
+	x:Class="DateToday.Avalonia.Views.WidgetView"
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:res="using:DateToday.Avalonia.Resources"
+	xmlns:vm="using:DateToday.Avalonia.ViewModels"
+	Title="{x:Static res:Strings.WidgetView_Window_Title}"
+	x:DataType="vm:WidgetViewModel"
+	Classes="WidgetWindow">
+
+	<Window.Styles>
+		<StyleInclude Source="/Avalonia/Styles/WidgetStyles.axaml" />
+	</Window.Styles>
+
+	<Window.ContextMenu>
+		<ContextMenu Classes="WidgetContextMenu">
+			<MenuItem
+				Classes="WidgetContextMenuItem"
+				Header="{x:Static res:Strings.WidgetView_ContextMenu_MenuItem_OpenSettingsView}" />
+			<MenuItem
+				Classes="WidgetContextMenuItem"
+				Command="{Binding CloseApplicationCommand}"
+				Header="{x:Static res:Strings.WidgetView_ContextMenu_MenuItem_ExitApplication}" />
+		</ContextMenu>
+	</Window.ContextMenu>
+
+	<TextBlock
+		Classes="WidgetTextBlock"
+		FontFamily="{Binding FontFamily}"
+		FontSize="{Binding FontSize}"
+		FontWeight="{Binding FontWeight}"
+		Text="{Binding DateTimeText}" />
+
+</Window>
