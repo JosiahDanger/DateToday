@@ -1,7 +1,7 @@
 # DateToday
 A beautiful, highly configurable desktop widget that displays the current date and/or time.
 
-**DateToday is currently being rewritten from scratch. If you would like to check out my progress on version 2.0.0, please see the [DT-Version-2.0-AOT branch](https://github.com/JosiahDanger/DateToday/tree/DT-Version-2.0-AOT).**
+**DateToday is currently being rewritten from scratch. If you would like to check out my progress on version 2.0.0, please see the [DT-Version-2.0-AOT branch](https://github.com/JosiahDanger/DateToday/tree/DateToday-2.0-AOT).**
 
 Version 2.0.0 will feature:
 - Strict MVVM architechture
