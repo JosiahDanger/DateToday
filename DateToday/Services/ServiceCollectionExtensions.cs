@@ -1,5 +1,4 @@
-﻿using DateToday.Avalonia.ViewModels;
-using DateToday.Models;
+﻿using DateToday.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DateToday.Services;
@@ -7,10 +6,9 @@ namespace DateToday.Services;
 internal static class ServiceCollectionExtensions
 {
 	public static IServiceCollection AddCommonServices(
-		this IServiceCollection collection, WidgetModel initialWidgetModel)
+		this IServiceCollection collection, WidgetModel activeWidgetModel)
 	{
-		collection.AddSingleton(initialWidgetModel);
-		collection.AddTransient<WidgetViewModel>();
+		collection.AddSingleton(activeWidgetModel);
 
 		return collection;
 	}

@@ -33,13 +33,6 @@ internal static class SuspensionService
 		ArgumentNullException.ThrowIfNull(state);
 		ArgumentNullException.ThrowIfNull(typeInfo);
 
-		string? directoryPath = Path.GetDirectoryName(_filepath);
-
-		if (!string.IsNullOrEmpty(directoryPath) && !Directory.Exists(directoryPath))
-		{
-			Directory.CreateDirectory(directoryPath);
-		}
-
 		try
 		{
 			using FileStream targetFileStream =

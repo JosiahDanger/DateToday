@@ -1,6 +1,8 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using DateToday.Avalonia.Resources;
 using DateToday.Avalonia.ViewModels;
 using DateToday.Avalonia.Views;
 using DateToday.Models;
@@ -8,12 +10,16 @@ using DateToday.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Text.Json.Serialization.Metadata;
+using System.Threading.Tasks;
 
 namespace DateToday.Avalonia;
 
 internal sealed partial class App : Application, IDisposable
 {
 	private ServiceProvider? _services;
+	private IClassicDesktopStyleApplicationLifetime? _desktopLifetime;
+	private WidgetView? _widgetView;
+	private bool _hasDeserialisationSucceeded;
 
 	public override void Initialize()
 	{
@@ -22,67 +28,99 @@ internal sealed partial class App : Application, IDisposable
 
 	public override void OnFrameworkInitializationCompleted()
 	{
-		if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+		if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)
 		{
 			_services?.Dispose();
 
-			(WidgetModel initialWidgetModel, bool hasDeserialisationSucceeded) =
+			_desktopLifetime = desktopLifetime;
+
+			(WidgetModel initialWidgetModel, _hasDeserialisationSucceeded) =
 				WidgetModelFactory.GetInitialWidgetModel();
 
-			if (!hasDeserialisationSucceeded)
-			{
-				/* TODO:
-				 *
-				 * Display a notification to inform the user that a deserialisation error has
-				 * occurred, then continue startup using the loaded default state. */
-			}
+			_widgetView = new() { DataContext = new WidgetViewModel(initialWidgetModel) };
 
-			_services = new ServiceCollection().AddCommonServices(initialWidgetModel)
-											   .BuildServiceProvider();
+			_services = new ServiceCollection()
+				.AddCommonServices(initialWidgetModel)
+				.AddTransient<AlertService>(_ => new AlertService(_widgetView))
+				.BuildServiceProvider();
 
-			WidgetViewModel wvm = _services.GetRequiredService<WidgetViewModel>();
+			_widgetView.Opened += OnWidgetViewOpened;
+			_widgetView.Closing += OnWidgetViewClosing;
+			_widgetView.Closed += OnWidgetViewClosed;
 
-			desktop.MainWindow = new WidgetView { DataContext = wvm };
-			desktop.ShutdownRequested += OnShutdownRequested;
+			_desktopLifetime.MainWindow = _widgetView;
 		}
 
 		base.OnFrameworkInitializationCompleted();
 	}
 
-	private void PersistStateBeforeShutdown()
+	private static async Task<bool> PersistStateBeforeClosure(WidgetModel widget)
 	{
-		WidgetModel? widgetModelOrNull = _services?.GetRequiredService<WidgetModel>();
+		JsonTypeInfo<WidgetModelDto> typeInfo =
+			WidgetModelDtoSerialiserContext.Default.WidgetModelDto;
 
-		if (widgetModelOrNull is WidgetModel wm)
+		WidgetModelDto wmdto = WidgetModelDto.FromModel(widget);
+
+		try
 		{
-			JsonTypeInfo<WidgetModelDto> typeInfo =
-				WidgetModelDtoSerialiserContext.Default.WidgetModelDto;
+			SuspensionService.SaveState(wmdto, typeInfo);
+		}
+		catch (InvalidOperationException)
+		{
+			return false;
+		}
 
-			try
+		return true;
+	}
+
+	private async void OnWidgetViewOpened(object? sender, EventArgs e)
+	{
+		if (!_hasDeserialisationSucceeded)
+		{
+			AlertService? alerts = _services?.GetRequiredService<AlertService>();
+
+			if (alerts != null)
 			{
-				WidgetModelDto wmdto = WidgetModelDto.FromModel(wm);
-				SuspensionService.SaveState(wmdto, typeInfo);
-			}
-			catch (NullReferenceException)
-			{
-				/* TODO:
-				 *
-				 * Display a notification to inform the user that the WidgetModel is corrupt, then
-				 * terminate the application. */
-			}
-			catch (InvalidOperationException)
-			{
-				/* TODO:
-				 *
-				 * Display a notification to inform the user that a serialisation error has
-				 * occurred, then terminate the application. */
+				await alerts.ShowAlertAsync(
+								AlertFlavour.Warning,
+								Strings.Suspension_Exception_FailedToDeserialiseState_Friendly
+							).ConfigureAwait(false);
 			}
 		}
 	}
 
-	private void OnShutdownRequested(object? sender, ShutdownRequestedEventArgs e)
+	private async void OnWidgetViewClosing(object? sender, WindowClosingEventArgs e)
 	{
-		PersistStateBeforeShutdown();
+		if (e.CloseReason == WindowCloseReason.ApplicationShutdown)
+		{
+			return;
+		}
+
+		if (_services != null)
+		{
+			WidgetModel widget = _services.GetRequiredService<WidgetModel>();
+
+			bool hasSerialisationSucceeded =
+				await PersistStateBeforeClosure(widget).ConfigureAwait(false);
+
+			if (!hasSerialisationSucceeded)
+			{
+				AlertService alerts = _services.GetRequiredService<AlertService>();
+
+				e.Cancel = true;
+
+				await alerts.ShowAlertAsync(
+								AlertFlavour.Warning,
+								Strings.Suspension_Exception_FailedToPersistState_Friendly
+							).ConfigureAwait(false);
+
+				_desktopLifetime?.Shutdown();
+			}
+		}
+	}
+
+	private void OnWidgetViewClosed(object? sender, EventArgs e)
+	{
 		Dispose();
 	}
 

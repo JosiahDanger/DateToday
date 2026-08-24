@@ -13,15 +13,20 @@
 	</Window.Styles>
 
 	<Window.ContextMenu>
+
 		<ContextMenu Classes="WidgetContextMenu">
+
 			<MenuItem
 				Classes="WidgetContextMenuItem"
 				Header="{x:Static res:Strings.WidgetView_ContextMenu_MenuItem_OpenSettingsView}" />
+
 			<MenuItem
 				Classes="WidgetContextMenuItem"
-				Command="{Binding CloseApplicationCommand}"
+				Command="{Binding CloseApplicationCommand, Mode=OneTime}"
 				Header="{x:Static res:Strings.WidgetView_ContextMenu_MenuItem_ExitApplication}" />
+
 		</ContextMenu>
+
 	</Window.ContextMenu>
 
 	<TextBlock

@@ -1,4 +1,4 @@
-﻿<!-- This file, 'Directory.Build.props', is a source of exclusive control over configuration for:
+﻿<!-- This file, 'Directory.Build.props', is a source of exclusive control over configuration for
 	 ahead-of-time (AOT) compilation, trimming, and self-contained publishing.
 
 	 The contents of this file have been adapted from an example on GitHub provided by PeaceShi.

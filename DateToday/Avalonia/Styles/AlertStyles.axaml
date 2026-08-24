@@ -1,0 +1,105 @@
+<Styles
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<Design.PreviewWith>
+
+		<!--  Add Controls for Previewer Here  -->
+
+		<Border
+			Background="IndianRed"
+			Classes="AlertOuterBorder">
+
+			<StackPanel Orientation="Vertical">
+
+				<TextBlock
+					Classes="AlertCaption"
+					Text="OOPSIE WOOPSIE!!" />
+
+				<Border Classes="AlertInnerBorder">
+
+					<ScrollViewer>
+
+						<SelectableTextBlock
+							Classes="AlertMessage"
+							Text="Uwu We made a fucky wucky!! A wittle fucko boingo! The code monkeys at our headquarters are working VEWY HAWD to fix this!" />
+
+					</ScrollViewer>
+
+				</Border>
+
+				<Button
+					Classes="CloseButton"
+					Content="Sample Text" />
+
+			</StackPanel>
+
+		</Border>
+
+	</Design.PreviewWith>
+
+	<!--  Add Styles Here  -->
+
+	<Style Selector="Window.AlertWindow">
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="CanMaximize" Value="False" />
+		<Setter Property="CanMinimize" Value="False" />
+		<Setter Property="CanResize" Value="False" />
+		<Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
+		<Setter Property="MaxHeight" Value="400" />
+		<Setter Property="ShowInTaskbar" Value="True" />
+		<Setter Property="SizeToContent" Value="Height" />
+		<Setter Property="Width" Value="450" />
+		<Setter Property="WindowDecorations" Value="None" />
+		<Setter Property="WindowStartupLocation" Value="CenterScreen" />
+	</Style>
+
+	<Style Selector="Border.AlertOuterBorder">
+		<Setter Property="BackgroundSizing" Value="OuterBorderEdge" />
+		<Setter Property="BorderBrush" Value="{DynamicResource SystemBaseLowColor}" />
+		<Setter Property="BorderThickness" Value="5" />
+		<Setter Property="CornerRadius" Value="25" />
+		<Setter Property="WindowDecorationProperties.ElementRole" Value="TitleBar" />
+	</Style>
+
+	<Style Selector="TextBlock.AlertCaption">
+		<Setter Property="FontFamily" Value="fonts:FontCollection#Libre Franklin" />
+		<Setter Property="FontSize" Value="24" />
+		<Setter Property="FontWeight" Value="Medium" />
+		<Setter Property="HorizontalAlignment" Value="Center" />
+		<Setter Property="Margin" Value="0 40 0 10" />
+		<Setter Property="MaxWidth" Value="375" />
+		<Setter Property="TextWrapping" Value="Wrap" />
+	</Style>
+
+	<Style Selector="Border.AlertInnerBorder">
+		<Setter Property="Background" Value="{DynamicResource SystemControlBackgroundAltMediumHighBrush}" />
+		<Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+		<Setter Property="Margin" Value="25" />
+		<Setter Property="MaxHeight" Value="150" />
+		<Setter Property="Width" Value="350" />
+	</Style>
+
+	<Style Selector="SelectableTextBlock.AlertMessage">
+		<Setter Property="FontFamily" Value="fonts:FontCollection#Drafting* Mono" />
+		<Setter Property="FontSize" Value="12" />
+		<Setter Property="FontWeight" Value="Light" />
+		<Setter Property="HorizontalAlignment" Value="Center" />
+		<Setter Property="LineSpacing" Value="5" />
+		<Setter Property="Margin" Value="0 15" />
+		<Setter Property="TextWrapping" Value="Wrap" />
+		<Setter Property="Width" Value="325" />
+		<Setter Property="WindowDecorationProperties.ElementRole" Value="DecorationsElement" />
+	</Style>
+
+	<Style Selector="Button.CloseButton">
+		<Setter Property="FontFamily" Value="fonts:FontCollection#Libre Franklin" />
+		<Setter Property="FontSize" Value="16" />
+		<Setter Property="FontWeight" Value="Medium" />
+		<Setter Property="HorizontalAlignment" Value="Center" />
+		<Setter Property="Margin" Value="0 10 0 25" />
+		<Setter Property="Padding" Value="15 10" />
+		<Setter Property="WindowDecorationProperties.ElementRole" Value="CloseButton" />
+	</Style>
+
+</Styles>

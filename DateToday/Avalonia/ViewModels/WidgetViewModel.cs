@@ -19,7 +19,7 @@ namespace DateToday.Avalonia.ViewModels;
 
 internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 {
-	private readonly WidgetModel _activeModel;
+	private readonly WidgetModel _modelHandle;
 	private IDisposable? _timerSubscription;
 
 	[ObservableProperty]
@@ -77,24 +77,24 @@ internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 
 	public WidgetViewModel(WidgetModel wm)
 	{
-		_activeModel = wm;
+		_modelHandle = wm;
 
-		DateTimeFormat = _activeModel.Content.DateTimeFormat;
-		DateTimeCulture = _activeModel.Content.DateTimeCulture;
-		OrdinalDaySuffixPosition = _activeModel.Content.OrdinalDaySuffixPosition;
-		RefreshIntervalSeconds = _activeModel.Content.RefreshIntervalSeconds;
+		DateTimeFormat = _modelHandle.Content.DateTimeFormat;
+		DateTimeCulture = _modelHandle.Content.DateTimeCulture;
+		OrdinalDaySuffixPosition = _modelHandle.Content.OrdinalDaySuffixPosition;
+		RefreshIntervalSeconds = _modelHandle.Content.RefreshIntervalSeconds;
 
-		AnchoredCorner = _activeModel.Position.AnchoredCorner;
-		AnchoredCornerScaledPosition = _activeModel.Position.AnchoredCornerScaledPosition;
-		MonitorReference = _activeModel.Position.MonitorReference;
-		IsMouseDragEnabled = _activeModel.Position.IsMouseDragEnabled;
+		AnchoredCorner = _modelHandle.Position.AnchoredCorner;
+		AnchoredCornerScaledPosition = _modelHandle.Position.AnchoredCornerScaledPosition;
+		MonitorReference = _modelHandle.Position.MonitorReference;
+		IsMouseDragEnabled = _modelHandle.Position.IsMouseDragEnabled;
 
-		FontFamily = _activeModel.Font.FontFamily;
-		FontSize = _activeModel.Font.FontSize;
-		FontWeight = _activeModel.Font.FontWeight;
-		FontRenderingMode = _activeModel.Font.FontRenderingMode;
-		CustomFontColour = _activeModel.Font.CustomFontColour;
-		CustomDropShadowColour = _activeModel.Font.CustomDropShadowColour;
+		FontFamily = _modelHandle.Font.FontFamily;
+		FontSize = _modelHandle.Font.FontSize;
+		FontWeight = _modelHandle.Font.FontWeight;
+		FontRenderingMode = _modelHandle.Font.FontRenderingMode;
+		CustomFontColour = _modelHandle.Font.CustomFontColour;
+		CustomDropShadowColour = _modelHandle.Font.CustomDropShadowColour;
 	}
 
 	[RelayCommand]

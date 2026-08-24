@@ -10,9 +10,9 @@ internal static class WidgetModelFactory
 		GetInitialWidgetModel()
 	{
 		bool hasDeserialisationSucceeded = TryRestoreState(out WidgetModel? restoredState);
-		WidgetModel wm = restoredState ?? CreateDefault();
+		WidgetModel initialWidgetModel = restoredState ?? CreateDefault();
 
-		return (wm, hasDeserialisationSucceeded);
+		return (initialWidgetModel, hasDeserialisationSucceeded);
 	}
 
 	/// <summary>

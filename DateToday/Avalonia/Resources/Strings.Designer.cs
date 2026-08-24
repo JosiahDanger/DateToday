@@ -61,6 +61,42 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Okay.
+        /// </summary>
+        public static string AlertView_Button_CloseAlert {
+            get {
+                return ResourceManager.GetString("AlertView_Button_CloseAlert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DateToday has shat the bed..
+        /// </summary>
+        public static string AlertView_ErrorFlavour_Caption {
+            get {
+                return ResourceManager.GetString("AlertView_ErrorFlavour_Caption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A heads-up from DateToday..
+        /// </summary>
+        public static string AlertView_InformationFlavour_Caption {
+            get {
+                return ResourceManager.GetString("AlertView_InformationFlavour_Caption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DateToday has encountered a problem..
+        /// </summary>
+        public static string AlertView_WarningFlavour_Caption {
+            get {
+                return ResourceManager.GetString("AlertView_WarningFlavour_Caption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to determine the filepath of the app executable..
         /// </summary>
         public static string AppVersionProvider_Exception_ExecutableFilepathNotAvailable {
@@ -84,42 +120,6 @@ namespace DateToday.Avalonia.Resources {
         public static string AppVersionProvider_Prefix {
             get {
                 return ResourceManager.GetString("AppVersionProvider_Prefix", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Failed to resolve DialogService dependency..
-        /// </summary>
-        public static string Locator_Exception_DialogServiceNotResolved {
-            get {
-                return ResourceManager.GetString("Locator_Exception_DialogServiceNotResolved", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Failed to resolve SettingsViewModel dependency..
-        /// </summary>
-        public static string Locator_Exception_SettingsViewModelNotResolved {
-            get {
-                return ResourceManager.GetString("Locator_Exception_SettingsViewModelNotResolved", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Failed to resolve WidgetModel dependency..
-        /// </summary>
-        public static string Locator_Exception_WidgetModelNotResolved {
-            get {
-                return ResourceManager.GetString("Locator_Exception_WidgetModelNotResolved", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Failed to resolve WidgetViewModel dependency..
-        /// </summary>
-        public static string Locator_Exception_WidgetViewModelNotResolved {
-            get {
-                return ResourceManager.GetString("Locator_Exception_WidgetViewModelNotResolved", resourceCulture);
             }
         }
         
@@ -178,11 +178,29 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Your existing settings file is either inaccessible or invalid. The widget has instead been initialised using a default configuration..
+        /// </summary>
+        public static string Suspension_Exception_FailedToDeserialiseState_Friendly {
+            get {
+                return ResourceManager.GetString("Suspension_Exception_FailedToDeserialiseState_Friendly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to persist the application state..
         /// </summary>
         public static string Suspension_Exception_FailedToPersistState {
             get {
                 return ResourceManager.GetString("Suspension_Exception_FailedToPersistState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The app attempted to save your widget configuration, but it was unable to do so. Please ensure that the app executable is permitted write access within its containing folder..
+        /// </summary>
+        public static string Suspension_Exception_FailedToPersistState_Friendly {
+            get {
+                return ResourceManager.GetString("Suspension_Exception_FailedToPersistState_Friendly", resourceCulture);
             }
         }
         

@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Locator_Exception_WidgetModelNotResolved" xml:space="preserve">
-    <value>Failed to resolve WidgetModel dependency.</value>
-  </data>
   <data name="Suspension_Exception_FailedToPersistState" xml:space="preserve">
     <value>Failed to persist the application state.</value>
   </data>
@@ -128,9 +125,6 @@
   </data>
   <data name="Suspension_Filename_WidgetState" xml:space="preserve">
     <value>datetoday-widget-state.json</value>
-  </data>
-  <data name="Locator_Exception_WidgetViewModelNotResolved" xml:space="preserve">
-    <value>Failed to resolve WidgetViewModel dependency.</value>
   </data>
   <data name="WidgetView_ContextMenu_MenuItem_OpenSettingsView" xml:space="preserve">
     <value>Widget Settings</value>
@@ -146,12 +140,6 @@
   </data>
   <data name="WidgetViewModel_Exception_OrdinalDaySuffixPosition_Negative" xml:space="preserve">
     <value>The value of OrdinalDaySuffixPosition must be positive.</value>
-  </data>
-  <data name="Locator_Exception_SettingsViewModelNotResolved" xml:space="preserve">
-    <value>Failed to resolve SettingsViewModel dependency.</value>
-  </data>
-  <data name="Locator_Exception_DialogServiceNotResolved" xml:space="preserve">
-    <value>Failed to resolve DialogService dependency.</value>
   </data>
   <data name="SettingsView_Window_Title" xml:space="preserve">
     <value>Settings</value>
@@ -179,5 +167,23 @@
   </data>
   <data name="AppVersionProvider_Prefix" xml:space="preserve">
     <value>Ver.</value>
+  </data>
+  <data name="AlertView_Button_CloseAlert" xml:space="preserve">
+    <value>Okay</value>
+  </data>
+  <data name="AlertView_InformationFlavour_Caption" xml:space="preserve">
+    <value>A heads-up from DateToday.</value>
+  </data>
+  <data name="AlertView_WarningFlavour_Caption" xml:space="preserve">
+    <value>DateToday has encountered a problem.</value>
+  </data>
+  <data name="AlertView_ErrorFlavour_Caption" xml:space="preserve">
+    <value>DateToday has shat the bed.</value>
+  </data>
+  <data name="Suspension_Exception_FailedToDeserialiseState_Friendly" xml:space="preserve">
+    <value>Your existing settings file is either inaccessible or invalid. The widget has instead been initialised using a default configuration.</value>
+  </data>
+  <data name="Suspension_Exception_FailedToPersistState_Friendly" xml:space="preserve">
+    <value>The app attempted to save your widget configuration, but it was unable to do so. Please ensure that the app executable is permitted write access within its containing folder.</value>
   </data>
 </root>

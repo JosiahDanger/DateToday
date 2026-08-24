@@ -63,10 +63,6 @@
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Strings.resx</DependentUpon>
 		</Compile>
-
-		<Compile Update="Avalonia\Views\WidgetView.axaml.cs">
-		  <DependentUpon>WidgetView.axaml</DependentUpon>
-		</Compile>
 	</ItemGroup>
 
 	<!-- Embedded Fonts -->
