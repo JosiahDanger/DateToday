@@ -1,5 +1,5 @@
 ﻿namespace DateToday.Avalonia.Messaging;
 
-internal class CloseAlertMessage
+internal sealed class CloseAlertMessage
 {
 }

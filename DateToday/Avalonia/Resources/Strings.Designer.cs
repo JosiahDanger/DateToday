@@ -124,6 +124,15 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A converter received an unsupported member of an enumeration type..
+        /// </summary>
+        public static string Converter_Exception_EnumerationTypeMember_NotSupported {
+            get {
+                return ResourceManager.GetString("Converter_Exception_EnumerationTypeMember_NotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to App.
         /// </summary>
         public static string SettingsView_TabControl_TabItem_AppTabHeader {

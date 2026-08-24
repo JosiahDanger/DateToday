@@ -9,24 +9,19 @@
 	x:DataType="vm:AlertViewModel"
 	Classes="AlertWindow">
 
-	<Window.Resources>
-		<conv:AlertFlavourToCaptionConverter x:Key="AlertFlavourToCaptionConverter" />
-		<conv:AlertFlavourToBrushConverter x:Key="AlertFlavourToBrushConverter" />
-	</Window.Resources>
-
 	<Window.Styles>
 		<StyleInclude Source="/Avalonia/Styles/AlertStyles.axaml" />
 	</Window.Styles>
 
 	<Border
-		Background="{Binding Alert.Flavour, Mode=OneTime, Converter={StaticResource AlertFlavourToBrushConverter}}"
+		Background="{Binding Alert.Flavour, Mode=OneTime, Converter={x:Static conv:AlertFlavourConverters.AlertFlavourToBrushConverter}}"
 		Classes="AlertOuterBorder">
 
 		<StackPanel Orientation="Vertical">
 
 			<TextBlock
 				Classes="AlertCaption"
-				Text="{Binding Alert.Flavour, Mode=OneTime, Converter={StaticResource AlertFlavourToCaptionConverter}}" />
+				Text="{Binding Alert.Flavour, Mode=OneTime, Converter={x:Static conv:AlertFlavourConverters.AlertFlavourToCaptionConverter}}" />
 
 			<Border Classes="AlertInnerBorder">
 
