@@ -19,7 +19,7 @@ namespace DateToday.Avalonia.ViewModels;
 
 internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 {
-	private readonly WidgetModel _modelHandle;
+	private readonly WidgetModel _widgetModel;
 	private IDisposable? _timerSubscription;
 
 	[ObservableProperty]
@@ -75,26 +75,26 @@ internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 
 	public string? DateTimeText => FormatCurrentDateTime();
 
-	public WidgetViewModel(WidgetModel wm)
+	public WidgetViewModel(WidgetModel widgetModel)
 	{
-		_modelHandle = wm;
+		_widgetModel = widgetModel;
 
-		DateTimeFormat = _modelHandle.Content.DateTimeFormat;
-		DateTimeCulture = _modelHandle.Content.DateTimeCulture;
-		OrdinalDaySuffixPosition = _modelHandle.Content.OrdinalDaySuffixPosition;
-		RefreshIntervalSeconds = _modelHandle.Content.RefreshIntervalSeconds;
+		DateTimeFormat = _widgetModel.Content.DateTimeFormat;
+		DateTimeCulture = _widgetModel.Content.DateTimeCulture;
+		OrdinalDaySuffixPosition = _widgetModel.Content.OrdinalDaySuffixPosition;
+		RefreshIntervalSeconds = _widgetModel.Content.RefreshIntervalSeconds;
 
-		AnchoredCorner = _modelHandle.Position.AnchoredCorner;
-		AnchoredCornerScaledPosition = _modelHandle.Position.AnchoredCornerScaledPosition;
-		MonitorReference = _modelHandle.Position.MonitorReference;
-		IsMouseDragEnabled = _modelHandle.Position.IsMouseDragEnabled;
+		AnchoredCorner = _widgetModel.Position.AnchoredCorner;
+		AnchoredCornerScaledPosition = _widgetModel.Position.AnchoredCornerScaledPosition;
+		MonitorReference = _widgetModel.Position.MonitorReference;
+		IsMouseDragEnabled = _widgetModel.Position.IsMouseDragEnabled;
 
-		FontFamily = _modelHandle.Font.FontFamily;
-		FontSize = _modelHandle.Font.FontSize;
-		FontWeight = _modelHandle.Font.FontWeight;
-		FontRenderingMode = _modelHandle.Font.FontRenderingMode;
-		CustomFontColour = _modelHandle.Font.CustomFontColour;
-		CustomDropShadowColour = _modelHandle.Font.CustomDropShadowColour;
+		FontFamily = _widgetModel.Font.FontFamily;
+		FontSize = _widgetModel.Font.FontSize;
+		FontWeight = _widgetModel.Font.FontWeight;
+		FontRenderingMode = _widgetModel.Font.FontRenderingMode;
+		CustomFontColour = _widgetModel.Font.CustomFontColour;
+		CustomDropShadowColour = _widgetModel.Font.CustomDropShadowColour;
 	}
 
 	[RelayCommand]

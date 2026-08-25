@@ -18,7 +18,6 @@ namespace DateToday.Avalonia;
 internal sealed partial class App : Application, IDisposable
 {
 	private ServiceProvider? _services;
-	private WidgetView? _widgetView;
 	private bool _hasDeserialisationSucceeded, _isAppShutdownAfoot;
 
 	public override void Initialize()
@@ -32,8 +31,8 @@ internal sealed partial class App : Application, IDisposable
 		Justification =
 			"""
 				An existing ServiceProvider instance cannot exist, because
-				OnFrameworkInitializationCompleted() is called only once during app initialisation
-				by the Avalonia framework.
+				OnFrameworkInitializationCompleted() is executed during app initialisation exactly
+				once.
 			""")]
 
 	public override void OnFrameworkInitializationCompleted()
@@ -43,33 +42,33 @@ internal sealed partial class App : Application, IDisposable
 			(WidgetModel initialWidgetModel, _hasDeserialisationSucceeded) =
 				WidgetModelFactory.GetInitialWidgetModel();
 
-			_widgetView = new() { DataContext = new WidgetViewModel(initialWidgetModel) };
+			WidgetView widgetView = new() { DataContext = new WidgetViewModel(initialWidgetModel) };
 
 			_services = new ServiceCollection()
 				.AddDomainServices(initialWidgetModel)
-				.AddPresentationServices(_widgetView)
+				.AddPresentationServices(widgetView)
 				.BuildServiceProvider();
 
-			_widgetView.Opened += OnWidgetViewOpened;
-			_widgetView.Closing += OnWidgetViewClosing;
-			_widgetView.Closed += OnWidgetViewClosed;
+			widgetView.Opened += OnWidgetViewOpened;
+			widgetView.Closing += OnWidgetViewClosing;
+			widgetView.Closed += OnWidgetViewClosed;
 
-			desktopLifetime.MainWindow = _widgetView;
+			desktopLifetime.MainWindow = widgetView;
 		}
 
 		base.OnFrameworkInitializationCompleted();
 	}
 
-	private static bool PersistStateBeforeClosure(WidgetModel widget)
+	private static bool PersistStateBeforeClosure(WidgetModel widgetModel)
 	{
 		JsonTypeInfo<WidgetModelDto> typeInfo =
 			WidgetModelDtoSerialiserContext.Default.WidgetModelDto;
 
-		WidgetModelDto wmdto = WidgetModelDto.FromModel(widget);
+		WidgetModelDto widgetModelDto = WidgetModelDto.FromModel(widgetModel);
 
 		try
 		{
-			SuspensionService.SaveState(wmdto, typeInfo);
+			SuspensionService.SaveState(widgetModelDto, typeInfo);
 		}
 		catch (InvalidOperationException)
 		{
@@ -83,15 +82,18 @@ internal sealed partial class App : Application, IDisposable
 	{
 		if (!_hasDeserialisationSucceeded)
 		{
-			AlertService? alerts = _services?.GetRequiredService<AlertService>();
-
-			if (alerts != null)
+			if (_services == null)
 			{
-				await alerts.ShowAlertAsync(
-								AlertFlavour.Warning,
-								Strings.Suspension_Exception_FailedToDeserialiseState_Friendly
-							).ConfigureAwait(false);
+				throw new InvalidOperationException(
+							Strings.Suspension_Exception_ServiceProviderNotInitialised);
 			}
+
+			AlertService alerts = _services.GetRequiredService<AlertService>();
+
+			await alerts.ShowAlertAsync(
+							AlertFlavour.Warning,
+							Strings.Suspension_Exception_FailedToDeserialiseState_Friendly
+						).ConfigureAwait(false);
 		}
 	}
 
@@ -113,22 +115,25 @@ internal sealed partial class App : Application, IDisposable
 
 		try
 		{
-			WidgetModel widget = _services.GetRequiredService<WidgetModel>();
-			bool hasSerialisationSucceeded = PersistStateBeforeClosure(widget);
+			WidgetModel widgetModel = _services.GetRequiredService<WidgetModel>();
+			bool hasSerialisationSucceeded = PersistStateBeforeClosure(widgetModel);
 
 			if (!hasSerialisationSucceeded)
 			{
 				AlertService alerts = _services.GetRequiredService<AlertService>();
 
 				await alerts.ShowAlertAsync(
-					AlertFlavour.Warning,
-					Strings.Suspension_Exception_FailedToPersistState_Friendly
-				).ConfigureAwait(false);
+								AlertFlavour.Warning,
+								Strings.Suspension_Exception_FailedToPersistState_Friendly
+							).ConfigureAwait(false);
 			}
 		}
 		finally
 		{
-			await Dispatcher.UIThread.InvokeAsync(() => _widgetView?.Close());
+			if (sender is Window widgetView)
+			{
+				await Dispatcher.UIThread.InvokeAsync(() => widgetView.Close());
+			}
 		}
 	}
 
