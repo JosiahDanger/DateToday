@@ -189,4 +189,7 @@
   <data name="Converter_Exception_EnumerationTypeMember_NotSupported" xml:space="preserve">
     <value>A converter received an unsupported member of an enumeration type.</value>
   </data>
+  <data name="Suspension_Exception_ServiceProviderNotInitialised" xml:space="preserve">
+    <value>The service provider was not initialised.</value>
+  </data>
 </root>

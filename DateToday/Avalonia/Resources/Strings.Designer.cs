@@ -214,6 +214,15 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The service provider was not initialised..
+        /// </summary>
+        public static string Suspension_Exception_ServiceProviderNotInitialised {
+            get {
+                return ResourceManager.GetString("Suspension_Exception_ServiceProviderNotInitialised", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to datetoday-widget-state.json.
         /// </summary>
         public static string Suspension_Filename_WidgetState {
