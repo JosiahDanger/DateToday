@@ -1,68 +1,69 @@
-﻿using Avalonia;
-using Avalonia.Media;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using DateToday.Avalonia.Messaging;
 using DateToday.Avalonia.Resources;
 using DateToday.Models;
 using System;
-using System.Globalization;
+using System.ComponentModel;
 using System.Reactive.Linq;
 
 namespace DateToday.Avalonia.ViewModels;
 
 /// <summary>
-/// WidgetViewModel is a passive consumer of the singleton WidgetModel. It will eventually reflect
-/// in WidgetView all WidgetModel mutations.
+/// The primary purpose of WidgetViewModel is to reflect in <see cref="WidgetView" /> via
+/// unidirectional binding the current mutable state of the singleton <see cref="WidgetModel" />. In
+/// addition, for properties that may change independently of the WidgetModel, such as
+/// MonitorReference, WidgetViewModel notifies the WidgetModel of changes via the
+/// <see cref="WeakReferenceMessenger" />.
 /// </summary>
 
 internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 {
 	private readonly WidgetModel _widgetModel;
+	private readonly bool _isPropertyInitialisationComplete;
 	private IDisposable? _timerSubscription;
 
-	[ObservableProperty]
-	public partial string DateTimeFormat { get; set; }
+	public WidgetViewModel(WidgetModel widgetModel)
+	{
+		_widgetModel = widgetModel;
+		_widgetModel.PropertyChanged += OnWidgetModelPropertyChanged;
+
+		Content = _widgetModel.Content;
+		Position = _widgetModel.Position;
+		Font = _widgetModel.Font;
+		App = _widgetModel.App;
+
+		_isPropertyInitialisationComplete = true;
+
+		WeakReferenceMessenger.Default.Register<WidgetMonitorChangedMessage>(this,
+			(_, message) =>
+			{
+				_widgetModel.Position =
+					_widgetModel.Position with { MonitorReference = message.MonitorReference };
+			});
+
+		WeakReferenceMessenger.Default.Register<IsMouseDragEnabledChangedMessage>(this,
+			(_, message) =>
+			{
+				_widgetModel.Position =
+					_widgetModel.Position with { IsMouseDragEnabled = message.IsMouseDragEnabled };
+			});
+
+		ResetSecondTickObservable(Content.RefreshIntervalSeconds);
+	}
 
 	[ObservableProperty]
-	public partial CultureInfo DateTimeCulture { get; set; }
+	public partial ContentConfig Content { get; set; }
 
 	[ObservableProperty]
-	public partial byte? OrdinalDaySuffixPosition { get; set; }
+	public partial PositionConfig Position { get; set; }
 
 	[ObservableProperty]
-	public partial uint RefreshIntervalSeconds { get; set; }
+	public partial FontConfig Font { get; set; }
 
 	[ObservableProperty]
-	public partial WindowVertexIdentifier AnchoredCorner { get; set; }
-
-	[ObservableProperty]
-	public partial Point AnchoredCornerScaledPosition { get; set; }
-
-	[ObservableProperty]
-	public partial string? MonitorReference { get; set; }
-
-	[ObservableProperty]
-	public partial bool IsMouseDragEnabled { get; set; }
-
-	[ObservableProperty]
-	public partial FontFamily FontFamily { get; set; }
-
-	[ObservableProperty]
-	public partial int FontSize { get; set; }
-
-	[ObservableProperty]
-	public partial FontWeight FontWeight { get; set; }
-
-	[ObservableProperty]
-	public partial TextRenderingMode FontRenderingMode { get; set; }
-
-	[ObservableProperty]
-	public partial Color? CustomFontColour { get; set; }
-
-	[ObservableProperty]
-	public partial Color? CustomDropShadowColour { get; set; }
+	public partial AppConfig App { get; set; }
 
 	/// <summary>
 	/// A calculated property that returns a string representation of the current date and/or time.
@@ -74,28 +75,6 @@ internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 	/// </summary>
 
 	public string? DateTimeText => FormatCurrentDateTime();
-
-	public WidgetViewModel(WidgetModel widgetModel)
-	{
-		_widgetModel = widgetModel;
-
-		DateTimeFormat = _widgetModel.Content.DateTimeFormat;
-		DateTimeCulture = _widgetModel.Content.DateTimeCulture;
-		OrdinalDaySuffixPosition = _widgetModel.Content.OrdinalDaySuffixPosition;
-		RefreshIntervalSeconds = _widgetModel.Content.RefreshIntervalSeconds;
-
-		AnchoredCorner = _widgetModel.Position.AnchoredCorner;
-		AnchoredCornerScaledPosition = _widgetModel.Position.AnchoredCornerScaledPosition;
-		MonitorReference = _widgetModel.Position.MonitorReference;
-		IsMouseDragEnabled = _widgetModel.Position.IsMouseDragEnabled;
-
-		FontFamily = _widgetModel.Font.FontFamily;
-		FontSize = _widgetModel.Font.FontSize;
-		FontWeight = _widgetModel.Font.FontWeight;
-		FontRenderingMode = _widgetModel.Font.FontRenderingMode;
-		CustomFontColour = _widgetModel.Font.CustomFontColour;
-		CustomDropShadowColour = _widgetModel.Font.CustomDropShadowColour;
-	}
 
 	[RelayCommand]
 	private static void CloseApplication()
@@ -116,18 +95,18 @@ internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 
 		DateTime currentDateTime = DateTime.Now;
 
-		if (OrdinalDaySuffixPosition == null)
+		if (Content.OrdinalDaySuffixPosition == null)
 		{
-			return currentDateTime.ToString(DateTimeFormat, DateTimeCulture);
+			return currentDateTime.ToString(Content.DateTimeFormat, Content.DateTimeCulture);
 		}
 
-		if (OrdinalDaySuffixPosition < 0)
+		if (Content.OrdinalDaySuffixPosition < 0)
 		{
 			throw new InvalidOperationException(
 				Strings.WidgetViewModel_Exception_OrdinalDaySuffixPosition_Negative);
 		}
 
-		if (OrdinalDaySuffixPosition > DateTimeFormat.Length)
+		if (Content.OrdinalDaySuffixPosition > Content.DateTimeFormat.Length)
 		{
 			throw new InvalidOperationException(
 				Strings.WidgetViewModel_Exception_OrdinalDaySuffixPosition_OutOfRange);
@@ -142,15 +121,15 @@ internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 		string ordinalDaySuffix = GetOrdinalDaySuffix(ordinalDayOfMonth);
 
 		string dateTimeFormatIncludingSuffixPlaceholder =
-			DateTimeFormat.Insert((int)OrdinalDaySuffixPosition, "{0}");
+			Content.DateTimeFormat.Insert((int)Content.OrdinalDaySuffixPosition, "{0}");
 
 		string dateTimeStringIncludingSuffixPlaceholder =
 			currentDateTime.ToString(
 								dateTimeFormatIncludingSuffixPlaceholder,
-								DateTimeCulture);
+								App.AppCulture);
 
 		return string.Format(
-							DateTimeCulture,
+							App.AppCulture,
 							dateTimeStringIncludingSuffixPlaceholder,
 							ordinalDaySuffix);
 	}
@@ -205,7 +184,7 @@ internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 		});
 	}
 
-	partial void OnRefreshIntervalSecondsChanged(uint value)
+	private void ResetSecondTickObservable(uint value)
 	{
 		_timerSubscription?.Dispose();
 
@@ -214,8 +193,60 @@ internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 			.Subscribe(_ => OnPropertyChanged(nameof(DateTimeText)));
 	}
 
+	private void OnWidgetModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+	{
+		switch (e.PropertyName)
+		{
+			case nameof(WidgetModel.Content):
+				Content = _widgetModel.Content;
+				break;
+
+			case nameof(WidgetModel.Position):
+				Position = _widgetModel.Position;
+				break;
+
+			case nameof(WidgetModel.Font):
+				Font = _widgetModel.Font;
+				break;
+
+			case nameof(WidgetModel.App):
+				App = _widgetModel.App;
+				break;
+		}
+	}
+
+	partial void OnContentChanged(ContentConfig oldValue, ContentConfig newValue)
+	{
+		if (!_isPropertyInitialisationComplete)
+		{
+			return;
+		}
+
+		if (newValue.RefreshIntervalSeconds != oldValue.RefreshIntervalSeconds)
+		{
+			ResetSecondTickObservable(newValue.RefreshIntervalSeconds);
+		}
+	}
+
+	partial void OnAppChanged(AppConfig oldValue, AppConfig newValue)
+	{
+		if (!_isPropertyInitialisationComplete)
+		{
+			return;
+		}
+
+		if (newValue.AppCulture != oldValue.AppCulture)
+		{
+			OnPropertyChanged(nameof(DateTimeText));
+		}
+	}
+
 	public void Dispose()
 	{
+		WeakReferenceMessenger.Default.Unregister<WidgetMonitorChangedMessage>(this);
+		WeakReferenceMessenger.Default.Unregister<IsMouseDragEnabledChangedMessage>(this);
+
+		_widgetModel.PropertyChanged -= OnWidgetModelPropertyChanged;
 		_timerSubscription?.Dispose();
 	}
 }

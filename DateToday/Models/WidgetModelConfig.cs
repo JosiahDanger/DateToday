@@ -25,6 +25,5 @@ internal sealed record FontConfig(
 	Color? CustomDropShadowColour);
 
 internal sealed record AppConfig(
-	CultureInfo AppCulture,
-	double SettingsViewOpacity
+	CultureInfo AppCulture
 );

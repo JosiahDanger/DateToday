@@ -30,6 +30,5 @@ internal static class WidgetModelDefaults
 
 	public static AppConfig DefaultAppConfig =>
 		new(
-			AppCulture: CultureInfo.CurrentUICulture,
-			SettingsViewOpacity: 1);
+			AppCulture: CultureInfo.CurrentUICulture);
 }

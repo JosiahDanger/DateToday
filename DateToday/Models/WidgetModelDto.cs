@@ -57,9 +57,6 @@ internal sealed class WidgetModelDto : ISuspensionState
 	[JsonPropertyName("appCultureIdentifier")]
 	public required string AppCultureIdentifier { get; set; }
 
-	[JsonPropertyName("settingsViewOpacity")]
-	public double SettingsViewOpacity { get; set; }
-
 	public WidgetModel ToModel()
 	{
 		CultureInfo dateTimeCulture = new(DateTimeCultureIdentifier);
@@ -102,7 +99,8 @@ internal sealed class WidgetModelDto : ISuspensionState
 					customFontColour,
 					customDropShadowColour),
 
-			new AppConfig(appCulture, SettingsViewOpacity));
+			new AppConfig(
+					appCulture));
 	}
 
 	public static WidgetModelDto FromModel(WidgetModel model)
@@ -127,8 +125,7 @@ internal sealed class WidgetModelDto : ISuspensionState
 			CustomFontColour = model.Font.CustomFontColour?.ToUInt32(),
 			CustomDropShadowColour = model.Font.CustomDropShadowColour?.ToUInt32(),
 
-			AppCultureIdentifier = model.App.AppCulture.Name,
-			SettingsViewOpacity = model.App.SettingsViewOpacity
+			AppCultureIdentifier = model.App.AppCulture.Name
 		};
 	}
 }

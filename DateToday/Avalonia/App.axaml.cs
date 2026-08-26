@@ -30,7 +30,7 @@ internal sealed partial class App : Application, IDisposable
 		"IDISP003",
 		Justification =
 			"""
-				An existing ServiceProvider instance cannot exist, because
+				An existing ServiceProvider instance cannot exist already, because
 				OnFrameworkInitializationCompleted() is executed during app initialisation exactly
 				once.
 			""")]
