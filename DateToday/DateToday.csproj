@@ -46,7 +46,6 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.11" />
 		<PackageReference Include="PublishAotCompressed" Version="1.0.5" />
 		<PackageReference Include="System.Reactive" Version="7.0.0" />
 	</ItemGroup>
@@ -62,6 +61,10 @@
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Strings.resx</DependentUpon>
+		</Compile>
+
+		<Compile Update="Avalonia\Views\SettingsView.axaml.cs">
+		  <DependentUpon>SettingsView.axaml</DependentUpon>
 		</Compile>
 	</ItemGroup>
 

@@ -5,7 +5,7 @@
 	xmlns:conv="using:DateToday.Avalonia.Converters"
 	xmlns:res="using:DateToday.Avalonia.Resources"
 	xmlns:vm="using:DateToday.Avalonia.ViewModels"
-	Title="DateToday - Alert"
+	Title="{x:Static res:Strings.AlertView_Window_Title}"
 	x:DataType="vm:AlertViewModel"
 	Classes="AlertWindow">
 
@@ -14,14 +14,14 @@
 	</Window.Styles>
 
 	<Border
-		Background="{Binding Alert.Flavour, Mode=OneTime, Converter={x:Static conv:AlertFlavourConverters.AlertFlavourToBrushConverter}}"
+		Background="{Binding AlertModel.Flavour, Mode=OneTime, Converter={x:Static conv:AlertFlavourConverters.AlertFlavourToBrushConverter}}"
 		Classes="AlertOuterBorder">
 
 		<StackPanel Orientation="Vertical">
 
 			<TextBlock
 				Classes="AlertCaption"
-				Text="{Binding Alert.Flavour, Mode=OneTime, Converter={x:Static conv:AlertFlavourConverters.AlertFlavourToCaptionConverter}}" />
+				Text="{Binding AlertModel.Flavour, Mode=OneTime, Converter={x:Static conv:AlertFlavourConverters.AlertFlavourToCaptionConverter}}" />
 
 			<Border Classes="AlertInnerBorder">
 
@@ -29,7 +29,7 @@
 
 					<SelectableTextBlock
 						Classes="AlertMessage"
-						Text="{Binding Alert.Message, Mode=OneTime}" />
+						Text="{Binding AlertModel.Message, Mode=OneTime}" />
 
 				</ScrollViewer>
 
@@ -37,7 +37,7 @@
 
 			<Button
 				Classes="CloseButton"
-				Command="{Binding CloseAlertCommand, Mode=OneTime}"
+				Command="{Binding CloseAlertViewCommand, Mode=OneTime}"
 				Content="{x:Static res:Strings.AlertView_Button_CloseAlert}" />
 
 		</StackPanel>

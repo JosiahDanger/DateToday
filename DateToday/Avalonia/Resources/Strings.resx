@@ -142,7 +142,7 @@
     <value>The value of OrdinalDaySuffixPosition must be positive.</value>
   </data>
   <data name="SettingsView_Window_Title" xml:space="preserve">
-    <value>Settings</value>
+    <value>DateToday - Widget Settings</value>
   </data>
   <data name="WidgetView_Window_Title" xml:space="preserve">
     <value>DateToday</value>
@@ -189,7 +189,7 @@
   <data name="Converter_Exception_EnumerationTypeMember_NotSupported" xml:space="preserve">
     <value>A converter received an unsupported member of an enumeration type.</value>
   </data>
-  <data name="Suspension_Exception_ServiceProviderNotInitialised" xml:space="preserve">
-    <value>The service provider was not initialised.</value>
+  <data name="AlertView_Window_Title" xml:space="preserve">
+    <value>DateToday - Alert</value>
   </data>
 </root>

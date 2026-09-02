@@ -12,10 +12,10 @@ namespace DateToday.Avalonia.ViewModels;
 
 /// <summary>
 /// The primary purpose of WidgetViewModel is to reflect in <see cref="WidgetView" /> via
-/// unidirectional binding the current mutable state of the singleton <see cref="WidgetModel" />. In
-/// addition, for properties that may change independently of the WidgetModel, such as
-/// MonitorReference, WidgetViewModel notifies the WidgetModel of changes via the
-/// <see cref="WeakReferenceMessenger" />.
+/// unidirectional binding the current mutable state of the singleton <see cref="WidgetModel" />,
+/// which persists throughout the entire lifetime of the application. In addition, for properties
+/// that may change independently of the WidgetModel, such as MonitorReference, WidgetViewModel
+/// notifies the WidgetModel of changes via the <see cref="WeakReferenceMessenger" />.
 /// </summary>
 
 internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
@@ -43,7 +43,7 @@ internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 					_widgetModel.Position with { MonitorReference = message.MonitorReference };
 			});
 
-		WeakReferenceMessenger.Default.Register<IsMouseDragEnabledChangedMessage>(this,
+		WeakReferenceMessenger.Default.Register<MouseDragToggledMessage>(this,
 			(_, message) =>
 			{
 				_widgetModel.Position =
@@ -75,6 +75,12 @@ internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 	/// </summary>
 
 	public string? DateTimeText => FormatCurrentDateTime();
+
+	[RelayCommand]
+	private static void OpenSettingsView()
+	{
+		WeakReferenceMessenger.Default.Send(new OpenSettingsViewMessage());
+	}
 
 	[RelayCommand]
 	private static void CloseApplication()
@@ -244,7 +250,7 @@ internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 	public void Dispose()
 	{
 		WeakReferenceMessenger.Default.Unregister<WidgetMonitorChangedMessage>(this);
-		WeakReferenceMessenger.Default.Unregister<IsMouseDragEnabledChangedMessage>(this);
+		WeakReferenceMessenger.Default.Unregister<MouseDragToggledMessage>(this);
 
 		_widgetModel.PropertyChanged -= OnWidgetModelPropertyChanged;
 		_timerSubscription?.Dispose();

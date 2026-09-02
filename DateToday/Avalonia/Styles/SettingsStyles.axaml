@@ -5,19 +5,49 @@
 
 		<!--  Add Controls for Previewer Here  -->
 
-		<Border
-			Width="600"
-			Height="400"
-			Classes="SettingsOuterBorder">
+		<Border Classes="SettingsOuterBorder">
 
-			<Canvas>
+			<Panel>
 
-				<Button
-					Canvas.Top="10"
-					Canvas.Right="10"
-					Classes="CloseButton" />
+				<Panel Classes="CloseButtonPanel">
 
-			</Canvas>
+					<Button Classes="CloseButton" />
+
+				</Panel>
+
+				<Panel Classes="TabPanel">
+
+					<TabControl
+						Name="TabGroup"
+						Classes="TabGroup">
+
+						<TabItem
+							Classes="TabHeader"
+							Header="Content" />
+
+						<TabItem
+							Classes="TabHeader"
+							Header="Position" />
+
+						<TabItem
+							Classes="TabHeader"
+							Header="Font" />
+
+						<TabItem
+							Classes="TabHeader"
+							Header="App" />
+
+					</TabControl>
+
+					<Panel Classes="AppVersionPanel">
+
+						<TextBlock Classes="AppVersion" />
+
+					</Panel>
+
+				</Panel>
+
+			</Panel>
 
 		</Border>
 
@@ -35,10 +65,23 @@
 		<Setter Property="MaxWidth" Value="800" />
 		<Setter Property="MinHeight" Value="400" />
 		<Setter Property="MinWidth" Value="600" />
-		<Setter Property="ShowInTaskbar" Value="False" />
+		<Setter Property="ShowInTaskbar" Value="True" />
 		<Setter Property="WindowDecorationProperties.ElementRole" Value="TitleBar" />
 		<Setter Property="WindowDecorations" Value="BorderOnly" />
 		<Setter Property="WindowStartupLocation" Value="CenterOwner" />
+	</Style>
+
+	<Style Selector="Border.SettingsOuterBorder">
+		<Setter Property="Background" Value="{DynamicResource SystemAltMediumHighColor}" />
+		<Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
+		<Setter Property="BorderThickness" Value="3" />
+		<Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+	</Style>
+
+	<Style Selector="Panel.CloseButtonPanel">
+		<Setter Property="Margin" Value="10" />
+		<Setter Property="HorizontalAlignment" Value="Right" />
+		<Setter Property="VerticalAlignment" Value="Top" />
 	</Style>
 
 	<Style Selector="Button.CloseButton">
@@ -56,12 +99,6 @@
 		<Setter Property="VerticalContentAlignment" Value="Top" />
 		<Setter Property="Width" Value="20" />
 		<Setter Property="WindowDecorationProperties.ElementRole" Value="CloseButton" />
-	</Style>
-
-	<Style Selector="Panel.CloseButtonPanel">
-		<Setter Property="Margin" Value="10" />
-		<Setter Property="HorizontalAlignment" Value="Right" />
-		<Setter Property="VerticalAlignment" Value="Top" />
 	</Style>
 
 	<Style Selector="Panel.TabPanel">
@@ -99,13 +136,6 @@
 		<Setter Property="FontFamily" Value="fonts:FontCollection#Drafting* Mono" />
 		<Setter Property="FontSize" Value="9" />
 		<Setter Property="FontWeight" Value="ExtraLight" />
-	</Style>
-
-	<Style Selector="Border.SettingsOuterBorder">
-		<Setter Property="Background" Value="{DynamicResource SystemAltMediumHighColor}" />
-		<Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
-		<Setter Property="BorderThickness" Value="3" />
-		<Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
 	</Style>
 
 	<Style Selector="Border.SettingsInnerBorder">

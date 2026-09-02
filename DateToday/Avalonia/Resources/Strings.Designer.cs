@@ -97,6 +97,15 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DateToday - Alert.
+        /// </summary>
+        public static string AlertView_Window_Title {
+            get {
+                return ResourceManager.GetString("AlertView_Window_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to determine the filepath of the app executable..
         /// </summary>
         public static string AppVersionProvider_Exception_ExecutableFilepathNotAvailable {
@@ -169,7 +178,7 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Settings.
+        ///   Looks up a localized string similar to DateToday - Widget Settings.
         /// </summary>
         public static string SettingsView_Window_Title {
             get {
@@ -210,15 +219,6 @@ namespace DateToday.Avalonia.Resources {
         public static string Suspension_Exception_FailedToPersistState_Friendly {
             get {
                 return ResourceManager.GetString("Suspension_Exception_FailedToPersistState_Friendly", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The service provider was not initialised..
-        /// </summary>
-        public static string Suspension_Exception_ServiceProviderNotInitialised {
-            get {
-                return ResourceManager.GetString("Suspension_Exception_ServiceProviderNotInitialised", resourceCulture);
             }
         }
         

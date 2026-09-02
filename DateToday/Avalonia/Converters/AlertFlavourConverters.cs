@@ -15,8 +15,9 @@ internal static class AlertFlavourConverters
 				AlertFlavour.Information => Strings.AlertView_InformationFlavour_Caption,
 				AlertFlavour.Warning => Strings.AlertView_WarningFlavour_Caption,
 				AlertFlavour.Error => Strings.AlertView_ErrorFlavour_Caption,
-				_ => throw new NotSupportedException(
-									Strings.Converter_Exception_EnumerationTypeMember_NotSupported),
+				_ =>
+					throw new NotSupportedException(
+								Strings.Converter_Exception_EnumerationTypeMember_NotSupported)
 			});
 
 	public static readonly IValueConverter AlertFlavourToBrushConverter =
@@ -26,7 +27,8 @@ internal static class AlertFlavourConverters
 				AlertFlavour.Information => new SolidColorBrush(Colors.SteelBlue),
 				AlertFlavour.Warning => new SolidColorBrush(Colors.Goldenrod),
 				AlertFlavour.Error => new SolidColorBrush(Colors.IndianRed),
-				_ => throw new NotSupportedException(
-									Strings.Converter_Exception_EnumerationTypeMember_NotSupported),
+				_ =>
+					throw new NotSupportedException(
+								Strings.Converter_Exception_EnumerationTypeMember_NotSupported)
 			});
 }

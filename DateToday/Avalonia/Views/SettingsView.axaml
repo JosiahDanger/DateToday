@@ -1,0 +1,64 @@
+<Window
+	x:Class="DateToday.Avalonia.Views.SettingsView"
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:conv="using:DateToday.Avalonia.Converters"
+	xmlns:res="using:DateToday.Avalonia.Resources"
+	xmlns:vm="using:DateToday.Avalonia.ViewModels"
+	Title="{x:Static res:Strings.SettingsView_Window_Title}"
+	x:DataType="vm:SettingsViewModel"
+	Classes="SettingsWindow">
+
+	<Window.Styles>
+		<StyleInclude Source="/Avalonia/Styles/SettingsStyles.axaml" />
+	</Window.Styles>
+
+	<Border Classes="SettingsOuterBorder">
+
+		<Panel>
+
+			<Panel Classes="CloseButtonPanel">
+
+				<Button
+					Classes="CloseButton"
+					Command="{Binding CloseSettingsViewCommand, Mode=OneTime}" />
+
+			</Panel>
+
+			<Panel Classes="TabPanel">
+
+				<TabControl
+					Name="TabGroup"
+					Classes="TabGroup">
+
+					<TabItem
+						Classes="TabHeader"
+						Header="{x:Static res:Strings.SettingsView_TabControl_TabItem_ContentTabHeader}" />
+
+					<TabItem
+						Classes="TabHeader"
+						Header="{x:Static res:Strings.SettingsView_TabControl_TabItem_PositionTabHeader}" />
+
+					<TabItem
+						Classes="TabHeader"
+						Header="{x:Static res:Strings.SettingsView_TabControl_TabItem_FontTabHeader}" />
+
+					<TabItem
+						Classes="TabHeader"
+						Header="{x:Static res:Strings.SettingsView_TabControl_TabItem_AppTabHeader}" />
+
+				</TabControl>
+
+				<Panel Classes="AppVersionPanel">
+
+					<TextBlock Classes="AppVersion" />
+
+				</Panel>
+
+			</Panel>
+
+		</Panel>
+
+	</Border>
+
+</Window>

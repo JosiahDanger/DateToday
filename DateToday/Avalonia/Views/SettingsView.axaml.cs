@@ -4,13 +4,13 @@ using DateToday.Avalonia.Messaging;
 
 namespace DateToday.Avalonia.Views;
 
-internal sealed partial class AlertView : Window
+internal sealed partial class SettingsView : Window
 {
-	public AlertView()
+	public SettingsView()
 	{
 		InitializeComponent();
 
-		WeakReferenceMessenger.Default.Register<CloseAlertViewMessage>(
+		WeakReferenceMessenger.Default.Register<CloseSettingsViewMessage>(
 			this, (_, _) => this.Close());
 	}
 }
