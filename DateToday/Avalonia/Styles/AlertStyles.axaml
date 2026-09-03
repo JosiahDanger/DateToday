@@ -50,6 +50,7 @@
 		<Setter Property="ShowInTaskbar" Value="True" />
 		<Setter Property="SizeToContent" Value="Height" />
 		<Setter Property="Width" Value="450" />
+		<Setter Property="WindowDecorationProperties.ElementRole" Value="None" />
 		<Setter Property="WindowDecorations" Value="None" />
 		<Setter Property="WindowStartupLocation" Value="CenterScreen" />
 	</Style>
@@ -70,6 +71,7 @@
 		<Setter Property="Margin" Value="0 40 0 10" />
 		<Setter Property="MaxWidth" Value="375" />
 		<Setter Property="TextWrapping" Value="Wrap" />
+		<Setter Property="WindowDecorationProperties.ElementRole" Value="None" />
 	</Style>
 
 	<Style Selector="Border.AlertInnerBorder">
@@ -78,6 +80,7 @@
 		<Setter Property="Margin" Value="25" />
 		<Setter Property="MaxHeight" Value="150" />
 		<Setter Property="Width" Value="350" />
+		<Setter Property="WindowDecorationProperties.ElementRole" Value="None" />
 	</Style>
 
 	<Style Selector="SelectableTextBlock.AlertMessage">
@@ -89,7 +92,7 @@
 		<Setter Property="Margin" Value="0 15" />
 		<Setter Property="TextWrapping" Value="Wrap" />
 		<Setter Property="Width" Value="325" />
-		<Setter Property="WindowDecorationProperties.ElementRole" Value="DecorationsElement" />
+		<Setter Property="WindowDecorationProperties.ElementRole" Value="User" />
 	</Style>
 
 	<Style Selector="Button.CloseButton">

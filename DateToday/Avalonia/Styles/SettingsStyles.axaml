@@ -5,7 +5,10 @@
 
 		<!--  Add Controls for Previewer Here  -->
 
-		<Border Classes="SettingsOuterBorder">
+		<Border
+			Width="600"
+			Height="400"
+			Classes="SettingsOuterBorder">
 
 			<Panel>
 
@@ -41,7 +44,9 @@
 
 					<Panel Classes="AppVersionPanel">
 
-						<TextBlock Classes="AppVersion" />
+						<TextBlock
+							Classes="AppVersion"
+							Text="Ver. 2.0.0" />
 
 					</Panel>
 
@@ -66,22 +71,26 @@
 		<Setter Property="MinHeight" Value="400" />
 		<Setter Property="MinWidth" Value="600" />
 		<Setter Property="ShowInTaskbar" Value="True" />
-		<Setter Property="WindowDecorationProperties.ElementRole" Value="TitleBar" />
+		<Setter Property="SizeToContent" Value="Width" />
+		<Setter Property="WindowDecorationProperties.ElementRole" Value="None" />
 		<Setter Property="WindowDecorations" Value="BorderOnly" />
 		<Setter Property="WindowStartupLocation" Value="CenterOwner" />
 	</Style>
 
 	<Style Selector="Border.SettingsOuterBorder">
 		<Setter Property="Background" Value="{DynamicResource SystemAltMediumHighColor}" />
+		<Setter Property="BackgroundSizing" Value="OuterBorderEdge" />
 		<Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
 		<Setter Property="BorderThickness" Value="3" />
 		<Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+		<Setter Property="WindowDecorationProperties.ElementRole" Value="TitleBar" />
 	</Style>
 
 	<Style Selector="Panel.CloseButtonPanel">
 		<Setter Property="Margin" Value="10" />
 		<Setter Property="HorizontalAlignment" Value="Right" />
 		<Setter Property="VerticalAlignment" Value="Top" />
+		<Setter Property="WindowDecorationProperties.ElementRole" Value="None" />
 	</Style>
 
 	<Style Selector="Button.CloseButton">
@@ -93,7 +102,6 @@
 		<Setter Property="FontSize" Value="10" />
 		<Setter Property="Height" Value="20" />
 		<Setter Property="HorizontalContentAlignment" Value="Center" />
-		<Setter Property="Margin" Value="0" />
 		<Setter Property="Padding" Value="0" />
 		<Setter Property="UseLayoutRounding" Value="False" />
 		<Setter Property="VerticalContentAlignment" Value="Top" />
@@ -103,39 +111,42 @@
 
 	<Style Selector="Panel.TabPanel">
 		<Setter Property="Height" Value="400" />
-		<Setter Property="Margin" Value="0" />
 		<Setter Property="HorizontalAlignment" Value="Left" />
-		<Setter Property="VerticalAlignment" Value="Top" />
+		<Setter Property="WindowDecorationProperties.ElementRole" Value="None" />
 	</Style>
 
 	<Style Selector="TabControl.TabGroup">
 		<Setter Property="Background" Value="{DynamicResource SystemBaseLowColor}" />
 		<Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-		<Setter Property="Margin" Value="5" />
+		<Setter Property="Margin" Value="10" />
 		<Setter Property="Padding" Value="0" />
 		<Setter Property="TabStripPlacement" Value="Left" />
+		<Setter Property="WindowDecorationProperties.ElementRole" Value="None" />
 	</Style>
 
 	<Style Selector="TabItem.TabHeader">
 		<Setter Property="FontFamily" Value="fonts:FontCollection#Libre Franklin" />
 		<Setter Property="FontSize" Value="16" />
 		<Setter Property="FontWeight" Value="Regular" />
-		<Setter Property="Margin" Value="0 10 0 0" />
+		<Setter Property="Margin" Value="0 15 0 0" />
 		<Setter Property="Padding" Value="10 0 17.5 0" />
+		<Setter Property="WindowDecorationProperties.ElementRole" Value="User" />
+
 	</Style>
 
 	<Style Selector="Panel.AppVersionPanel">
-		<Setter Property="MaxWidth" Value="100" />
-		<Setter Property="Margin" Value="5" />
+		<Setter Property="Margin" Value="0 0 0 10" />
 		<Setter Property="VerticalAlignment" Value="Bottom" />
+		<Setter Property="WindowDecorationProperties.ElementRole" Value="None" />
 	</Style>
 
 	<Style Selector="TextBlock.AppVersion">
-		<Setter Property="Margin" Value="1" />
-		<Setter Property="HorizontalAlignment" Value="Center" />
 		<Setter Property="FontFamily" Value="fonts:FontCollection#Drafting* Mono" />
 		<Setter Property="FontSize" Value="9" />
 		<Setter Property="FontWeight" Value="ExtraLight" />
+		<Setter Property="HorizontalAlignment" Value="Center" />
+		<Setter Property="TextAlignment" Value="Center" />
+		<Setter Property="WindowDecorationProperties.ElementRole" Value="None" />
 	</Style>
 
 	<Style Selector="Border.SettingsInnerBorder">
@@ -145,6 +156,7 @@
 		<Setter Property="Height" Value="350" />
 		<Setter Property="Margin" Value="20" />
 		<Setter Property="Width" Value="550" />
+		<Setter Property="WindowDecorationProperties.ElementRole" Value="None" />
 	</Style>
 
 </Styles>
