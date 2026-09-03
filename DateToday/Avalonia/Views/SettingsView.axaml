@@ -56,8 +56,7 @@
 
 					<TextBlock
 						Grid.Row="1"
-						Classes="AppVersion"
-						Text="Ver. 2.0.0" />
+						Classes="AppVersion" />
 
 				</Grid>
 
