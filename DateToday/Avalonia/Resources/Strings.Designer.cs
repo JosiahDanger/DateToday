@@ -144,36 +144,36 @@ namespace DateToday.Avalonia.Resources {
         /// <summary>
         ///   Looks up a localized string similar to App.
         /// </summary>
-        public static string SettingsView_TabControl_TabItem_AppTabHeader {
+        public static string SettingsView_TabStrip_TabStripItem_AppTabHeader {
             get {
-                return ResourceManager.GetString("SettingsView_TabControl_TabItem_AppTabHeader", resourceCulture);
+                return ResourceManager.GetString("SettingsView_TabStrip_TabStripItem_AppTabHeader", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Content.
         /// </summary>
-        public static string SettingsView_TabControl_TabItem_ContentTabHeader {
+        public static string SettingsView_TabStrip_TabStripItem_ContentTabHeader {
             get {
-                return ResourceManager.GetString("SettingsView_TabControl_TabItem_ContentTabHeader", resourceCulture);
+                return ResourceManager.GetString("SettingsView_TabStrip_TabStripItem_ContentTabHeader", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Font.
         /// </summary>
-        public static string SettingsView_TabControl_TabItem_FontTabHeader {
+        public static string SettingsView_TabStrip_TabStripItem_FontTabHeader {
             get {
-                return ResourceManager.GetString("SettingsView_TabControl_TabItem_FontTabHeader", resourceCulture);
+                return ResourceManager.GetString("SettingsView_TabStrip_TabStripItem_FontTabHeader", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Position.
         /// </summary>
-        public static string SettingsView_TabControl_TabItem_PositionTabHeader {
+        public static string SettingsView_TabStrip_TabStripItem_PositionTabHeader {
             get {
-                return ResourceManager.GetString("SettingsView_TabControl_TabItem_PositionTabHeader", resourceCulture);
+                return ResourceManager.GetString("SettingsView_TabStrip_TabStripItem_PositionTabHeader", resourceCulture);
             }
         }
         

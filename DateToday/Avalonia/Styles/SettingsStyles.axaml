@@ -20,35 +20,46 @@
 					Grid.Row="0"
 					Grid.RowSpan="3"
 					Grid.Column="0"
-					Classes="TabGroupGridBorder">
+					Classes="SettingsOuterNavigationGridBorder">
 
 					<Grid
-						Classes="SettingsNavigationGrid"
+						Classes="SettingsOuterNavigationGrid"
 						ColumnDefinitions="Auto"
-						RowDefinitions="350, Auto">
+						RowDefinitions="365, Auto">
 
-						<TabControl
+						<TabStrip
 							Grid.Row="0"
 							Grid.Column="0"
 							Classes="TabGroup">
 
-							<TabItem
-								Classes="TabHeader"
-								Header="Content" />
+							<UniformGrid
+								Classes="SettingsInnerNavigationGrid"
+								Columns="1"
+								Rows="4">
 
-							<TabItem
-								Classes="TabHeader"
-								Header="Position" />
+								<TabStripItem
+									Grid.Row="0"
+									Classes="TabHeader"
+									Content="Content" />
 
-							<TabItem
-								Classes="TabHeader"
-								Header="Font" />
+								<TabStripItem
+									Grid.Row="1"
+									Classes="TabHeader"
+									Content="Position" />
 
-							<TabItem
-								Classes="TabHeader"
-								Header="App" />
+								<TabStripItem
+									Grid.Row="2"
+									Classes="TabHeader"
+									Content="Font" />
 
-						</TabControl>
+								<TabStripItem
+									Grid.Row="3"
+									Classes="TabHeader"
+									Content="App" />
+
+							</UniformGrid>
+
+						</TabStrip>
 
 						<TextBlock
 							Grid.Row="1"
@@ -127,33 +138,35 @@
 		<Setter Property="WindowDecorationProperties.ElementRole" Value="CloseButton" />
 	</Style>
 
-	<Style Selector="Border.TabGroupGridBorder">
+	<Style Selector="Border.SettingsOuterNavigationGridBorder">
 		<Setter Property="Background" Value="{DynamicResource SystemBaseLowColor}" />
 		<Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-		<Setter Property="Height" Value="375" />
 	</Style>
 
-	<Style Selector="Grid.SettingsNavigationGrid">
-		<Setter Property="Margin" Value="0 10 0 0" />
+	<Style Selector="Grid.SettingsOuterNavigationGrid">
+		<!--  Placeholder  -->
 	</Style>
 
-	<Style Selector="TabControl.TabGroup">
-		<Setter Property="Padding" Value="0" />
-		<Setter Property="TabStripPlacement" Value="Left" />
+	<Style Selector="UniformGrid.SettingsInnerNavigationGrid">
+		<!--  Placeholder  -->
 	</Style>
 
-	<Style Selector="TabItem.TabHeader">
+	<Style Selector="TabStrip.TabGroup">
+		<Setter Property="Margin" Value="0 15 0 0" />
+	</Style>
+
+	<Style Selector="TabStripItem.TabHeader">
 		<Setter Property="FontFamily" Value="fonts:FontCollection#Libre Franklin" />
 		<Setter Property="FontSize" Value="16" />
 		<Setter Property="FontWeight" Value="Regular" />
-		<Setter Property="Margin" Value="0 15 0 0" />
-		<Setter Property="Padding" Value="10 0 17.5 0" />
+		<Setter Property="Margin" Value="0 1" />
+		<Setter Property="Padding" Value="7.5 0" />
 		<Setter Property="WindowDecorationProperties.ElementRole" Value="User" />
 	</Style>
 
 	<Style Selector="TextBlock.AppVersion">
 		<Setter Property="FontFamily" Value="fonts:FontCollection#Drafting* Mono" />
-		<Setter Property="FontSize" Value="9" />
+		<Setter Property="FontSize" Value="8" />
 		<Setter Property="FontWeight" Value="ExtraLight" />
 		<Setter Property="HorizontalAlignment" Value="Center" />
 		<Setter Property="TextAlignment" Value="Center" />
@@ -163,13 +176,13 @@
 		<Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColorDark1}" />
 		<Setter Property="BorderThickness" Value="2" />
 		<Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-		<Setter Property="Margin" Value="15 0 10 0" />
+		<Setter Property="Margin" Value="15 2.5 10 2.5" />
 	</Style>
 
 	<Style Selector="Border.SettingsWindowResizeHandle">
-		<Setter Property="Background" Value="{DynamicResource SystemAccentColorDark2}" />
+		<Setter Property="Background" Value="{DynamicResource SystemChromeHighColor}" />
 		<Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-		<Setter Property="Height" Value="250" />
+		<Setter Property="Height" Value="75" />
 		<Setter Property="VerticalAlignment" Value="Center" />
 		<Setter Property="Width" Value="6" />
 		<Setter Property="WindowDecorationProperties.ElementRole" Value="ResizeE" />

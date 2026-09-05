@@ -147,16 +147,16 @@
   <data name="WidgetView_Window_Title" xml:space="preserve">
     <value>DateToday</value>
   </data>
-  <data name="SettingsView_TabControl_TabItem_ContentTabHeader" xml:space="preserve">
+  <data name="SettingsView_TabStrip_TabStripItem_ContentTabHeader" xml:space="preserve">
     <value>Content</value>
   </data>
-  <data name="SettingsView_TabControl_TabItem_PositionTabHeader" xml:space="preserve">
+  <data name="SettingsView_TabStrip_TabStripItem_PositionTabHeader" xml:space="preserve">
     <value>Position</value>
   </data>
-  <data name="SettingsView_TabControl_TabItem_FontTabHeader" xml:space="preserve">
+  <data name="SettingsView_TabStrip_TabStripItem_FontTabHeader" xml:space="preserve">
     <value>Font</value>
   </data>
-  <data name="SettingsView_TabControl_TabItem_AppTabHeader" xml:space="preserve">
+  <data name="SettingsView_TabStrip_TabStripItem_AppTabHeader" xml:space="preserve">
     <value>App</value>
   </data>
   <data name="AppVersionProvider_Exception_ExecutableFilepathNotAvailable" xml:space="preserve">

@@ -24,39 +24,51 @@
 				Grid.Row="0"
 				Grid.RowSpan="3"
 				Grid.Column="0"
-				Classes="TabGroupGridBorder">
+				Classes="SettingsOuterNavigationGridBorder">
 
 				<Grid
-					Classes="SettingsNavigationGrid"
+					Classes="SettingsOuterNavigationGrid"
 					ColumnDefinitions="Auto"
-					RowDefinitions="350, Auto">
+					RowDefinitions="365, Auto">
 
-					<TabControl
+					<TabStrip
 						Grid.Row="0"
 						Grid.Column="0"
 						Classes="TabGroup">
 
-						<TabItem
-							Classes="TabHeader"
-							Header="Content" />
+						<UniformGrid
+							Classes="SettingsInnerNavigationGrid"
+							Columns="1"
+							Rows="4">
 
-						<TabItem
-							Classes="TabHeader"
-							Header="Position" />
+							<TabStripItem
+								Grid.Row="0"
+								Classes="TabHeader"
+								Content="{x:Static res:Strings.SettingsView_TabStrip_TabStripItem_ContentTabHeader}" />
 
-						<TabItem
-							Classes="TabHeader"
-							Header="Font" />
+							<TabStripItem
+								Grid.Row="1"
+								Classes="TabHeader"
+								Content="{x:Static res:Strings.SettingsView_TabStrip_TabStripItem_PositionTabHeader}" />
 
-						<TabItem
-							Classes="TabHeader"
-							Header="App" />
+							<TabStripItem
+								Grid.Row="2"
+								Classes="TabHeader"
+								Content="{x:Static res:Strings.SettingsView_TabStrip_TabStripItem_FontTabHeader}" />
 
-					</TabControl>
+							<TabStripItem
+								Grid.Row="3"
+								Classes="TabHeader"
+								Content="{x:Static res:Strings.SettingsView_TabStrip_TabStripItem_AppTabHeader}" />
+
+						</UniformGrid>
+
+					</TabStrip>
 
 					<TextBlock
 						Grid.Row="1"
-						Classes="AppVersion" />
+						Classes="AppVersion"
+						Text="{Binding AppVersion, Mode=OneTime}" />
 
 				</Grid>
 
