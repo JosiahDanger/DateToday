@@ -13,7 +13,7 @@
 
 			<Grid
 				Classes="SettingsOuterGrid"
-				ColumnDefinitions="Auto,*,20"
+				ColumnDefinitions="Auto,Auto,20"
 				RowDefinitions="25,*,*">
 
 				<Border
@@ -30,34 +30,27 @@
 						<TabStrip
 							Grid.Row="0"
 							Grid.Column="0"
-							Classes="TabGroup">
+							Classes="SettingsNavigator">
 
-							<UniformGrid
-								Classes="SettingsInnerNavigationGrid"
-								Columns="1"
-								Rows="4">
+							<TabStripItem
+								Grid.Row="0"
+								Classes="SettingsNavigatorItem"
+								Content="Content" />
 
-								<TabStripItem
-									Grid.Row="0"
-									Classes="TabHeader"
-									Content="Content" />
+							<TabStripItem
+								Grid.Row="1"
+								Classes="SettingsNavigatorItem"
+								Content="Position" />
 
-								<TabStripItem
-									Grid.Row="1"
-									Classes="TabHeader"
-									Content="Position" />
+							<TabStripItem
+								Grid.Row="2"
+								Classes="SettingsNavigatorItem"
+								Content="Font" />
 
-								<TabStripItem
-									Grid.Row="2"
-									Classes="TabHeader"
-									Content="Font" />
-
-								<TabStripItem
-									Grid.Row="3"
-									Classes="TabHeader"
-									Content="App" />
-
-							</UniformGrid>
+							<TabStripItem
+								Grid.Row="3"
+								Classes="SettingsNavigatorItem"
+								Content="App" />
 
 						</TabStrip>
 
@@ -106,15 +99,14 @@
 		<Setter Property="MinWidth" Value="600" />
 		<Setter Property="ShowInTaskbar" Value="True" />
 		<Setter Property="SizeToContent" Value="Width" />
-		<Setter Property="TransparencyLevelHint" Value="Mica" />
+		<Setter Property="TransparencyLevelHint" Value="AcrylicBlur, Transparent" />
 		<Setter Property="WindowDecorationProperties.ElementRole" Value="None" />
 		<Setter Property="WindowDecorations" Value="None" />
 		<Setter Property="WindowStartupLocation" Value="CenterOwner" />
 	</Style>
 
 	<Style Selector="Border.SettingsOuterBorder">
-		<Setter Property="Background" Value="Transparent" />
-		<Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+		<Setter Property="Background" Value="{DynamicResource SystemAltMediumColor}" />
 		<Setter Property="WindowDecorationProperties.ElementRole" Value="TitleBar" />
 	</Style>
 
@@ -147,21 +139,31 @@
 		<!--  Placeholder  -->
 	</Style>
 
-	<Style Selector="UniformGrid.SettingsInnerNavigationGrid">
-		<!--  Placeholder  -->
+	<Style Selector="TabStrip.SettingsNavigator">
+		<Setter Property="ItemsPanel">
+			<ItemsPanelTemplate>
+				<StackPanel
+					Margin="5 15 5 0"
+					Orientation="Vertical" />
+			</ItemsPanelTemplate>
+		</Setter>
 	</Style>
 
-	<Style Selector="TabStrip.TabGroup">
-		<Setter Property="Margin" Value="0 15 0 0" />
-	</Style>
-
-	<Style Selector="TabStripItem.TabHeader">
+	<Style Selector="TabStripItem.SettingsNavigatorItem">
 		<Setter Property="FontFamily" Value="fonts:FontCollection#Libre Franklin" />
 		<Setter Property="FontSize" Value="16" />
 		<Setter Property="FontWeight" Value="Regular" />
-		<Setter Property="Margin" Value="0 1" />
-		<Setter Property="Padding" Value="7.5 0" />
+		<Setter Property="Margin" Value="0 0 0 5" />
+		<Setter Property="Padding" Value="10 0 25 0" />
 		<Setter Property="WindowDecorationProperties.ElementRole" Value="User" />
+	</Style>
+
+	<Style Selector="TabStripItem.SettingsNavigatorItem:selected /template/ Border#PART_SelectedPipe">
+		<Setter Property="Height" Value="{DynamicResource TabItemVerticalPipeHeight}" />
+		<Setter Property="HorizontalAlignment" Value="Right" />
+		<Setter Property="Margin" Value="0 0 -15 0" />
+		<Setter Property="VerticalAlignment" Value="Center" />
+		<Setter Property="Width" Value="{DynamicResource TabItemPipeThickness}" />
 	</Style>
 
 	<Style Selector="TextBlock.AppVersion">

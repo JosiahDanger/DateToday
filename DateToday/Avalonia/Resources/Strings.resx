@@ -186,10 +186,13 @@
   <data name="Suspension_Exception_FailedToPersistState_Friendly" xml:space="preserve">
     <value>The app attempted to save your widget configuration, but it was unable to do so. Please ensure that the app executable is permitted write access within its containing folder.</value>
   </data>
-  <data name="Converter_Exception_EnumerationTypeMember_NotSupported" xml:space="preserve">
+  <data name="Converter_Exception_EnumerationTypeMemberNotSupported" xml:space="preserve">
     <value>A converter received an unsupported member of an enumeration type.</value>
   </data>
   <data name="AlertView_Window_Title" xml:space="preserve">
     <value>DateToday - Alert</value>
+  </data>
+  <data name="SettingsView_Exception_SettingsNavigatorIndexNotSupported" xml:space="preserve">
+    <value>Failed to locate a View corresponding to the selected SettingsView navigator index.</value>
   </data>
 </root>

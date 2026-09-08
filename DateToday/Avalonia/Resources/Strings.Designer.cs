@@ -135,9 +135,18 @@ namespace DateToday.Avalonia.Resources {
         /// <summary>
         ///   Looks up a localized string similar to A converter received an unsupported member of an enumeration type..
         /// </summary>
-        public static string Converter_Exception_EnumerationTypeMember_NotSupported {
+        public static string Converter_Exception_EnumerationTypeMemberNotSupported {
             get {
-                return ResourceManager.GetString("Converter_Exception_EnumerationTypeMember_NotSupported", resourceCulture);
+                return ResourceManager.GetString("Converter_Exception_EnumerationTypeMemberNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to locate a View corresponding to the selected SettingsView navigator index..
+        /// </summary>
+        public static string SettingsView_Exception_SettingsNavigatorIndexNotSupported {
+            get {
+                return ResourceManager.GetString("SettingsView_Exception_SettingsNavigatorIndexNotSupported", resourceCulture);
             }
         }
         
