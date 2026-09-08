@@ -38,9 +38,9 @@
 
 	<!-- App Dependencies -->
 	<ItemGroup Label="App Dependencies">
-		<PackageReference Include="Avalonia" Version="12.1.1" />
-		<PackageReference Include="Avalonia.Desktop" Version="12.1.1" />
-		<PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.1" />
+		<PackageReference Include="Avalonia" Version="12.1.2" />
+		<PackageReference Include="Avalonia.Desktop" Version="12.1.2" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.2" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
 		<PackageReference Include="IDisposableAnalyzers" Version="4.0.8">
 			<PrivateAssets>all</PrivateAssets>
@@ -61,10 +61,6 @@
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Strings.resx</DependentUpon>
-		</Compile>
-
-		<Compile Update="Avalonia\Views\SettingsView.axaml.cs">
-		  <DependentUpon>SettingsView.axaml</DependentUpon>
 		</Compile>
 	</ItemGroup>
 
