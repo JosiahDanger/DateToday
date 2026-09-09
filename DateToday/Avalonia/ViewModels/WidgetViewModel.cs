@@ -11,44 +11,32 @@ using System.Reactive.Linq;
 namespace DateToday.Avalonia.ViewModels;
 
 /// <summary>
-/// The primary purpose of WidgetViewModel is to reflect in <see cref="WidgetView" /> via
-/// unidirectional binding the current mutable state of the singleton <see cref="WidgetModel" />,
-/// which persists throughout the entire lifetime of the application. In addition, for properties
-/// that may change independently of the WidgetModel, such as MonitorReference, WidgetViewModel
-/// notifies the WidgetModel of changes via the <see cref="WeakReferenceMessenger" />.
+/// The primary purpose of WidgetViewModel is to reflect in the <see cref="WidgetView" /> via
+/// unidirectional binding the current mutable state of the singleton <see cref="WidgetModel" />.
+///
+/// In WidgetViewModel, WidgetModel state is accessed through a read-only
+/// <see cref="IWidgetModelSnapshot" />, which ensures at compile time that the WidgetViewModel does
+/// not mutate the WidgetModel state, and thus eliminates the possible occurrence of binding
+/// feedback loops.
 /// </summary>
 
 internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 {
-	private readonly WidgetModel _widgetModel;
+	private readonly IWidgetModelSnapshot _widgetModelSnapshot;
 	private readonly bool _isPropertyInitialisationComplete;
 	private IDisposable? _timerSubscription;
 
-	public WidgetViewModel(WidgetModel widgetModel)
+	public WidgetViewModel(IWidgetModelSnapshot widgetModelSnapshot)
 	{
-		_widgetModel = widgetModel;
-		_widgetModel.PropertyChanged += OnWidgetModelPropertyChanged;
+		_widgetModelSnapshot = widgetModelSnapshot;
+		_widgetModelSnapshot.PropertyChanged += OnWidgetModelPropertyChanged;
 
-		Content = _widgetModel.Content;
-		Position = _widgetModel.Position;
-		Font = _widgetModel.Font;
-		App = _widgetModel.App;
+		Content = _widgetModelSnapshot.Content;
+		Position = _widgetModelSnapshot.Position;
+		Font = _widgetModelSnapshot.Font;
+		App = _widgetModelSnapshot.App;
 
 		_isPropertyInitialisationComplete = true;
-
-		WeakReferenceMessenger.Default.Register<WidgetMonitorChangedMessage>(this,
-			(_, message) =>
-			{
-				_widgetModel.Position =
-					_widgetModel.Position with { MonitorReference = message.MonitorReference };
-			});
-
-		WeakReferenceMessenger.Default.Register<MouseDragToggledMessage>(this,
-			(_, message) =>
-			{
-				_widgetModel.Position =
-					_widgetModel.Position with { IsMouseDragEnabled = message.IsMouseDragEnabled };
-			});
 
 		ResetSecondTickObservable(Content.RefreshIntervalSeconds);
 	}
@@ -204,19 +192,19 @@ internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 		switch (e.PropertyName)
 		{
 			case nameof(WidgetModel.Content):
-				Content = _widgetModel.Content;
+				Content = _widgetModelSnapshot.Content;
 				break;
 
 			case nameof(WidgetModel.Position):
-				Position = _widgetModel.Position;
+				Position = _widgetModelSnapshot.Position;
 				break;
 
 			case nameof(WidgetModel.Font):
-				Font = _widgetModel.Font;
+				Font = _widgetModelSnapshot.Font;
 				break;
 
 			case nameof(WidgetModel.App):
-				App = _widgetModel.App;
+				App = _widgetModelSnapshot.App;
 				break;
 		}
 	}
@@ -249,10 +237,7 @@ internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 
 	public void Dispose()
 	{
-		WeakReferenceMessenger.Default.Unregister<WidgetMonitorChangedMessage>(this);
-		WeakReferenceMessenger.Default.Unregister<MouseDragToggledMessage>(this);
-
-		_widgetModel.PropertyChanged -= OnWidgetModelPropertyChanged;
+		_widgetModelSnapshot.PropertyChanged -= OnWidgetModelPropertyChanged;
 		_timerSubscription?.Dispose();
 	}
 }

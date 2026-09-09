@@ -10,12 +10,12 @@ namespace DateToday.Services;
 internal sealed class WidgetDialogService
 {
 	private readonly WidgetView _widgetView;
-	private readonly WidgetModel _widgetModel;
+	private readonly WidgetModelMutationService _widgetModelMutationService;
 
-	public WidgetDialogService(WidgetView widgetView, WidgetModel widgetModel)
+	public WidgetDialogService(WidgetView widgetView, WidgetModelMutationService widgetModelMutator)
 	{
 		_widgetView = widgetView;
-		_widgetModel = widgetModel;
+		_widgetModelMutationService = widgetModelMutator;
 
 		WeakReferenceMessenger.Default.Register<OpenSettingsViewMessage>(
 			this, async (_, _) => await this.ShowSettingsAsync().ConfigureAwait(false));
@@ -23,7 +23,7 @@ internal sealed class WidgetDialogService
 
 	public async Task ShowSettingsAsync()
 	{
-		SettingsViewModel settingsViewModel = new(_widgetModel);
+		SettingsViewModel settingsViewModel = new(_widgetModelMutationService);
 		SettingsView settingsView = new() { DataContext = settingsViewModel };
 
 		await settingsView.ShowDialog(_widgetView).ConfigureAwait(false);

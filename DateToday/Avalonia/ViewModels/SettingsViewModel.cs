@@ -1,14 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using DateToday.Avalonia.Messaging;
-using DateToday.Models;
+using DateToday.Services;
 using DateToday.Utilities;
 
 namespace DateToday.Avalonia.ViewModels;
 
-internal sealed partial class SettingsViewModel(WidgetModel widgetModel)
+internal sealed partial class SettingsViewModel(WidgetModelMutationService widgetModelMutator)
 {
-	private readonly WidgetModel _widgetModel = widgetModel;
+	private readonly WidgetModelMutationService _widgetModelMutator = widgetModelMutator;
 
 	public static string AppVersion => AppVersionProvider.GetAppVersion();
 

@@ -29,8 +29,11 @@ internal sealed partial class App : Application
 			(WidgetModel? widgetModel, bool hasDeserialisationSucceeded) =
 				WidgetModelFactory.GetInitialWidgetModel();
 
-			WidgetView widgetView = new() { DataContext = new WidgetViewModel(widgetModel) };
-			WidgetDialogService widgetDialogService = new(widgetView, widgetModel);
+			WidgetViewModel widgetViewModel = new(widgetModel);
+			WidgetModelMutationService widgetModelMutationService = new(widgetModel);
+
+			WidgetView widgetView = new() { DataContext = widgetViewModel };
+			WidgetDialogService widgetDialogService = new(widgetView, widgetModelMutationService);
 
 			async void OnWidgetViewOpened(object? sender, EventArgs e)
 			{
