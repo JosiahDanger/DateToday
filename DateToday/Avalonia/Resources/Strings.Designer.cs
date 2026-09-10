@@ -61,6 +61,24 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The value of RefreshIntervalSeconds must be greater than zero..
+        /// </summary>
+        public static string ActionScheduler_Exception_RefreshIntervalSeconds_Zero {
+            get {
+                return ResourceManager.GetString("ActionScheduler_Exception_RefreshIntervalSeconds_Zero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ActionScheduler requires a SynchronizationContext..
+        /// </summary>
+        public static string ActionScheduler_Exception_SynchronizationContext_Null {
+            get {
+                return ResourceManager.GetString("ActionScheduler_Exception_SynchronizationContext_Null", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Okay.
         /// </summary>
         public static string AlertView_Button_CloseAlert {
@@ -153,36 +171,36 @@ namespace DateToday.Avalonia.Resources {
         /// <summary>
         ///   Looks up a localized string similar to App.
         /// </summary>
-        public static string SettingsView_TabStrip_TabStripItem_AppTabHeader {
+        public static string SettingsView_TabStrip_TabStripItem_AppTabLabel {
             get {
-                return ResourceManager.GetString("SettingsView_TabStrip_TabStripItem_AppTabHeader", resourceCulture);
+                return ResourceManager.GetString("SettingsView_TabStrip_TabStripItem_AppTabLabel", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Content.
         /// </summary>
-        public static string SettingsView_TabStrip_TabStripItem_ContentTabHeader {
+        public static string SettingsView_TabStrip_TabStripItem_ContentTabLabel {
             get {
-                return ResourceManager.GetString("SettingsView_TabStrip_TabStripItem_ContentTabHeader", resourceCulture);
+                return ResourceManager.GetString("SettingsView_TabStrip_TabStripItem_ContentTabLabel", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Font.
         /// </summary>
-        public static string SettingsView_TabStrip_TabStripItem_FontTabHeader {
+        public static string SettingsView_TabStrip_TabStripItem_FontTabLabel {
             get {
-                return ResourceManager.GetString("SettingsView_TabStrip_TabStripItem_FontTabHeader", resourceCulture);
+                return ResourceManager.GetString("SettingsView_TabStrip_TabStripItem_FontTabLabel", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Position.
         /// </summary>
-        public static string SettingsView_TabStrip_TabStripItem_PositionTabHeader {
+        public static string SettingsView_TabStrip_TabStripItem_PositionTabLabel {
             get {
-                return ResourceManager.GetString("SettingsView_TabStrip_TabStripItem_PositionTabHeader", resourceCulture);
+                return ResourceManager.GetString("SettingsView_TabStrip_TabStripItem_PositionTabLabel", resourceCulture);
             }
         }
         
@@ -282,15 +300,6 @@ namespace DateToday.Avalonia.Resources {
         public static string WidgetViewModel_Exception_OrdinalDaySuffixPosition_OutOfRange {
             get {
                 return ResourceManager.GetString("WidgetViewModel_Exception_OrdinalDaySuffixPosition_OutOfRange", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The value of RefreshIntervalSeconds must be greater than zero..
-        /// </summary>
-        public static string WidgetViewModel_Exception_RefreshIntervalSeconds_Zero {
-            get {
-                return ResourceManager.GetString("WidgetViewModel_Exception_RefreshIntervalSeconds_Zero", resourceCulture);
             }
         }
     }

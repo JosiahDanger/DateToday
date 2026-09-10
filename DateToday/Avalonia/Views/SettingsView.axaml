@@ -39,19 +39,19 @@
 
 						<TabStripItem
 							Classes="SettingsNavigatorItem"
-							Content="{x:Static res:Strings.SettingsView_TabStrip_TabStripItem_ContentTabHeader}" />
+							Content="{x:Static res:Strings.SettingsView_TabStrip_TabStripItem_ContentTabLabel}" />
 
 						<TabStripItem
 							Classes="SettingsNavigatorItem"
-							Content="{x:Static res:Strings.SettingsView_TabStrip_TabStripItem_PositionTabHeader}" />
+							Content="{x:Static res:Strings.SettingsView_TabStrip_TabStripItem_PositionTabLabel}" />
 
 						<TabStripItem
 							Classes="SettingsNavigatorItem"
-							Content="{x:Static res:Strings.SettingsView_TabStrip_TabStripItem_FontTabHeader}" />
+							Content="{x:Static res:Strings.SettingsView_TabStrip_TabStripItem_FontTabLabel}" />
 
 						<TabStripItem
 							Classes="SettingsNavigatorItem"
-							Content="{x:Static res:Strings.SettingsView_TabStrip_TabStripItem_AppTabHeader}" />
+							Content="{x:Static res:Strings.SettingsView_TabStrip_TabStripItem_AppTabLabel}" />
 
 					</TabStrip>
 

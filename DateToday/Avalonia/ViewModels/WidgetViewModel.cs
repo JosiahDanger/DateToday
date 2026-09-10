@@ -4,9 +4,10 @@ using CommunityToolkit.Mvvm.Messaging;
 using DateToday.Avalonia.Messaging;
 using DateToday.Avalonia.Resources;
 using DateToday.Models;
+using DateToday.Utilities;
 using System;
 using System.ComponentModel;
-using System.Reactive.Linq;
+using System.Threading;
 
 namespace DateToday.Avalonia.ViewModels;
 
@@ -24,7 +25,7 @@ internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 {
 	private readonly IWidgetModelSnapshot _widgetModelSnapshot;
 	private readonly bool _isPropertyInitialisationComplete;
-	private IDisposable? _timerSubscription;
+	private Timer? _widgetContentUpdateScheduler;
 
 	public WidgetViewModel(IWidgetModelSnapshot widgetModelSnapshot)
 	{
@@ -38,7 +39,7 @@ internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 
 		_isPropertyInitialisationComplete = true;
 
-		ResetSecondTickObservable(Content.RefreshIntervalSeconds);
+		ResetWidgetContentUpdateScheduler();
 	}
 
 	[ObservableProperty]
@@ -55,11 +56,11 @@ internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 
 	/// <summary>
 	/// A calculated property that returns a string representation of the current date and/or time.
-	/// The string's format is determined by <see cref="DateTimeFormat"/> and
+	/// The string's format is determined by <see cref="DateTimeFormat" /> and
 	/// <see cref="DateTimeCulture"/>.
 	///
 	/// The property's initial value is calculated upon access, and is subsequently updated at
-	/// real-time clock boundaries specified by <see cref="RefreshIntervalSeconds"/>.
+	/// real-time clock boundaries specified by <see cref="RefreshIntervalSeconds" />.
 	/// </summary>
 
 	public string? DateTimeText => FormatCurrentDateTime();
@@ -129,62 +130,18 @@ internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 	}
 
 	/// <summary>
-	/// CreateSecondTickObservable(…) returns a timer observable that emits values at regular
-	/// intervals, synchronised to real-time clock boundaries. Rather than starting immediately,
-	/// it calculates the delay needed to align its first emission with the next interval
-	/// boundary, then repeats at the specified refresh interval.
+	/// Leverages the <see cref="ActionScheduler"/> to create a timer that invokes property change
+	/// notifications for <see cref="DateTimeText"/>.
 	/// </summary>
 
-	private static IObservable<long> CreateSecondTickObservable(uint refreshIntervalSeconds)
+	private void ResetWidgetContentUpdateScheduler()
 	{
-		if (refreshIntervalSeconds == 0)
-		{
-			throw new InvalidOperationException(
-				Strings.WidgetViewModel_Exception_RefreshIntervalSeconds_Zero);
-		}
+		_widgetContentUpdateScheduler?.Dispose();
 
-		const double MillisecondsPerSecond = 1000;
-		const double BoundaryDetectionToleranceMilliseconds = 0.5;
-
-		double millisecondsPerInterval = refreshIntervalSeconds * MillisecondsPerSecond;
-
-		return Observable.Defer(() =>
-		{
-			DateTime currentDateTime = DateTime.Now;
-
-			long totalMillisecondsSinceEpoch = currentDateTime.Ticks / TimeSpan.TicksPerMillisecond;
-
-			double elapsedInCycle = totalMillisecondsSinceEpoch % millisecondsPerInterval;
-
-			double millisecondsPrecedingNextInterval =
-				(millisecondsPerInterval - elapsedInCycle) % millisecondsPerInterval;
-
-			/* Check if the next interval boundary is scheduled to occur right now, allowing for
-			 * tolerance of floating-point precision loss. */
-
-			if (Math.Abs(millisecondsPrecedingNextInterval) <
-				BoundaryDetectionToleranceMilliseconds)
-			{
-				/* Reset the millisecond counter, such that the app will wait for the subsequent
-				 * interval boundary to occur. This behaviour is intended to prevent a scenario
-				 * in which two emissions are made in close succession of one another. */
-
-				millisecondsPrecedingNextInterval = millisecondsPerInterval;
-			}
-
-			return Observable.Timer(
-									TimeSpan.FromMilliseconds(millisecondsPrecedingNextInterval),
-									TimeSpan.FromMilliseconds(millisecondsPerInterval));
-		});
-	}
-
-	private void ResetSecondTickObservable(uint value)
-	{
-		_timerSubscription?.Dispose();
-
-		_timerSubscription =
-			CreateSecondTickObservable(value)
-			.Subscribe(_ => OnPropertyChanged(nameof(DateTimeText)));
+		_widgetContentUpdateScheduler =
+			ActionScheduler.Create(
+				Content.RefreshIntervalSeconds,
+				() => OnPropertyChanged(nameof(DateTimeText)));
 	}
 
 	private void OnWidgetModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -218,7 +175,7 @@ internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 
 		if (newValue.RefreshIntervalSeconds != oldValue.RefreshIntervalSeconds)
 		{
-			ResetSecondTickObservable(newValue.RefreshIntervalSeconds);
+			ResetWidgetContentUpdateScheduler();
 		}
 	}
 
@@ -238,6 +195,6 @@ internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 	public void Dispose()
 	{
 		_widgetModelSnapshot.PropertyChanged -= OnWidgetModelPropertyChanged;
-		_timerSubscription?.Dispose();
+		_widgetContentUpdateScheduler?.Dispose();
 	}
 }
