@@ -14,14 +14,14 @@
 	</Window.Styles>
 
 	<Border
-		Background="{Binding AlertModel.Flavour, Mode=OneTime, Converter={x:Static conv:AlertFlavourConverters.AlertFlavourToBrushConverter}}"
+		Background="{Binding AlertModel.Flavour, Mode=OneTime, Converter={x:Static conv:AlertViewConverters.AlertFlavourToBrushConverter}}"
 		Classes="AlertOuterBorder">
 
 		<StackPanel Orientation="Vertical">
 
 			<TextBlock
 				Classes="AlertCaption"
-				Text="{Binding AlertModel.Flavour, Mode=OneTime, Converter={x:Static conv:AlertFlavourConverters.AlertFlavourToCaptionConverter}}" />
+				Text="{Binding AlertModel.Flavour, Mode=OneTime, Converter={x:Static conv:AlertViewConverters.AlertFlavourToCaptionConverter}}" />
 
 			<Border Classes="AlertInnerBorder">
 

@@ -25,5 +25,4 @@ internal sealed record FontConfig(
 	Color? CustomDropShadowColour);
 
 internal sealed record AppConfig(
-	CultureInfo AppCulture
-);
+	CultureInfo AppCulture);

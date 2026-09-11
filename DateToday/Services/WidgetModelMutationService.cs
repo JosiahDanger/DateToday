@@ -21,7 +21,7 @@ internal sealed class WidgetModelMutationService
 					positionConfig with { MonitorReference = message.MonitorReference });
 			});
 
-		WeakReferenceMessenger.Default.Register<MouseDragToggledMessage>(
+		WeakReferenceMessenger.Default.Register<ToggleMouseDragMessage>(
 			this,
 			(_, message) =>
 			{

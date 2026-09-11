@@ -69,4 +69,9 @@
 		<AvaloniaResource Include="Avalonia\Fonts\*.ttf" />
 	</ItemGroup>
 
+	<!-- Embedded StreamGeometry -->
+	<ItemGroup Label="Embedded Fonts">
+		<AvaloniaResource Include="Avalonia\Resources\IconGeometries.axaml" />
+	</ItemGroup>
+
 </Project>

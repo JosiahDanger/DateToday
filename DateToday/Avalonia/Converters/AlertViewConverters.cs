@@ -6,7 +6,7 @@ using System;
 
 namespace DateToday.Avalonia.Converters;
 
-internal static class AlertFlavourConverters
+internal static class AlertViewConverters
 {
 	public static readonly IValueConverter AlertFlavourToCaptionConverter =
 		new FuncValueConverter<AlertFlavour, string>(flavour =>
@@ -17,7 +17,7 @@ internal static class AlertFlavourConverters
 				AlertFlavour.Error => Strings.AlertView_ErrorFlavour_Caption,
 				_ =>
 					throw new NotSupportedException(
-								Strings.Converter_Exception_EnumerationTypeMemberNotSupported)
+						Strings.AlertViewConverters_Exception_EnumerationTypeMemberNotSupported)
 			});
 
 	public static readonly IValueConverter AlertFlavourToBrushConverter =
@@ -29,6 +29,6 @@ internal static class AlertFlavourConverters
 				AlertFlavour.Error => new SolidColorBrush(Colors.IndianRed),
 				_ =>
 					throw new NotSupportedException(
-								Strings.Converter_Exception_EnumerationTypeMemberNotSupported)
+						Strings.AlertViewConverters_Exception_EnumerationTypeMemberNotSupported)
 			});
 }

@@ -17,14 +17,14 @@ internal static class WidgetModelDefaults
 			AnchoredCorner: WindowVertexIdentifier.TopRight,
 			AnchoredCornerScaledPosition: new(100, 100),
 			MonitorReference: null,
-			IsMouseDragEnabled: false);
+			IsMouseDragEnabled: true);
 
 	public static FontConfig DefaultFontConfig =>
 		new(
 			FontFamily: FontFamily.Default,
 			FontSize: 70,
 			FontWeight: FontWeight.Normal,
-			FontRenderingMode: TextRenderingMode.SubpixelAntialias,
+			FontRenderingMode: TextRenderingMode.Unspecified,
 			CustomFontColour: null,
 			CustomDropShadowColour: null);
 

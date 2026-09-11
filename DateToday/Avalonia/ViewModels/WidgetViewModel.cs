@@ -72,6 +72,12 @@ internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 	}
 
 	[RelayCommand]
+	private void ToggleMouseDrag()
+	{
+		WeakReferenceMessenger.Default.Send(new ToggleMouseDragMessage(!_widgetModelSnapshot.Position.IsMouseDragEnabled));
+	}
+
+	[RelayCommand]
 	private static void CloseApplication()
 	{
 		WeakReferenceMessenger.Default.Send(new CloseApplicationMessage());

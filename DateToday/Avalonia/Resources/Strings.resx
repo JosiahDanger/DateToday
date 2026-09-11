@@ -127,7 +127,7 @@
     <value>datetoday-widget-state.json</value>
   </data>
   <data name="WidgetView_ContextMenu_MenuItem_OpenSettingsView" xml:space="preserve">
-    <value>Widget Settings</value>
+    <value>Settings</value>
   </data>
   <data name="WidgetView_ContextMenu_MenuItem_ExitApplication" xml:space="preserve">
     <value>Exit</value>
@@ -142,7 +142,7 @@
     <value>The value of OrdinalDaySuffixPosition must be positive.</value>
   </data>
   <data name="SettingsView_Window_Title" xml:space="preserve">
-    <value>DateToday - Widget Settings</value>
+    <value>DateToday - Settings</value>
   </data>
   <data name="WidgetView_Window_Title" xml:space="preserve">
     <value>DateToday</value>
@@ -186,16 +186,28 @@
   <data name="Suspension_Exception_FailedToPersistState_Friendly" xml:space="preserve">
     <value>The app attempted to save your widget configuration, but it was unable to do so. Please ensure that the app executable is permitted write access within its containing folder.</value>
   </data>
-  <data name="Converter_Exception_EnumerationTypeMemberNotSupported" xml:space="preserve">
-    <value>A converter received an unsupported member of an enumeration type.</value>
+  <data name="AlertViewConverters_Exception_EnumerationTypeMemberNotSupported" xml:space="preserve">
+    <value>A converter utilised by AlertView received an unsupported member of an enumeration type.</value>
   </data>
   <data name="AlertView_Window_Title" xml:space="preserve">
     <value>DateToday - Alert</value>
   </data>
-  <data name="SettingsView_Exception_SettingsNavigatorIndexNotSupported" xml:space="preserve">
-    <value>Failed to locate a View corresponding to the selected SettingsView navigator index.</value>
+  <data name="SettingsViewConverters_Exception_SettingsNavigatorIndexNotSupported" xml:space="preserve">
+    <value>A converter utilised by SettingsView failed to locate a child View corresponding to the selected SettingsView navigator index.</value>
   </data>
   <data name="ActionScheduler_Exception_SynchronizationContext_Null" xml:space="preserve">
     <value>ActionScheduler requires a SynchronizationContext.</value>
+  </data>
+  <data name="WidgetView_ContextMenu_MenuItem_EnableMouseDrag" xml:space="preserve">
+    <value>Allow Widget Dragging</value>
+  </data>
+  <data name="WidgetView_ContextMenu_MenuItem_DisableMouseDrag" xml:space="preserve">
+    <value>Prevent Widget Dragging</value>
+  </data>
+  <data name="WidgetViewConverters_Exception_ApplicationCurrent_Null" xml:space="preserve">
+    <value>A converter utilised by WidgetView failed to find the active instance of the Application class.</value>
+  </data>
+  <data name="WidgetViewConverters_Exception_GeometryResource_Null" xml:space="preserve">
+    <value>A converter utilised by WidgetView failed to find an Application icon resource.</value>
   </data>
 </root>

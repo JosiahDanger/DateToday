@@ -2,6 +2,7 @@
 	x:Class="DateToday.Avalonia.Views.WidgetView"
 	xmlns="https://github.com/avaloniaui"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:conv="using:DateToday.Avalonia.Converters"
 	xmlns:res="using:DateToday.Avalonia.Resources"
 	xmlns:vm="using:DateToday.Avalonia.ViewModels"
 	Title="{x:Static res:Strings.WidgetView_Window_Title}"
@@ -17,14 +18,39 @@
 		<ContextMenu Classes="WidgetContextMenu">
 
 			<MenuItem
+				Classes="WidgetContextMenuQuickSetting"
+				Command="{Binding ToggleMouseDragCommand, Mode=OneTime}"
+				Header="{Binding Position.IsMouseDragEnabled, Mode=OneWay, Converter={x:Static conv:WidgetViewConverters.ToggleMouseDragLabelConverter}}">
+
+				<MenuItem.Icon>
+					<PathIcon Data="{Binding Position.IsMouseDragEnabled, Mode=OneWay, Converter={x:Static conv:WidgetViewConverters.ToggleMouseDragStreamGeometryConverter}}" />
+				</MenuItem.Icon>
+
+			</MenuItem>
+
+			<Separator />
+
+			<MenuItem
 				Classes="WidgetContextMenuItem"
 				Command="{Binding OpenSettingsViewCommand, Mode=OneTime}"
-				Header="{x:Static res:Strings.WidgetView_ContextMenu_MenuItem_OpenSettingsView}" />
+				Header="{x:Static res:Strings.WidgetView_ContextMenu_MenuItem_OpenSettingsView}">
+
+				<MenuItem.Icon>
+					<PathIcon Data="{StaticResource settings_regular}" />
+				</MenuItem.Icon>
+
+			</MenuItem>
 
 			<MenuItem
 				Classes="WidgetContextMenuItem"
 				Command="{Binding CloseApplicationCommand, Mode=OneTime}"
-				Header="{x:Static res:Strings.WidgetView_ContextMenu_MenuItem_ExitApplication}" />
+				Header="{x:Static res:Strings.WidgetView_ContextMenu_MenuItem_ExitApplication}">
+
+				<MenuItem.Icon>
+					<PathIcon Data="{StaticResource power_regular}" />
+				</MenuItem.Icon>
+
+			</MenuItem>
 
 		</ContextMenu>
 

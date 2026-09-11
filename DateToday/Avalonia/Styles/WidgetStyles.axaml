@@ -20,13 +20,22 @@
 
 	<Style Selector="ContextMenu.WidgetContextMenu">
 		<Setter Property="FontFamily" Value="fonts:FontCollection#Libre Franklin" />
-		<Setter Property="FontSize" Value="13" />
+	</Style>
+
+	<Style Selector="MenuItem.WidgetContextMenuQuickSetting">
+		<Setter Property="CornerRadius" Value="1" />
+		<Setter Property="FontWeight" Value="Light" />
+		<Setter Property="FontSize" Value="12" />
+		<Setter Property="Margin" Value="4 0 4 0" />
+		<Setter Property="Padding" Value="10 5 -5 5" />
 	</Style>
 
 	<Style Selector="MenuItem.WidgetContextMenuItem">
 		<Setter Property="CornerRadius" Value="1" />
-		<Setter Property="Margin" Value="4 0" />
-		<Setter Property="Padding" Value="5" />
+		<Setter Property="FontWeight" Value="Regular" />
+		<Setter Property="FontSize" Value="13" />
+		<Setter Property="Margin" Value="4 0 4 0" />
+		<Setter Property="Padding" Value="10 5 -5 5" />
 	</Style>
 
 	<Style Selector="TextBlock.WidgetTextBlock">

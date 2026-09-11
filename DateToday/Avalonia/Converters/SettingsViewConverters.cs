@@ -16,6 +16,6 @@ internal static class SettingsNavigatorConverters
 				//2 => new FontConfigView(),
 				//3 => new AppConfigView(),
 				_ => throw new NotSupportedException(
-								Strings.SettingsView_Exception_SettingsNavigatorIndexNotSupported)
+								Strings.SettingsViewConverters_Exception_SettingsNavigatorIndexNotSupported)
 			});
 }

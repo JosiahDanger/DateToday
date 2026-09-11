@@ -124,6 +124,15 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A converter utilised by AlertView received an unsupported member of an enumeration type..
+        /// </summary>
+        public static string AlertViewConverters_Exception_EnumerationTypeMemberNotSupported {
+            get {
+                return ResourceManager.GetString("AlertViewConverters_Exception_EnumerationTypeMemberNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to determine the filepath of the app executable..
         /// </summary>
         public static string AppVersionProvider_Exception_ExecutableFilepathNotAvailable {
@@ -147,24 +156,6 @@ namespace DateToday.Avalonia.Resources {
         public static string AppVersionProvider_Prefix {
             get {
                 return ResourceManager.GetString("AppVersionProvider_Prefix", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to A converter received an unsupported member of an enumeration type..
-        /// </summary>
-        public static string Converter_Exception_EnumerationTypeMemberNotSupported {
-            get {
-                return ResourceManager.GetString("Converter_Exception_EnumerationTypeMemberNotSupported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Failed to locate a View corresponding to the selected SettingsView navigator index..
-        /// </summary>
-        public static string SettingsView_Exception_SettingsNavigatorIndexNotSupported {
-            get {
-                return ResourceManager.GetString("SettingsView_Exception_SettingsNavigatorIndexNotSupported", resourceCulture);
             }
         }
         
@@ -205,11 +196,20 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DateToday - Widget Settings.
+        ///   Looks up a localized string similar to DateToday - Settings.
         /// </summary>
         public static string SettingsView_Window_Title {
             get {
                 return ResourceManager.GetString("SettingsView_Window_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A converter utilised by SettingsView failed to locate a child View corresponding to the selected SettingsView navigator index..
+        /// </summary>
+        public static string SettingsViewConverters_Exception_SettingsNavigatorIndexNotSupported {
+            get {
+                return ResourceManager.GetString("SettingsViewConverters_Exception_SettingsNavigatorIndexNotSupported", resourceCulture);
             }
         }
         
@@ -259,6 +259,24 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Prevent Widget Dragging.
+        /// </summary>
+        public static string WidgetView_ContextMenu_MenuItem_DisableMouseDrag {
+            get {
+                return ResourceManager.GetString("WidgetView_ContextMenu_MenuItem_DisableMouseDrag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allow Widget Dragging.
+        /// </summary>
+        public static string WidgetView_ContextMenu_MenuItem_EnableMouseDrag {
+            get {
+                return ResourceManager.GetString("WidgetView_ContextMenu_MenuItem_EnableMouseDrag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Exit.
         /// </summary>
         public static string WidgetView_ContextMenu_MenuItem_ExitApplication {
@@ -268,7 +286,7 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Widget Settings.
+        ///   Looks up a localized string similar to Settings.
         /// </summary>
         public static string WidgetView_ContextMenu_MenuItem_OpenSettingsView {
             get {
@@ -282,6 +300,24 @@ namespace DateToday.Avalonia.Resources {
         public static string WidgetView_Window_Title {
             get {
                 return ResourceManager.GetString("WidgetView_Window_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A converter utilised by WidgetView failed to find the active instance of the Application class..
+        /// </summary>
+        public static string WidgetViewConverters_Exception_ApplicationCurrent_Null {
+            get {
+                return ResourceManager.GetString("WidgetViewConverters_Exception_ApplicationCurrent_Null", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A converter utilised by WidgetView failed to find an Application icon resource..
+        /// </summary>
+        public static string WidgetViewConverters_Exception_GeometryResource_Null {
+            get {
+                return ResourceManager.GetString("WidgetViewConverters_Exception_GeometryResource_Null", resourceCulture);
             }
         }
         

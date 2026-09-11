@@ -1,6 +1,6 @@
 ﻿namespace DateToday.Avalonia.Messaging;
 
-internal sealed class MouseDragToggledMessage(bool isMouseDragEnabled)
+internal sealed class ToggleMouseDragMessage(bool isMouseDragEnabled)
 {
 	public bool IsMouseDragEnabled { get; } = isMouseDragEnabled;
 }
