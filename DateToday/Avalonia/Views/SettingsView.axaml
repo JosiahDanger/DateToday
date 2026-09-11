@@ -78,7 +78,11 @@
 				Grid.Row="0"
 				Grid.Column="2"
 				Classes="CloseButton"
-				Command="{Binding CloseSettingsViewCommand, Mode=OneTime}" />
+				Command="{Binding CloseSettingsViewCommand, Mode=OneTime}">
+
+				<PathIcon Classes="CloseButtonIcon" />
+
+			</Button>
 
 			<Border
 				Grid.Row="1"

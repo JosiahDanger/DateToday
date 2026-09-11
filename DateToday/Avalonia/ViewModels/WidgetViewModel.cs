@@ -66,15 +66,16 @@ internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 	public string? DateTimeText => FormatCurrentDateTime();
 
 	[RelayCommand]
-	private static void OpenSettingsView()
+	private void ToggleMouseDrag()
 	{
-		WeakReferenceMessenger.Default.Send(new OpenSettingsViewMessage());
+		WeakReferenceMessenger.Default.Send(
+			new ToggleMouseDragMessage(!Position.IsMouseDragEnabled));
 	}
 
 	[RelayCommand]
-	private void ToggleMouseDrag()
+	private static void OpenSettingsView()
 	{
-		WeakReferenceMessenger.Default.Send(new ToggleMouseDragMessage(!_widgetModelSnapshot.Position.IsMouseDragEnabled));
+		WeakReferenceMessenger.Default.Send(new OpenSettingsViewMessage());
 	}
 
 	[RelayCommand]
