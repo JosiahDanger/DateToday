@@ -204,10 +204,10 @@
   <data name="WidgetView_ContextMenu_MenuItem_DisableMouseDrag" xml:space="preserve">
     <value>Prevent Widget Dragging</value>
   </data>
-  <data name="WidgetViewConverters_Exception_ApplicationCurrent_Null" xml:space="preserve">
-    <value>A converter utilised by WidgetView failed to find the active instance of the Application class.</value>
+  <data name="Application_Exception_FailedToLocateApplicationResourceDictionary" xml:space="preserve">
+    <value>The app failed to locate its own ResourceDictionary. How embarrassing!</value>
   </data>
-  <data name="WidgetViewConverters_Exception_GeometryResource_Null" xml:space="preserve">
-    <value>A converter utilised by WidgetView failed to find an Application icon resource.</value>
+  <data name="WidgetViewModel_Exception_IsMouseDragEnabled_FailedToLocateToggleIcon" xml:space="preserve">
+    <value>The widget failed to locate a toggle icon corresponding to its next IsMouseDragEnabled state.</value>
   </data>
 </root>

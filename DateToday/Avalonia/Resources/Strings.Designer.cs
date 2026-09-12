@@ -133,6 +133,15 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The app failed to locate its own ResourceDictionary. How embarrassing!.
+        /// </summary>
+        public static string Application_Exception_FailedToLocateApplicationResourceDictionary {
+            get {
+                return ResourceManager.GetString("Application_Exception_FailedToLocateApplicationResourceDictionary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to determine the filepath of the app executable..
         /// </summary>
         public static string AppVersionProvider_Exception_ExecutableFilepathNotAvailable {
@@ -304,20 +313,11 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A converter utilised by WidgetView failed to find the active instance of the Application class..
+        ///   Looks up a localized string similar to The widget failed to locate a toggle icon corresponding to its next IsMouseDragEnabled state..
         /// </summary>
-        public static string WidgetViewConverters_Exception_ApplicationCurrent_Null {
+        public static string WidgetViewModel_Exception_IsMouseDragEnabled_FailedToLocateToggleIcon {
             get {
-                return ResourceManager.GetString("WidgetViewConverters_Exception_ApplicationCurrent_Null", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to A converter utilised by WidgetView failed to find an Application icon resource..
-        /// </summary>
-        public static string WidgetViewConverters_Exception_GeometryResource_Null {
-            get {
-                return ResourceManager.GetString("WidgetViewConverters_Exception_GeometryResource_Null", resourceCulture);
+                return ResourceManager.GetString("WidgetViewModel_Exception_IsMouseDragEnabled_FailedToLocateToggleIcon", resourceCulture);
             }
         }
         

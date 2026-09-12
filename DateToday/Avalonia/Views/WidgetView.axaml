@@ -20,10 +20,10 @@
 			<MenuItem
 				Classes="WidgetContextMenuQuickSetting"
 				Command="{Binding ToggleMouseDragCommand, Mode=OneTime}"
-				Header="{Binding Position.IsMouseDragEnabled, Mode=OneWay, Converter={x:Static conv:WidgetViewConverters.ToggleMouseDragLabelConverter}}">
+				Header="{Binding Position.IsMouseDragEnabled, Mode=OneWay, Converter={x:Static conv:WidgetViewConverters.IsMouseDragEnabledToggleLabelConverter}}">
 
 				<MenuItem.Icon>
-					<PathIcon Data="{Binding Position.IsMouseDragEnabled, Mode=OneWay, Converter={x:Static conv:WidgetViewConverters.ToggleMouseDragStreamGeometryConverter}}" />
+					<PathIcon Data="{Binding IsMouseDragEnabledToggleIcon, Mode=OneWay}" />
 				</MenuItem.Icon>
 
 			</MenuItem>

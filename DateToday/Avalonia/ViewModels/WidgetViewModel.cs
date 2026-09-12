@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Avalonia.Controls;
+using Avalonia.Media;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using DateToday.Avalonia.Messaging;
@@ -6,6 +8,7 @@ using DateToday.Avalonia.Resources;
 using DateToday.Models;
 using DateToday.Utilities;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 
@@ -24,13 +27,17 @@ namespace DateToday.Avalonia.ViewModels;
 internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 {
 	private readonly IWidgetModelSnapshot _widgetModelSnapshot;
+	private readonly ResourceDictionary _applicationResourceDictionary;
 	private readonly bool _isPropertyInitialisationComplete;
 	private Timer? _widgetContentUpdateScheduler;
 
-	public WidgetViewModel(IWidgetModelSnapshot widgetModelSnapshot)
+	public WidgetViewModel(
+		IWidgetModelSnapshot widgetModelSnapshot, ResourceDictionary applicationResourceDictionary)
 	{
 		_widgetModelSnapshot = widgetModelSnapshot;
 		_widgetModelSnapshot.PropertyChanged += OnWidgetModelPropertyChanged;
+
+		_applicationResourceDictionary = applicationResourceDictionary;
 
 		Content = _widgetModelSnapshot.Content;
 		Position = _widgetModelSnapshot.Position;
@@ -64,6 +71,17 @@ internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 	/// </summary>
 
 	public string? DateTimeText => FormatCurrentDateTime();
+
+	public StreamGeometry IsMouseDragEnabledToggleIcon
+	{
+		get
+		{
+			string iconKey = Position.IsMouseDragEnabled ? "lock_regular" : "unlock_regular";
+			return _applicationResourceDictionary[iconKey] as StreamGeometry
+				?? throw new KeyNotFoundException(
+					Strings.WidgetViewModel_Exception_IsMouseDragEnabled_FailedToLocateToggleIcon);
+		}
+	}
 
 	[RelayCommand]
 	private void ToggleMouseDrag()
@@ -183,6 +201,19 @@ internal sealed partial class WidgetViewModel : ObservableObject, IDisposable
 		if (newValue.RefreshIntervalSeconds != oldValue.RefreshIntervalSeconds)
 		{
 			ResetWidgetContentUpdateScheduler();
+		}
+	}
+
+	partial void OnPositionChanged(PositionConfig oldValue, PositionConfig newValue)
+	{
+		if (!_isPropertyInitialisationComplete)
+		{
+			return;
+		}
+
+		if (newValue.IsMouseDragEnabled != oldValue.IsMouseDragEnabled)
+		{
+			OnPropertyChanged(nameof(IsMouseDragEnabledToggleIcon));
 		}
 	}
 
