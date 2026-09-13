@@ -5,9 +5,9 @@
 	xmlns:conv="using:DateToday.Avalonia.Converters"
 	xmlns:res="using:DateToday.Avalonia.Resources"
 	xmlns:vm="using:DateToday.Avalonia.ViewModels"
+	Name="WidgetWindow"
 	Title="{x:Static res:Strings.WidgetView_Window_Title}"
-	x:DataType="vm:WidgetViewModel"
-	Classes="WidgetWindow">
+	x:DataType="vm:WidgetViewModel">
 
 	<Window.Styles>
 		<StyleInclude Source="/Avalonia/Styles/WidgetStyles.axaml" />
@@ -36,7 +36,7 @@
 				Header="{x:Static res:Strings.WidgetView_ContextMenu_MenuItem_OpenSettingsView}">
 
 				<MenuItem.Icon>
-					<PathIcon Data="{StaticResource settings_regular}" />
+					<PathIcon Name="OpenSettingsViewIcon" />
 				</MenuItem.Icon>
 
 			</MenuItem>
@@ -47,7 +47,7 @@
 				Header="{x:Static res:Strings.WidgetView_ContextMenu_MenuItem_ExitApplication}">
 
 				<MenuItem.Icon>
-					<PathIcon Data="{StaticResource power_regular}" />
+					<PathIcon Name="ExitApplicationIcon" />
 				</MenuItem.Icon>
 
 			</MenuItem>

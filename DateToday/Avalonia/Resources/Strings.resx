@@ -205,6 +205,6 @@
     <value>Prevent Widget Dragging</value>
   </data>
   <data name="WidgetView_Exception_FailedToLocateMouseDragToggleIcon" xml:space="preserve">
-    <value>The WidgetView failed to locate a toggle icon corresponding to its next IsMouseDragEnabled state.</value>
+    <value>The widget failed to locate a toggle icon corresponding to its next IsMouseDragEnabled state.</value>
   </data>
 </root>

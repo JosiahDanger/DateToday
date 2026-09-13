@@ -295,7 +295,7 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The WidgetView failed to locate a toggle icon corresponding to its next IsMouseDragEnabled state..
+        ///   Looks up a localized string similar to The widget failed to locate a toggle icon corresponding to its next IsMouseDragEnabled state..
         /// </summary>
         public static string WidgetView_Exception_FailedToLocateMouseDragToggleIcon {
             get {
