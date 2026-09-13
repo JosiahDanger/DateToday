@@ -204,10 +204,7 @@
   <data name="WidgetView_ContextMenu_MenuItem_DisableMouseDrag" xml:space="preserve">
     <value>Prevent Widget Dragging</value>
   </data>
-  <data name="Application_Exception_FailedToLocateApplicationResourceDictionary" xml:space="preserve">
-    <value>The app failed to locate its own ResourceDictionary. How embarrassing!</value>
-  </data>
-  <data name="WidgetViewModel_Exception_IsMouseDragEnabled_FailedToLocateToggleIcon" xml:space="preserve">
-    <value>The widget failed to locate a toggle icon corresponding to its next IsMouseDragEnabled state.</value>
+  <data name="WidgetView_Exception_FailedToLocateMouseDragToggleIcon" xml:space="preserve">
+    <value>The WidgetView failed to locate a toggle icon corresponding to its next IsMouseDragEnabled state.</value>
   </data>
 </root>

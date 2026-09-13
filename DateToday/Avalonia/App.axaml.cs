@@ -29,10 +29,10 @@ internal sealed partial class App : Application
 			(WidgetModel? widgetModel, bool hasDeserialisationSucceeded) =
 				WidgetModelFactory.GetInitialWidgetModel();
 
-			WidgetViewModel widgetViewModel = new(widgetModel, GetApplicationResourceDictionary());
+			WidgetViewModel widgetViewModel = new(widgetModel);
 			WidgetModelMutationService widgetModelMutationService = new(widgetModel);
 
-			WidgetView widgetView = new() { DataContext = widgetViewModel };
+			WidgetView widgetView = new(widgetViewModel) { DataContext = widgetViewModel };
 			WidgetDialogService widgetDialogService = new(widgetView, widgetModelMutationService);
 
 			async void OnWidgetViewOpened(object? sender, EventArgs e)
@@ -81,17 +81,6 @@ internal sealed partial class App : Application
 		}
 
 		base.OnFrameworkInitializationCompleted();
-	}
-
-	private ResourceDictionary GetApplicationResourceDictionary()
-	{
-		if (this.Resources is ResourceDictionary applicationResourceDictionary)
-		{
-			return applicationResourceDictionary;
-		}
-
-		throw new InvalidOperationException(
-			Strings.Application_Exception_FailedToLocateApplicationResourceDictionary);
 	}
 
 	private static bool PersistStateBeforeClosure(WidgetModel widgetModel)

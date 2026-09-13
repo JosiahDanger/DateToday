@@ -133,15 +133,6 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The app failed to locate its own ResourceDictionary. How embarrassing!.
-        /// </summary>
-        public static string Application_Exception_FailedToLocateApplicationResourceDictionary {
-            get {
-                return ResourceManager.GetString("Application_Exception_FailedToLocateApplicationResourceDictionary", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Failed to determine the filepath of the app executable..
         /// </summary>
         public static string AppVersionProvider_Exception_ExecutableFilepathNotAvailable {
@@ -304,20 +295,20 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The WidgetView failed to locate a toggle icon corresponding to its next IsMouseDragEnabled state..
+        /// </summary>
+        public static string WidgetView_Exception_FailedToLocateMouseDragToggleIcon {
+            get {
+                return ResourceManager.GetString("WidgetView_Exception_FailedToLocateMouseDragToggleIcon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DateToday.
         /// </summary>
         public static string WidgetView_Window_Title {
             get {
                 return ResourceManager.GetString("WidgetView_Window_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The widget failed to locate a toggle icon corresponding to its next IsMouseDragEnabled state..
-        /// </summary>
-        public static string WidgetViewModel_Exception_IsMouseDragEnabled_FailedToLocateToggleIcon {
-            get {
-                return ResourceManager.GetString("WidgetViewModel_Exception_IsMouseDragEnabled_FailedToLocateToggleIcon", resourceCulture);
             }
         }
         
