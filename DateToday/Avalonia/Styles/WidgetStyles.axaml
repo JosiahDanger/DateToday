@@ -1,6 +1,7 @@
 <Styles
 	xmlns="https://github.com/avaloniaui"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
 	<Design.PreviewWith>
 
 		<!--  Add Controls for Previewer Here  -->
@@ -11,6 +12,9 @@
 
 	<Style Selector="Window#WidgetWindow">
 		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="CanMaximize" Value="False" />
+		<Setter Property="CanMinimize" Value="False" />
+		<Setter Property="CanResize" Value="False" />
 		<Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
 		<Setter Property="Focusable" Value="False" />
 		<Setter Property="ShowInTaskbar" Value="False" />
@@ -40,11 +44,11 @@
 	</Style>
 
 	<Style Selector="PathIcon#OpenSettingsViewIcon">
-		<Setter Property="Data" Value="{StaticResource settings_regular}" />
+		<Setter Property="Data" Value="{StaticResource icon_settings}" />
 	</Style>
 
 	<Style Selector="PathIcon#ExitApplicationIcon">
-		<Setter Property="Data" Value="{StaticResource power_regular}" />
+		<Setter Property="Data" Value="{StaticResource icon_power}" />
 	</Style>
 
 	<Style Selector="TextBlock.WidgetTextBlock">

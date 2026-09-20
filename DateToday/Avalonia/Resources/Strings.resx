@@ -207,4 +207,22 @@
   <data name="WidgetView_Exception_FailedToLocateMouseDragToggleIcon" xml:space="preserve">
     <value>The widget failed to locate a toggle icon corresponding to its next IsMouseDragEnabled state.</value>
   </data>
+  <data name="Icons_Key_Dismiss" xml:space="preserve">
+    <value>icon_dismiss</value>
+  </data>
+  <data name="Icons_Key_Lock" xml:space="preserve">
+    <value>icon_lock</value>
+  </data>
+  <data name="Icons_Key_Unlock" xml:space="preserve">
+    <value>icon_unlock</value>
+  </data>
+  <data name="Icons_Key_Power" xml:space="preserve">
+    <value>icon_power</value>
+  </data>
+  <data name="Icons_Key_Settings" xml:space="preserve">
+    <value>icon_settings</value>
+  </data>
+  <data name="WidgetView_Exception_NoAvailableMonitors" xml:space="preserve">
+    <value>Avalonia reports that zero monitors are available to facilitate display of the widget.</value>
+  </data>
 </root>

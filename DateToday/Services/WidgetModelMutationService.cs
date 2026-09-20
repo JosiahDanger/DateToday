@@ -13,15 +13,30 @@ internal sealed class WidgetModelMutationService
 	{
 		_widgetModel = widgetModel;
 
-		WeakReferenceMessenger.Default.Register<WidgetMonitorChangedMessage>(
+		WeakReferenceMessenger.Default.Register<WidgetDraggedMessage>(
 			this,
 			(_, message) =>
 			{
 				MutatePositionConfig(positionConfig =>
-					positionConfig with { MonitorReference = message.MonitorReference });
+					positionConfig with
+					{
+						AnchoredCornerScaledPosition = message.AnchoredCornerScaledPosition
+					});
 			});
 
-		WeakReferenceMessenger.Default.Register<ToggleMouseDragMessage>(
+		WeakReferenceMessenger.Default.Register<ParentMonitorChangedMessage>(
+			this,
+			(_, message) =>
+			{
+				MutatePositionConfig(positionConfig =>
+					positionConfig with
+					{
+						AnchoredCornerScaledPosition = message.AnchoredCornerScaledPosition,
+						MonitorReference = message.MonitorReference
+					});
+			});
+
+		WeakReferenceMessenger.Default.Register<MouseDragToggledMessage>(
 			this,
 			(_, message) =>
 			{

@@ -160,6 +160,51 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to icon_dismiss.
+        /// </summary>
+        public static string Icons_Key_Dismiss {
+            get {
+                return ResourceManager.GetString("Icons_Key_Dismiss", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to icon_lock.
+        /// </summary>
+        public static string Icons_Key_Lock {
+            get {
+                return ResourceManager.GetString("Icons_Key_Lock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to icon_power.
+        /// </summary>
+        public static string Icons_Key_Power {
+            get {
+                return ResourceManager.GetString("Icons_Key_Power", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to icon_settings.
+        /// </summary>
+        public static string Icons_Key_Settings {
+            get {
+                return ResourceManager.GetString("Icons_Key_Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to icon_unlock.
+        /// </summary>
+        public static string Icons_Key_Unlock {
+            get {
+                return ResourceManager.GetString("Icons_Key_Unlock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to App.
         /// </summary>
         public static string SettingsView_TabStrip_TabStripItem_AppTabLabel {
@@ -300,6 +345,15 @@ namespace DateToday.Avalonia.Resources {
         public static string WidgetView_Exception_FailedToLocateMouseDragToggleIcon {
             get {
                 return ResourceManager.GetString("WidgetView_Exception_FailedToLocateMouseDragToggleIcon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Avalonia reports that zero monitors are available to facilitate display of the widget..
+        /// </summary>
+        public static string WidgetView_Exception_NoAvailableMonitors {
+            get {
+                return ResourceManager.GetString("WidgetView_Exception_NoAvailableMonitors", resourceCulture);
             }
         }
         

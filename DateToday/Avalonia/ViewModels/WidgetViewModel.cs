@@ -5,7 +5,6 @@ using DateToday.Avalonia.Messaging;
 using DateToday.Avalonia.Resources;
 using DateToday.Models;
 using DateToday.Utilities;
-using DateToday.ViewModels;
 using System;
 using System.ComponentModel;
 using System.Threading;
@@ -22,8 +21,7 @@ namespace DateToday.Avalonia.ViewModels;
 /// feedback loops.
 /// </summary>
 
-internal sealed partial class WidgetViewModel :
-	ObservableObject, IWidgetViewDependencyProvider, IDisposable
+internal sealed partial class WidgetViewModel : ObservableObject, IPositionProvider, IDisposable
 {
 	private readonly IWidgetModelSnapshot _widgetModelSnapshot;
 	private readonly bool _isPropertyInitialisationComplete;
@@ -71,7 +69,7 @@ internal sealed partial class WidgetViewModel :
 	private void ToggleMouseDrag()
 	{
 		WeakReferenceMessenger.Default.Send(
-			new ToggleMouseDragMessage(!Position.IsMouseDragEnabled));
+			new MouseDragToggledMessage(!Position.IsMouseDragEnabled));
 	}
 
 	[RelayCommand]
