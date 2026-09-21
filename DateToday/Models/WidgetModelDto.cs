@@ -24,11 +24,11 @@ internal sealed class WidgetModelDto : ISuspensionState
 	[JsonPropertyName("anchoredCorner")]
 	public WindowVertexIdentifier AnchoredCorner { get; set; }
 
-	[JsonPropertyName("anchoredCornerScaledPositionX")]
-	public double AnchoredCornerScaledPositionX { get; set; }
+	[JsonPropertyName("anchoredCornerLogicalPositionX")]
+	public double AnchoredCornerLogicalPositionX { get; set; }
 
-	[JsonPropertyName("anchoredCornerScaledPositionY")]
-	public double AnchoredCornerScaledPositionY { get; set; }
+	[JsonPropertyName("anchoredCornerLogicalPositionY")]
+	public double AnchoredCornerLogicalPositionY { get; set; }
 
 	[JsonPropertyName("monitorReference")]
 	public string? MonitorReference { get; set; }
@@ -61,7 +61,7 @@ internal sealed class WidgetModelDto : ISuspensionState
 	{
 		CultureInfo dateTimeCulture = new(DateTimeCultureIdentifier);
 
-		Point position = new(AnchoredCornerScaledPositionX, AnchoredCornerScaledPositionY);
+		Point position = new(AnchoredCornerLogicalPositionX, AnchoredCornerLogicalPositionY);
 
 		FontFamily fontFamily = new(FontFamilyName);
 
@@ -113,8 +113,8 @@ internal sealed class WidgetModelDto : ISuspensionState
 			RefreshIntervalSeconds = model.Content.RefreshIntervalSeconds,
 
 			AnchoredCorner = model.Position.AnchoredCorner,
-			AnchoredCornerScaledPositionX = model.Position.AnchoredCornerScaledPosition.X,
-			AnchoredCornerScaledPositionY = model.Position.AnchoredCornerScaledPosition.Y,
+			AnchoredCornerLogicalPositionX = model.Position.AnchoredCornerLogicalPosition.X,
+			AnchoredCornerLogicalPositionY = model.Position.AnchoredCornerLogicalPosition.Y,
 			MonitorReference = model.Position.MonitorReference,
 			IsMouseDragEnabled = model.Position.IsMouseDragEnabled,
 

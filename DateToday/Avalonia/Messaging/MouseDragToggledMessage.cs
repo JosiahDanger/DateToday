@@ -2,7 +2,7 @@
 
 namespace DateToday.Avalonia.Messaging;
 
-internal sealed class WidgetDraggedMessage(Point anchoredCornerScaledPosition)
+internal sealed class WidgetDraggedMessage(Point anchoredCornerLogicalPosition)
 {
-	public Point AnchoredCornerScaledPosition { get; } = anchoredCornerScaledPosition;
+	public Point AnchoredCornerLogicalPosition { get; } = anchoredCornerLogicalPosition;
 }

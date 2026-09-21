@@ -15,7 +15,7 @@ internal static class WidgetModelDefaults
 	public static PositionConfig DefaultPositionConfig =>
 		new(
 			AnchoredCorner: WindowVertexIdentifier.TopRight,
-			AnchoredCornerScaledPosition: new(100, 100),
+			AnchoredCornerLogicalPosition: new(100, 100),
 			MonitorReference: null,
 			IsMouseDragEnabled: true);
 

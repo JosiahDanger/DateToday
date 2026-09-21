@@ -46,7 +46,7 @@ internal sealed partial class WidgetView : Window
 		WeakReferenceMessenger.Default.Register<CloseApplicationMessage>(
 			this, (_, _) => this.Close());
 
-		FitWidgetToWorkingArea(initialPositionConfig.AnchoredCornerScaledPosition);
+		FitWidgetToWorkingArea(initialPositionConfig.AnchoredCornerLogicalPosition);
 		UpdateMouseDragToggleIcon();
 	}
 
@@ -54,27 +54,27 @@ internal sealed partial class WidgetView : Window
 	/// Moves the widget such that it becomes enclosed entirely within the bounds of the desktop
 	/// working area.
 	/// </summary>
-	/// <param name="currentScaledPosition">The widget's scaled position before constraint.</param>
-	/// <returns>The new scaled position corresponding to the pixel co-ordinate newly assigned by
+	/// <param name="currentLogicalPosition">The widget's logical position before constraint.</param>
+	/// <returns>The new logical position corresponding to the pixel co-ordinate newly assigned by
 	/// this method to the widget.</returns>
 
-	private Point FitWidgetToWorkingArea(Point currentScaledPosition)
+	private Point FitWidgetToWorkingArea(Point currentLogicalPosition)
 	{
-		static Point CalculateScaledPositionMax(Size widgetSize, Size workingAreaSize)
+		static Point CalculateLogicalPositionMax(Size widgetSize, Size workingAreaSize)
 		{
-			double scaledPositionMaxX = workingAreaSize.Width - widgetSize.Width;
-			double scaledPositionMaxY = workingAreaSize.Height - widgetSize.Height;
+			double logicalPositionMaxX = workingAreaSize.Width - widgetSize.Width;
+			double logicalPositionMaxY = workingAreaSize.Height - widgetSize.Height;
 
-			return new(scaledPositionMaxX, scaledPositionMaxY);
+			return new(logicalPositionMaxX, logicalPositionMaxY);
 		}
 
-		static Point ConstrainScaledPosition(
-			Point currentScaledPosition, Point scaledPositionMax)
+		static Point ConstrainLogicalPosition(
+			Point currentLogicalPosition, Point logicalPositionMax)
 		{
 			double newPositionX =
-				Math.Clamp(currentScaledPosition.X, PixelPoint.Origin.X, scaledPositionMax.X);
+				Math.Clamp(currentLogicalPosition.X, PixelPoint.Origin.X, logicalPositionMax.X);
 			double newPositionY =
-				Math.Clamp(currentScaledPosition.Y, PixelPoint.Origin.Y, scaledPositionMax.Y);
+				Math.Clamp(currentLogicalPosition.Y, PixelPoint.Origin.Y, logicalPositionMax.Y);
 
 			return new(newPositionX, newPositionY);
 		}
@@ -84,14 +84,14 @@ internal sealed partial class WidgetView : Window
 
 		Size workingAreaSize = parentMonitor.WorkingArea.Size.ToSize(this.DesktopScaling);
 
-		Point scaledPositionMax = CalculateScaledPositionMax(this.ClientSize, workingAreaSize);
+		Point logicalPositionMax = CalculateLogicalPositionMax(this.ClientSize, workingAreaSize);
 
-		Point scaledPositionConstrained =
-			ConstrainScaledPosition(currentScaledPosition, scaledPositionMax);
+		Point logicalPositionConstrained =
+			ConstrainLogicalPosition(currentLogicalPosition, logicalPositionMax);
 
-		this.Position = PixelPoint.FromPoint(scaledPositionConstrained, this.DesktopScaling);
+		this.Position = PixelPoint.FromPoint(logicalPositionConstrained, this.DesktopScaling);
 
-		return scaledPositionConstrained;
+		return logicalPositionConstrained;
 	}
 
 	private Screen GetSelectedMonitor(string? targetMonitorReference)
@@ -141,13 +141,13 @@ internal sealed partial class WidgetView : Window
 
 		if (hasParentMonitorChanged)
 		{
-			// TODO. ParentMonitorChangedMessage should receive the anchored corner scaled position, not the overall scaled position.
+			// TODO. ParentMonitorChangedMessage should receive the anchored corner logical position, not the overall logical position.
 
-			Point currentScaledPosition = this.Position.ToPoint(this.DesktopScaling);
-			Point scaledPositionConstrained = FitWidgetToWorkingArea(currentScaledPosition);
+			Point currentLogicalPosition = this.Position.ToPoint(this.DesktopScaling);
+			Point logicalPositionConstrained = FitWidgetToWorkingArea(currentLogicalPosition);
 
 			WeakReferenceMessenger.Default.Send(
-				new ParentMonitorChangedMessage(currentMonitorReference, scaledPositionConstrained));
+				new WidgetMonitorChangedMessage(currentMonitorReference, logicalPositionConstrained));
 
 			_cachedMonitorReference = currentMonitorReference;
 		}
@@ -176,13 +176,13 @@ internal sealed partial class WidgetView : Window
 	{
 		if (_isWindowDragAfoot)
 		{
-			// TODO. WidgetDraggedMessage should receive the anchored corner scaled position, not the overall scaled position.
+			// TODO. WidgetDraggedMessage should receive the anchored corner logical position, not the overall logical position.
 
-			Point currentScaledPosition = this.Position.ToPoint(this.DesktopScaling);
-			Point scaledPositionConstrained = FitWidgetToWorkingArea(currentScaledPosition);
+			Point currentLogicalPosition = this.Position.ToPoint(this.DesktopScaling);
+			Point logicalPositionConstrained = FitWidgetToWorkingArea(currentLogicalPosition);
 
 			WeakReferenceMessenger.Default.Send(
-				new WidgetDraggedMessage(scaledPositionConstrained));
+				new WidgetDraggedMessage(logicalPositionConstrained));
 		}
 
 		_isWindowDragAfoot = false;
@@ -195,10 +195,10 @@ internal sealed partial class WidgetView : Window
 			Point currentCursorPosition = e.GetPosition(this);
 			Point cursorPositionDelta = currentCursorPosition - _cursorPositionAtWindowDragStart;
 
-			Point currentScaledPosition = this.Position.ToPoint(this.DesktopScaling);
-			Point newScaledPosition = currentScaledPosition + cursorPositionDelta;
+			Point currentLogicalPosition = this.Position.ToPoint(this.DesktopScaling);
+			Point newLogicalPosition = currentLogicalPosition + cursorPositionDelta;
 
-			this.Position = PixelPoint.FromPoint(newScaledPosition, this.DesktopScaling);
+			this.Position = PixelPoint.FromPoint(newLogicalPosition, this.DesktopScaling);
 		}
 	}
 

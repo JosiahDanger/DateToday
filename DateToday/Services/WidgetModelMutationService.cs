@@ -20,18 +20,18 @@ internal sealed class WidgetModelMutationService
 				MutatePositionConfig(positionConfig =>
 					positionConfig with
 					{
-						AnchoredCornerScaledPosition = message.AnchoredCornerScaledPosition
+						AnchoredCornerLogicalPosition = message.AnchoredCornerLogicalPosition
 					});
 			});
 
-		WeakReferenceMessenger.Default.Register<ParentMonitorChangedMessage>(
+		WeakReferenceMessenger.Default.Register<WidgetMonitorChangedMessage>(
 			this,
 			(_, message) =>
 			{
 				MutatePositionConfig(positionConfig =>
 					positionConfig with
 					{
-						AnchoredCornerScaledPosition = message.AnchoredCornerScaledPosition,
+						AnchoredCornerLogicalPosition = message.AnchoredCornerLogicalPosition,
 						MonitorReference = message.MonitorReference
 					});
 			});
