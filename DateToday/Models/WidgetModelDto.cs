@@ -30,9 +30,6 @@ internal sealed class WidgetModelDto : ISuspensionState
 	[JsonPropertyName("anchoredCornerLogicalPositionY")]
 	public double AnchoredCornerLogicalPositionY { get; set; }
 
-	[JsonPropertyName("monitorReference")]
-	public string? MonitorReference { get; set; }
-
 	[JsonPropertyName("isMouseDragEnabled")]
 	public required bool IsMouseDragEnabled { get; set; }
 

@@ -50,12 +50,12 @@ internal sealed partial class WidgetView : Window
 		set { this.Position = PixelPoint.FromPoint(value, this.DesktopScaling); }
 	}
 
-	private Screen ParentScreen
+	private Screen ParentMonitor
 	{
 		get
 		{
 			return
-				Screens.All.FirstOrDefault(x => x.Bounds.Contains(this.Position))
+				Screens.All.FirstOrDefault(monitor => monitor.Bounds.Contains(this.Position))
 				?? throw new InvalidOperationException(
 					Strings.WidgetView_Exception_NoAvailableMonitors);
 		}
@@ -153,7 +153,7 @@ internal sealed partial class WidgetView : Window
 			FitWindowToWorkingArea(
 				widgetOriginInitialLogicalPosition,
 				this.ClientSize,
-				this.ParentScreen.WorkingArea.Size.ToSize(this.DesktopScaling));
+				this.ParentMonitor.WorkingArea.Size.ToSize(this.DesktopScaling));
 	}
 
 	private void OnPositionConfigChanged(object? sender, PropertyChangedEventArgs e)
@@ -191,7 +191,7 @@ internal sealed partial class WidgetView : Window
 				FitWindowToWorkingArea(
 					newWidgetOriginLogicalPosition,
 					this.ClientSize,
-					this.ParentScreen.WorkingArea.Size.ToSize(this.DesktopScaling));
+					this.ParentMonitor.WorkingArea.Size.ToSize(this.DesktopScaling));
 		}
 	}
 
@@ -232,6 +232,6 @@ internal sealed partial class WidgetView : Window
 			FitWindowToWorkingArea(
 				new(currentLogicalPosition.X + offsetX, currentLogicalPosition.Y + offsetY),
 				this.ClientSize,
-				this.ParentScreen.WorkingArea.Size.ToSize(this.DesktopScaling));
+				this.ParentMonitor.WorkingArea.Size.ToSize(this.DesktopScaling));
 	}
 }
