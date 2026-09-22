@@ -24,18 +24,6 @@ internal sealed class WidgetModelMutationService
 					});
 			});
 
-		WeakReferenceMessenger.Default.Register<WidgetMonitorChangedMessage>(
-			this,
-			(_, message) =>
-			{
-				MutatePositionConfig(positionConfig =>
-					positionConfig with
-					{
-						AnchoredCornerLogicalPosition = message.AnchoredCornerLogicalPosition,
-						MonitorReference = message.MonitorReference
-					});
-			});
-
 		WeakReferenceMessenger.Default.Register<MouseDragToggledMessage>(
 			this,
 			(_, message) =>

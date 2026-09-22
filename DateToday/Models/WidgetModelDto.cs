@@ -88,7 +88,6 @@ internal sealed class WidgetModelDto : ISuspensionState
 			new PositionConfig(
 					AnchoredCorner,
 					position,
-					MonitorReference,
 					IsMouseDragEnabled),
 
 			new FontConfig(
@@ -115,7 +114,6 @@ internal sealed class WidgetModelDto : ISuspensionState
 			AnchoredCorner = model.Position.AnchoredCorner,
 			AnchoredCornerLogicalPositionX = model.Position.AnchoredCornerLogicalPosition.X,
 			AnchoredCornerLogicalPositionY = model.Position.AnchoredCornerLogicalPosition.Y,
-			MonitorReference = model.Position.MonitorReference,
 			IsMouseDragEnabled = model.Position.IsMouseDragEnabled,
 
 			FontFamilyName = model.Font.FontFamily.Name,

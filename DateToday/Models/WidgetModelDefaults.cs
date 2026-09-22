@@ -16,7 +16,6 @@ internal static class WidgetModelDefaults
 		new(
 			AnchoredCorner: WindowVertexIdentifier.TopRight,
 			AnchoredCornerLogicalPosition: new(100, 100),
-			MonitorReference: null,
 			IsMouseDragEnabled: true);
 
 	public static FontConfig DefaultFontConfig =>

@@ -13,7 +13,6 @@ internal sealed record ContentConfig(
 internal sealed record PositionConfig(
 	WindowVertexIdentifier AnchoredCorner,
 	Point AnchoredCornerLogicalPosition,
-	string? MonitorReference,
 	bool IsMouseDragEnabled);
 
 internal sealed record FontConfig(

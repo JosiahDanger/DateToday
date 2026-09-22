@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.Messaging;
@@ -18,100 +19,97 @@ namespace DateToday.Avalonia.Views;
 internal sealed partial class WidgetView : Window
 {
 	private readonly IPositionProvider _positionConfigProvider;
-	private string? _cachedMonitorReference;
-	private bool _cachedIsMouseDragEnabled, _isWindowDragAfoot;
-	private Point _cursorPositionAtWindowDragStart;
+	private bool _isWindowDragAfoot, _cachedIsMouseDragEnabled;
+	private Point _cursorLogicalPositionAtWindowDragStart;
 
 	public WidgetView(IPositionProvider positionProvider)
 	{
 		InitializeComponent();
 
 		_positionConfigProvider = positionProvider;
+		_cachedIsMouseDragEnabled = _positionConfigProvider.Position.IsMouseDragEnabled;
 
-		PositionConfig initialPositionConfig = _positionConfigProvider.Position;
-
-		_cachedMonitorReference = initialPositionConfig.MonitorReference;
-		_cachedIsMouseDragEnabled = initialPositionConfig.IsMouseDragEnabled;
-
-		this.Screens.Changed += OnScreensChanged;
-
+		this.Closed += OnClosed;
+		this.Loaded += OnLoaded;
 		this.PointerPressed += OnPointerPressed;
 		this.PointerMoved += OnPointerMoved;
 		this.PointerReleased += OnPointerReleased;
-
-		this.Closed += OnClosed;
+		this.SizeChanged += OnSizeChanged;
 
 		_positionConfigProvider.PropertyChanged += OnPositionConfigChanged;
 
 		WeakReferenceMessenger.Default.Register<CloseApplicationMessage>(
 			this, (_, _) => this.Close());
 
-		FitWidgetToWorkingArea(initialPositionConfig.AnchoredCornerLogicalPosition);
 		UpdateMouseDragToggleIcon();
 	}
 
-	/// <summary>
-	/// Moves the widget such that it becomes enclosed entirely within the bounds of the desktop
-	/// working area.
-	/// </summary>
-	/// <param name="currentLogicalPosition">The widget's logical position before constraint.</param>
-	/// <returns>The new logical position corresponding to the pixel co-ordinate newly assigned by
-	/// this method to the widget.</returns>
-
-	private Point FitWidgetToWorkingArea(Point currentLogicalPosition)
+	private Point LogicalPosition
 	{
-		static Point CalculateLogicalPositionMax(Size widgetSize, Size workingAreaSize)
-		{
-			double logicalPositionMaxX = workingAreaSize.Width - widgetSize.Width;
-			double logicalPositionMaxY = workingAreaSize.Height - widgetSize.Height;
-
-			return new(logicalPositionMaxX, logicalPositionMaxY);
-		}
-
-		static Point ConstrainLogicalPosition(
-			Point currentLogicalPosition, Point logicalPositionMax)
-		{
-			double newPositionX =
-				Math.Clamp(currentLogicalPosition.X, PixelPoint.Origin.X, logicalPositionMax.X);
-			double newPositionY =
-				Math.Clamp(currentLogicalPosition.Y, PixelPoint.Origin.Y, logicalPositionMax.Y);
-
-			return new(newPositionX, newPositionY);
-		}
-
-		Screen parentMonitor =
-			GetSelectedMonitor(_positionConfigProvider.Position.MonitorReference);
-
-		Size workingAreaSize = parentMonitor.WorkingArea.Size.ToSize(this.DesktopScaling);
-
-		Point logicalPositionMax = CalculateLogicalPositionMax(this.ClientSize, workingAreaSize);
-
-		Point logicalPositionConstrained =
-			ConstrainLogicalPosition(currentLogicalPosition, logicalPositionMax);
-
-		this.Position = PixelPoint.FromPoint(logicalPositionConstrained, this.DesktopScaling);
-
-		return logicalPositionConstrained;
+		get { return this.Position.ToPoint(this.DesktopScaling); }
+		set { this.Position = PixelPoint.FromPoint(value, this.DesktopScaling); }
 	}
 
-	private Screen GetSelectedMonitor(string? targetMonitorReference)
+	private Screen ParentScreen
 	{
-		Screen primaryScreen =
-			Screens.Primary
-			?? throw new InvalidOperationException(
-				Strings.WidgetView_Exception_NoAvailableMonitors);
-
-		if (targetMonitorReference is null)
+		get
 		{
-			return primaryScreen;
+			return
+				Screens.All.FirstOrDefault(x => x.Bounds.Contains(this.Position))
+				?? throw new InvalidOperationException(
+					Strings.WidgetView_Exception_NoAvailableMonitors);
 		}
+	}
 
-		return Screens.All.FirstOrDefault(monitor =>
-			string.Equals(
-				monitor.ToString(),
-				targetMonitorReference,
-				StringComparison.OrdinalIgnoreCase))
-			?? primaryScreen;
+	private static Point CalculateWindowOriginLogicalPositionFromVertex(
+		WindowVertexIdentifier corner, Point cornerLogicalPosition, Size windowSize)
+	{
+		double originX = corner switch
+		{
+			WindowVertexIdentifier.TopRight or WindowVertexIdentifier.BottomRight
+				=> cornerLogicalPosition.X - windowSize.Width,
+			_ => cornerLogicalPosition.X
+		};
+
+		double originY = corner switch
+		{
+			WindowVertexIdentifier.BottomLeft or WindowVertexIdentifier.BottomRight
+				=> cornerLogicalPosition.Y - windowSize.Height,
+			_ => cornerLogicalPosition.Y
+		};
+
+		return new Point(originX, originY);
+	}
+
+	private static Point CalculateWindowVertexLogicalPositionFromOrigin(
+		WindowVertexIdentifier corner, Point cornerLogicalPosition, Size windowSize)
+	{
+		double originX = corner switch
+		{
+			WindowVertexIdentifier.TopRight or WindowVertexIdentifier.BottomRight
+				=> cornerLogicalPosition.X + windowSize.Width,
+			_ => cornerLogicalPosition.X
+		};
+
+		double originY = corner switch
+		{
+			WindowVertexIdentifier.BottomLeft or WindowVertexIdentifier.BottomRight
+				=> cornerLogicalPosition.Y + windowSize.Height,
+			_ => cornerLogicalPosition.Y
+		};
+
+		return new Point(originX, originY);
+	}
+
+	private static Point FitWindowToWorkingArea(
+		Point windowOriginLogicalPosition, Size windowSize, Size workingArea)
+	{
+		double logicalPositionMaxX = Math.Max(0, workingArea.Width - windowSize.Width);
+		double logicalPositionMaxY = Math.Max(0, workingArea.Height - windowSize.Height);
+
+		return new(
+			Math.Clamp(windowOriginLogicalPosition.X, 0, logicalPositionMaxX),
+			Math.Clamp(windowOriginLogicalPosition.Y, 0, logicalPositionMaxY));
 	}
 
 	private void UpdateMouseDragToggleIcon()
@@ -129,37 +127,44 @@ internal sealed partial class WidgetView : Window
 		IsMouseDragEnabledToggleIcon.Data = icon;
 	}
 
-	private void OnScreensChanged(object? sender, EventArgs e)
+	private void OnClosed(object? sender, EventArgs e)
 	{
-		string? currentMonitorReference = Screens.ScreenFromWindow(this)?.ToString();
+		this.Closed -= OnClosed;
+		this.Loaded -= OnLoaded;
+		this.PointerPressed -= OnPointerPressed;
+		this.PointerMoved -= OnPointerMoved;
+		this.PointerReleased -= OnPointerReleased;
+		this.SizeChanged -= OnSizeChanged;
 
-		bool hasParentMonitorChanged =
-			!string.Equals(
-				_cachedMonitorReference,
-				currentMonitorReference,
-				StringComparison.OrdinalIgnoreCase);
+		_positionConfigProvider.PropertyChanged -= OnPositionConfigChanged;
 
-		if (hasParentMonitorChanged)
-		{
-			// TODO. ParentMonitorChangedMessage should receive the anchored corner logical position, not the overall logical position.
+		WeakReferenceMessenger.Default.Unregister<CloseApplicationMessage>(this);
+	}
 
-			Point currentLogicalPosition = this.Position.ToPoint(this.DesktopScaling);
-			Point logicalPositionConstrained = FitWidgetToWorkingArea(currentLogicalPosition);
+	private void OnLoaded(object? sender, RoutedEventArgs e)
+	{
+		Point widgetOriginInitialLogicalPosition =
+			CalculateWindowOriginLogicalPositionFromVertex(
+				_positionConfigProvider.Position.AnchoredCorner,
+				_positionConfigProvider.Position.AnchoredCornerLogicalPosition,
+				this.ClientSize);
 
-			WeakReferenceMessenger.Default.Send(
-				new WidgetMonitorChangedMessage(currentMonitorReference, logicalPositionConstrained));
-
-			_cachedMonitorReference = currentMonitorReference;
-		}
+		this.LogicalPosition =
+			FitWindowToWorkingArea(
+				widgetOriginInitialLogicalPosition,
+				this.ClientSize,
+				this.ParentScreen.WorkingArea.Size.ToSize(this.DesktopScaling));
 	}
 
 	private void OnPositionConfigChanged(object? sender, PropertyChangedEventArgs e)
 	{
-		if (_cachedIsMouseDragEnabled != _positionConfigProvider.Position.IsMouseDragEnabled)
-		{
-			UpdateMouseDragToggleIcon();
+		bool newIsMouseDragEnabled = _positionConfigProvider.Position.IsMouseDragEnabled;
 
-			_cachedIsMouseDragEnabled = _positionConfigProvider.Position.IsMouseDragEnabled;
+		if (_cachedIsMouseDragEnabled !=
+			newIsMouseDragEnabled)
+		{
+			_cachedIsMouseDragEnabled = newIsMouseDragEnabled;
+			UpdateMouseDragToggleIcon();
 		}
 	}
 
@@ -168,7 +173,25 @@ internal sealed partial class WidgetView : Window
 		if (e.Properties.IsLeftButtonPressed && _positionConfigProvider.Position.IsMouseDragEnabled)
 		{
 			_isWindowDragAfoot = true;
-			_cursorPositionAtWindowDragStart = e.GetPosition(this);
+			_cursorLogicalPositionAtWindowDragStart = e.GetPosition(this);
+		}
+	}
+
+	private void OnPointerMoved(object? sender, PointerEventArgs e)
+	{
+		if (_isWindowDragAfoot)
+		{
+			Point cursorLogicalPositionDelta =
+				e.GetPosition(this) - _cursorLogicalPositionAtWindowDragStart;
+
+			Point newWidgetOriginLogicalPosition =
+				this.LogicalPosition + cursorLogicalPositionDelta;
+
+			this.LogicalPosition =
+				FitWindowToWorkingArea(
+					newWidgetOriginLogicalPosition,
+					this.ClientSize,
+					this.ParentScreen.WorkingArea.Size.ToSize(this.DesktopScaling));
 		}
 	}
 
@@ -176,42 +199,39 @@ internal sealed partial class WidgetView : Window
 	{
 		if (_isWindowDragAfoot)
 		{
-			// TODO. WidgetDraggedMessage should receive the anchored corner logical position, not the overall logical position.
-
-			Point currentLogicalPosition = this.Position.ToPoint(this.DesktopScaling);
-			Point logicalPositionConstrained = FitWidgetToWorkingArea(currentLogicalPosition);
+			Point widgetAnchoredCornerLogicalPosition
+				= CalculateWindowVertexLogicalPositionFromOrigin(
+					_positionConfigProvider.Position.AnchoredCorner,
+					this.LogicalPosition,
+					this.ClientSize);
 
 			WeakReferenceMessenger.Default.Send(
-				new WidgetDraggedMessage(logicalPositionConstrained));
+				new WidgetDraggedMessage(widgetAnchoredCornerLogicalPosition));
 		}
 
 		_isWindowDragAfoot = false;
 	}
 
-	private void OnPointerMoved(object? sender, PointerEventArgs e)
+	private void OnSizeChanged(object? sender, SizeChangedEventArgs e)
 	{
-		if (_isWindowDragAfoot)
-		{
-			Point currentCursorPosition = e.GetPosition(this);
-			Point cursorPositionDelta = currentCursorPosition - _cursorPositionAtWindowDragStart;
+		double widthDelta = e.NewSize.Width - e.PreviousSize.Width;
+		double heightDelta = e.NewSize.Height - e.PreviousSize.Height;
 
-			Point currentLogicalPosition = this.Position.ToPoint(this.DesktopScaling);
-			Point newLogicalPosition = currentLogicalPosition + cursorPositionDelta;
+		(double offsetX, double offsetY) =
+			_positionConfigProvider.Position.AnchoredCorner switch
+			{
+				WindowVertexIdentifier.TopRight => (-widthDelta, 0),
+				WindowVertexIdentifier.BottomLeft => (0, -heightDelta),
+				WindowVertexIdentifier.BottomRight => (-widthDelta, -heightDelta),
+				_ => (0, 0)
+			};
 
-			this.Position = PixelPoint.FromPoint(newLogicalPosition, this.DesktopScaling);
-		}
-	}
+		Point currentLogicalPosition = this.LogicalPosition;
 
-	private void OnClosed(object? sender, EventArgs e)
-	{
-		this.Closed -= OnClosed;
-
-		this.PointerPressed -= OnPointerPressed;
-		this.PointerMoved -= OnPointerMoved;
-		this.PointerReleased -= OnPointerReleased;
-
-		this.Screens.Changed -= OnScreensChanged;
-
-		WeakReferenceMessenger.Default.Unregister<CloseApplicationMessage>(this);
+		this.LogicalPosition =
+			FitWindowToWorkingArea(
+				new(currentLogicalPosition.X + offsetX, currentLogicalPosition.Y + offsetY),
+				this.ClientSize,
+				this.ParentScreen.WorkingArea.Size.ToSize(this.DesktopScaling));
 	}
 }
