@@ -19,6 +19,7 @@ namespace DateToday.Avalonia.Views;
 internal sealed partial class WidgetView : Window
 {
 	private readonly IPositionProvider _positionConfigProvider;
+	private Screen? _fallbackParentScreen;
 	private CornerIdentifier _cachedAnchoredCorner;
 	private bool _isWindowDragAfoot, _cachedIsMouseDragEnabled;
 	private Point _cursorLogicalPositionAtWindowDragStart;
@@ -56,10 +57,26 @@ internal sealed partial class WidgetView : Window
 	/// Thrown if no monitors are detected.
 	/// </exception>
 
-	private Screen ParentScreen =>
-		Screens.All.FirstOrDefault(screen => screen.Bounds.Contains(this.Position))
-		?? throw new InvalidOperationException(
-			Strings.WidgetView_Exception_NoAvailableMonitors);
+	private Screen ParentScreen
+	{
+		get
+		{
+			Screen? currentParentScreen =
+				Screens.All.FirstOrDefault(screen => screen.Bounds.Contains(this.Position));
+
+			if (currentParentScreen != null)
+			{
+				_fallbackParentScreen = currentParentScreen;
+			}
+
+			return
+				currentParentScreen
+				?? _fallbackParentScreen
+				?? Screens.Primary
+				?? throw new InvalidOperationException(
+					Strings.WidgetView_Exception_NoAvailableMonitors);
+		}
+	}
 
 	/// <summary>
 	/// Exposes the logical position the window's origin.
@@ -70,6 +87,7 @@ internal sealed partial class WidgetView : Window
 	/// <see cref="Window.Position"/> returns the window's position in physical space, using integer
 	/// co-ordinates.
 	/// </remarks>
+
 	private Point WindowOriginLogicalPosition
 	{
 		get { return this.Position.ToPoint(this.DesktopScaling); }
