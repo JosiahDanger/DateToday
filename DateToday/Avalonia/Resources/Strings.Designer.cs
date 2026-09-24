@@ -340,6 +340,15 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Homie, I need you to understand that a rectangle cannot have more than four corners..
+        /// </summary>
+        public static string WidgetView_Exception_CornerIdentifierNotSupported {
+            get {
+                return ResourceManager.GetString("WidgetView_Exception_CornerIdentifierNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The widget failed to locate a toggle icon corresponding to its next IsMouseDragEnabled state..
         /// </summary>
         public static string WidgetView_Exception_FailedToLocateMouseDragToggleIcon {
@@ -349,7 +358,7 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Avalonia reports that zero monitors are available to facilitate display of the widget..
+        ///   Looks up a localized string similar to The operating system reports that zero monitors are available to facilitate display of the widget..
         /// </summary>
         public static string WidgetView_Exception_NoAvailableMonitors {
             get {

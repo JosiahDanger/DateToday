@@ -3,6 +3,6 @@
 namespace DateToday.Models;
 
 [JsonSerializable(typeof(WidgetModelDto))]
-[JsonSerializable(typeof(WindowVertexIdentifier))]
+[JsonSerializable(typeof(CornerIdentifier))]
 [JsonSourceGenerationOptions(WriteIndented = true)]
 internal sealed partial class WidgetModelDtoSerialiserContext : JsonSerializerContext;

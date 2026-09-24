@@ -13,7 +13,7 @@ internal sealed class WidgetModelMutationService
 	{
 		_widgetModel = widgetModel;
 
-		WeakReferenceMessenger.Default.Register<WidgetDraggedMessage>(
+		WeakReferenceMessenger.Default.Register<WidgetPositionUpdatedMessage>(
 			this,
 			(_, message) =>
 			{

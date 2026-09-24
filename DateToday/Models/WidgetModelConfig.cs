@@ -11,7 +11,7 @@ internal sealed record ContentConfig(
 	uint RefreshIntervalSeconds);
 
 internal sealed record PositionConfig(
-	WindowVertexIdentifier AnchoredCorner,
+	CornerIdentifier AnchoredCorner,
 	Point AnchoredCornerLogicalPosition,
 	bool IsMouseDragEnabled);
 

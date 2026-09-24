@@ -1,8 +1,6 @@
-﻿using Avalonia;
+﻿namespace DateToday.Avalonia.Messaging;
 
-namespace DateToday.Avalonia.Messaging;
-
-internal sealed class WidgetDraggedMessage(Point anchoredCornerLogicalPosition)
+internal sealed class MouseDragToggledMessage(bool isMouseDragEnabled)
 {
-	public Point AnchoredCornerLogicalPosition { get; } = anchoredCornerLogicalPosition;
+	public bool IsMouseDragEnabled { get; } = isMouseDragEnabled;
 }

@@ -223,6 +223,9 @@
     <value>icon_settings</value>
   </data>
   <data name="WidgetView_Exception_NoAvailableMonitors" xml:space="preserve">
-    <value>Avalonia reports that zero monitors are available to facilitate display of the widget.</value>
+    <value>The operating system reports that zero monitors are available to facilitate display of the widget.</value>
+  </data>
+  <data name="WidgetView_Exception_CornerIdentifierNotSupported" xml:space="preserve">
+    <value>Homie, I need you to understand that a rectangle cannot have more than four corners.</value>
   </data>
 </root>

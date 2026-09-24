@@ -1,6 +1,6 @@
 ﻿namespace DateToday.Models;
 
-enum WindowVertexIdentifier
+enum CornerIdentifier
 {
 	TopLeft,
 	TopRight,

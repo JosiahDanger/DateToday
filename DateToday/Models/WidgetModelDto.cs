@@ -22,7 +22,7 @@ internal sealed class WidgetModelDto : ISuspensionState
 	public uint RefreshIntervalSeconds { get; set; }
 
 	[JsonPropertyName("anchoredCorner")]
-	public WindowVertexIdentifier AnchoredCorner { get; set; }
+	public CornerIdentifier AnchoredCorner { get; set; }
 
 	[JsonPropertyName("anchoredCornerLogicalPositionX")]
 	public double AnchoredCornerLogicalPositionX { get; set; }
