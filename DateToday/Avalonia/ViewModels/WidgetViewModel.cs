@@ -80,7 +80,7 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	/// </summary>
 	/// <remarks>
 	/// Avalonia measures logical space using a floating-point co-ordinate system, whereas the pixel
-	/// area occupied by the window on the user's monitor exists in physical space.
+	/// area occupied by the WidgetView window on the user's monitor exists in physical space.
 	/// </remarks>
 
 	[ObservableProperty]
