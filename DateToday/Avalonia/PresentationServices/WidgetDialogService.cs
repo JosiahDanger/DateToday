@@ -2,10 +2,11 @@
 using DateToday.Avalonia.Messaging;
 using DateToday.Avalonia.ViewModels;
 using DateToday.Avalonia.Views;
+using DateToday.DomainServices;
 using DateToday.Models;
 using System.Threading.Tasks;
 
-namespace DateToday.Services;
+namespace DateToday.Avalonia.PresentationServices;
 
 internal sealed class WidgetDialogService
 {

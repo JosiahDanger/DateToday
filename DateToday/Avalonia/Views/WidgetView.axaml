@@ -23,7 +23,7 @@
 				Header="{Binding Position.IsMouseDragEnabled, Mode=OneWay, Converter={x:Static conv:WidgetViewConverters.IsMouseDragEnabledToggleLabelConverter}}">
 
 				<MenuItem.Icon>
-					<PathIcon Name="IsMouseDragEnabledToggleIcon" />
+					<PathIcon Data="{Binding MouseDragToggleIcon, Mode=OneWay}" />
 				</MenuItem.Icon>
 
 			</MenuItem>

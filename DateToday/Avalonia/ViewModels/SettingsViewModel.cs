@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using DateToday.Avalonia.Messaging;
-using DateToday.Services;
+using DateToday.DomainServices;
 using DateToday.Utilities;
 
 namespace DateToday.Avalonia.ViewModels;

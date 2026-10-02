@@ -6,7 +6,7 @@ namespace DateToday.Avalonia;
 
 internal sealed class Program
 {
-	private static readonly FontCollection _embeddedFonts = new();
+	private static readonly FontCollection s_embeddedFonts = new();
 
 	/* Initialization code. Don't use any Avalonia, third-party APIs or any
 	 * SynchronizationContext-reliant code before AppMain is called: things aren't initialized yet
@@ -20,6 +20,6 @@ internal sealed class Program
 	public static AppBuilder BuildAvaloniaApp()
 		=> AppBuilder.Configure<App>()
 					 .UsePlatformDetect()
-					 .ConfigureFonts(fontManager => fontManager.AddFontCollection(_embeddedFonts))
+					 .ConfigureFonts(fontManager => fontManager.AddFontCollection(s_embeddedFonts))
 					 .LogToTrace();
 }

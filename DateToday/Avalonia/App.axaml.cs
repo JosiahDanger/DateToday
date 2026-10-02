@@ -3,24 +3,39 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
+using DateToday.Avalonia.PresentationServices;
 using DateToday.Avalonia.Resources;
 using DateToday.Avalonia.ViewModels;
 using DateToday.Avalonia.Views;
+using DateToday.DependencyInjection;
+using DateToday.DomainServices;
 using DateToday.Models;
-using DateToday.Services;
+using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization.Metadata;
 
 namespace DateToday.Avalonia;
 
-internal sealed partial class App : Application
+internal sealed partial class App : Application, IDisposable
 {
+	private ServiceProvider? _services;
 	private bool _isAppShutdownAfoot;
 
 	public override void Initialize()
 	{
 		AvaloniaXamlLoader.Load(this);
 	}
+
+	[SuppressMessage(
+	"IDisposableAnalyzers.IDISP003",
+	"IDISP003",
+	Justification =
+		"""
+			An existing ServiceProvider instance cannot exist already, because
+			OnFrameworkInitializationCompleted() is executed during app initialisation exactly
+			once.
+		""")]
 
 	public override void OnFrameworkInitializationCompleted()
 	{
@@ -29,11 +44,19 @@ internal sealed partial class App : Application
 			(WidgetModel? widgetModel, bool hasDeserialisationSucceeded) =
 				WidgetModelFactory.GetInitialWidgetModel();
 
-			WidgetViewModel widgetViewModel = new(widgetModel);
-			WidgetModelMutationService widgetModelMutationService = new(widgetModel);
+			_services = new ServiceCollection()
+				.AddDomainServices(widgetModel)
+				.AddPresentationServices(this)
+				.BuildServiceProvider();
 
-			WidgetView widgetView = new(widgetViewModel) { DataContext = widgetViewModel };
-			WidgetDialogService widgetDialogService = new(widgetView, widgetModelMutationService);
+			WidgetView widgetView = _services.GetRequiredService<WidgetView>();
+
+			WidgetViewModel widgetViewModel = _services.GetRequiredService<WidgetViewModel>();
+
+			WidgetDialogService widgetDialogService =
+				_services.GetRequiredService<WidgetDialogService>();
+
+			widgetView.DataContext = widgetViewModel;
 
 			async void OnWidgetViewOpened(object? sender, EventArgs e)
 			{
@@ -71,6 +94,7 @@ internal sealed partial class App : Application
 				finally
 				{
 					await Dispatcher.UIThread.InvokeAsync(() => widgetView.Close());
+					this.Dispose();
 				}
 			}
 
@@ -100,5 +124,10 @@ internal sealed partial class App : Application
 		}
 
 		return true;
+	}
+
+	public void Dispose()
+	{
+		_services?.Dispose();
 	}
 }

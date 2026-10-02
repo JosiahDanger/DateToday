@@ -160,6 +160,15 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The GeometryProvider failed to locate StreamGeometry associated with key &apos;{0}&apos;..
+        /// </summary>
+        public static string GeometryProvider_Exception_FailedToLocateRequestedGeometry {
+            get {
+                return ResourceManager.GetString("GeometryProvider_Exception_FailedToLocateRequestedGeometry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to icon_dismiss.
         /// </summary>
         public static string Icons_Key_Dismiss {
@@ -345,15 +354,6 @@ namespace DateToday.Avalonia.Resources {
         public static string WidgetView_Exception_CornerIdentifierNotSupported {
             get {
                 return ResourceManager.GetString("WidgetView_Exception_CornerIdentifierNotSupported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The widget failed to locate a toggle icon corresponding to its next IsMouseDragEnabled state..
-        /// </summary>
-        public static string WidgetView_Exception_FailedToLocateMouseDragToggleIcon {
-            get {
-                return ResourceManager.GetString("WidgetView_Exception_FailedToLocateMouseDragToggleIcon", resourceCulture);
             }
         }
         

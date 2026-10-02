@@ -5,7 +5,7 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
-namespace DateToday.Services;
+namespace DateToday.DomainServices;
 
 /// <summary>
 /// A service capable of loading and saving application state to persistent storage.
@@ -13,7 +13,7 @@ namespace DateToday.Services;
 
 internal static class SuspensionService
 {
-	private static readonly string _filepath =
+	private static readonly string s_filepath =
 		Path.Combine(AppContext.BaseDirectory, Strings.Suspension_Filename_WidgetState);
 
 	/// <summary>
@@ -36,7 +36,7 @@ internal static class SuspensionService
 		try
 		{
 			using FileStream targetFileStream =
-				File.Open(_filepath, FileMode.Create, FileAccess.Write, FileShare.None);
+				File.Open(s_filepath, FileMode.Create, FileAccess.Write, FileShare.None);
 
 			JsonSerializer.Serialize(targetFileStream, state, typeInfo);
 		}
@@ -66,14 +66,14 @@ internal static class SuspensionService
 	{
 		ArgumentNullException.ThrowIfNull(typeInfo);
 
-		if (!File.Exists(_filepath))
+		if (!File.Exists(s_filepath))
 		{
 			return default;
 		}
 
 		try
 		{
-			using FileStream targetFileStream = File.OpenRead(_filepath);
+			using FileStream targetFileStream = File.OpenRead(s_filepath);
 			T? result = JsonSerializer.Deserialize(targetFileStream, typeInfo);
 
 			return result;

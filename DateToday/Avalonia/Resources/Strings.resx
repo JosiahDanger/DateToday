@@ -204,9 +204,6 @@
   <data name="WidgetView_ContextMenu_MenuItem_DisableMouseDrag" xml:space="preserve">
     <value>Prevent Widget Dragging</value>
   </data>
-  <data name="WidgetView_Exception_FailedToLocateMouseDragToggleIcon" xml:space="preserve">
-    <value>The widget failed to locate a toggle icon corresponding to its next IsMouseDragEnabled state.</value>
-  </data>
   <data name="Icons_Key_Dismiss" xml:space="preserve">
     <value>icon_dismiss</value>
   </data>
@@ -227,5 +224,8 @@
   </data>
   <data name="WidgetView_Exception_CornerIdentifierNotSupported" xml:space="preserve">
     <value>Homie, I need you to understand that a rectangle cannot have more than four corners.</value>
+  </data>
+  <data name="GeometryProvider_Exception_FailedToLocateRequestedGeometry" xml:space="preserve">
+    <value>The GeometryProvider failed to locate StreamGeometry associated with key '{0}'.</value>
   </data>
 </root>
