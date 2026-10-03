@@ -133,6 +133,24 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The ServiceProvider has not been instantiated..
+        /// </summary>
+        public static string Application_Exception_ServiceProvider_Null {
+            get {
+                return ResourceManager.GetString("Application_Exception_ServiceProvider_Null", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only the WidgetView may instigate closure of itself..
+        /// </summary>
+        public static string Application_Exception_UnsupportedWidgetViewClosureInstigator {
+            get {
+                return ResourceManager.GetString("Application_Exception_UnsupportedWidgetViewClosureInstigator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to determine the filepath of the app executable..
         /// </summary>
         public static string AppVersionProvider_Exception_ExecutableFilepathNotAvailable {
@@ -210,6 +228,15 @@ namespace DateToday.Avalonia.Resources {
         public static string Icons_Key_Unlock {
             get {
                 return ResourceManager.GetString("Icons_Key_Unlock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The ServiceProvider failed to locate the WidgetDialogService..
+        /// </summary>
+        public static string ServiceProvider_Exception_FailedToLocateWidgetDialogService {
+            get {
+                return ResourceManager.GetString("ServiceProvider_Exception_FailedToLocateWidgetDialogService", resourceCulture);
             }
         }
         

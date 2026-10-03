@@ -15,19 +15,18 @@ namespace DateToday.Avalonia.Views;
 
 /// <summary>
 /// The <see cref="WidgetView" /> code-behind is responsible for updating in physical space the
-/// on-screen position of the WidgetView according to
+/// on-screen position of the WidgetView window according to
 /// <see cref="IPositionController.WindowOriginLogicalPosition" />. It does so with respect to the
-/// operating system scaling factor selected by the user. In addition, the IPositionController is
-/// notified by the code-behind of window-dragging operations conducted on the WidgetView by the
-/// user. The singleton WidgetView persists throughout the entire application lifetime; when it
-/// closes, so too does the application.
+/// configurable per-monitor scaling factor exposed by the operating system. In addition, the
+/// IPositionController is notified by the code-behind of window-dragging operations conducted on
+/// the WidgetView by the user.
 /// </summary>
 /// <remarks>
 /// Avalonia measures logical space using a floating-point co-ordinate system, whereas the pixel
 /// area occupied by the WidgetView window on the user's monitor exists in physical space.
 /// </remarks>
 
-internal sealed partial class WidgetView : Window, IParentScreenWorkingAreaProvider
+internal sealed partial class WidgetView : Window, IParentScreenWorkingAreaProvider, IDisposable
 {
 	private readonly IPositionController _positionController;
 	private Screen? _fallbackParentScreen;
@@ -37,9 +36,10 @@ internal sealed partial class WidgetView : Window, IParentScreenWorkingAreaProvi
 		InitializeComponent();
 
 		_positionController = positionController;
-
-		this.Loaded += OnLoaded;
 		_positionController.PropertyChanged += OnPositionConfigChanged;
+
+		this.Closed += OnClosed;
+		this.Loaded += OnLoaded;
 	}
 
 	/// <summary>
@@ -76,8 +76,15 @@ internal sealed partial class WidgetView : Window, IParentScreenWorkingAreaProvi
 		return parentScreen.WorkingArea.Size.ToSize(this.DesktopScaling);
 	}
 
+	private void OnClosed(object? sender, EventArgs e)
+	{
+		this.Closed -= OnClosed;
+		Dispose();
+	}
+
 	private void OnLoaded(object? sender, RoutedEventArgs e)
 	{
+		this.Loaded -= OnLoaded;
 		_positionController.LoadedCommand.Execute(this.ClientSize);
 
 		this.PointerPressed += OnPointerPressed;
@@ -115,5 +122,18 @@ internal sealed partial class WidgetView : Window, IParentScreenWorkingAreaProvi
 		this.Position =
 			PixelPoint.FromPoint(
 				_positionController.WindowOriginLogicalPosition, this.DesktopScaling);
+	}
+
+	public void Dispose()
+	{
+		this.PointerPressed -= OnPointerPressed;
+		this.PointerMoved -= OnPointerMoved;
+		this.PointerReleased -= OnPointerReleased;
+		this.Screens.Changed -= OnScreensChanged;
+		this.SizeChanged -= OnSizeChanged;
+
+		_positionController.PropertyChanged -= OnPositionConfigChanged;
+
+		WeakReferenceMessenger.Default.Unregister<CloseApplicationMessage>(this);
 	}
 }

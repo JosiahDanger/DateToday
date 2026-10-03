@@ -76,7 +76,7 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	public partial AppConfig App { get; private set; }
 
 	/// <summary>
-	/// Controls the logical position of the window's origin.
+	/// Controls the logical position of the <see cref="WidgetView" /> window's origin.
 	/// </summary>
 	/// <remarks>
 	/// Avalonia measures logical space using a floating-point co-ordinate system, whereas the pixel
@@ -260,7 +260,7 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 
 	/// <summary>
 	/// Calculates and commits to the <see cref="WidgetModel" /> the current logical position of the
-	/// window's anchored corner.
+	/// <see cref="WidgetView" /> window's anchored corner.
 	/// </summary>
 
 	private void UpdateAnchoredCornerLogicalPosition()
@@ -292,8 +292,8 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	}
 
 	/// <summary>
-	/// Adjusts in logical space the current position of the window such that it becomes enclosed
-	/// entirely within its working area.
+	/// Adjusts in logical space the current position of the <see cref="WidgetView" /> window such
+	/// that it becomes enclosed entirely within its working area.
 	/// </summary>
 
 	private void FitWindowToWorkingArea()
