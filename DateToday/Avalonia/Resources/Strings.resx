@@ -228,9 +228,6 @@
   <data name="GeometryProvider_Exception_FailedToLocateRequestedGeometry" xml:space="preserve">
     <value>The GeometryProvider failed to locate StreamGeometry associated with key '{0}'.</value>
   </data>
-  <data name="ServiceProvider_Exception_FailedToLocateWidgetDialogService" xml:space="preserve">
-    <value>The ServiceProvider failed to locate the WidgetDialogService.</value>
-  </data>
   <data name="Application_Exception_ServiceProvider_Null" xml:space="preserve">
     <value>The ServiceProvider has not been instantiated.</value>
   </data>

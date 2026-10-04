@@ -22,7 +22,7 @@ internal sealed partial class App : Application, IDisposable
 {
 	/// <summary>
 	/// The dependency injection container. Instantiated exactly once in
-	/// <see cref="OnFrameworkInitializationCompleted"/>. It remains active throughout the entire
+	/// <see cref="OnFrameworkInitializationCompleted" />. It remains active throughout the entire
 	/// application lifetime.
 	/// </summary>
 
@@ -83,7 +83,7 @@ internal sealed partial class App : Application, IDisposable
 	}
 
 	/// <summary>
-	/// Attempts to serialise the <paramref name="widgetModel"/> to persistent storage.
+	/// Attempts to serialise the <paramref name="widgetModel" /> to persistent storage.
 	/// </summary>
 	/// <returns>
 	/// <c>true</c> if serialisation succeeded; <c>false</c> if serialisation failed.
@@ -120,7 +120,7 @@ internal sealed partial class App : Application, IDisposable
 	/// </summary>
 	/// <remarks>
 	/// This method is executed asynchronously because it must await
-	/// <see cref="WidgetDialogService.ShowAlertAsync"/> and <see cref="Dispatcher.InvokeAsync"/>.
+	/// <see cref="WidgetDialogService.ShowAlertAsync" /> and <see cref="Dispatcher.InvokeAsync" />.
 	/// The alert dialog must be closed via the UI thread before its parent window closes, otherwise
 	/// a runtime error will occur. To ensure the intended chronology of events, closure of the
 	/// <see cref="WidgetView" /> is marshalled back to the UI thread via the Dispatcher. Thus is
@@ -156,13 +156,13 @@ internal sealed partial class App : Application, IDisposable
 	}
 
 	/// <summary>
-	/// Handles the <see cref="WidgetView" /> <see cref="Window.Closing"/> event. Immediately
-	/// prevents window closure and initiates asynchronous cleanup of the application state and
+	/// Handles the <see cref="WidgetView" /> <see cref="Window.Closing" /> event. Immediately
+	/// pauses window closure and initiates asynchronous cleanup of the application state and
 	/// services.
 	/// </summary>
 	/// <remarks>
 	/// Closure of WidgetView is cancelled immediately in order to allow
-	/// <see cref="CleanUpAndCloseAsync"/> to carry out its cleanup and shutdown operations before
+	/// <see cref="CleanUpAndCloseAsync" /> to carry out its cleanup and shutdown operations before
 	/// the application is terminated. This independent asynchronous cleanup task is intentionally
 	/// not awaited; application shutdown will proceed afterwards.
 	/// </remarks>
@@ -196,28 +196,33 @@ internal sealed partial class App : Application, IDisposable
 	}
 
 	/// <summary>
-	/// Handles the <see cref="WidgetView" /> <see cref="Window.Opened"/> event. An alert is
-	/// displayed to the user if prior deserialisation of the application state by
+	/// Handles the <see cref="WidgetView" /> <see cref="Window.Opened" /> event. One of its
+	/// responsibilities is to instantiate the WidgetDialogService. An alert is displayed to the
+	/// user if prior deserialisation of the application state by
 	/// <see cref="OnFrameworkInitializationCompleted" /> was unsuccessful.
 	/// </summary>
+	/// <remarks>
+	/// It is intentional that this event handler is responsible for instantiating the
+	/// <see cref="WidgetDialogService" />. Consider that Avalonia permits modal dialogs to spawn
+	/// only when their parent window is open.
+	/// </remarks>
 	/// <exception cref="InvalidOperationException">
-	/// Thrown if the <see cref="WidgetDialogService"/> cannot be resolved. This would indicate a
-	/// dependency injection configuration error and should not occur during normal operation.
+	/// Thrown if the <see cref="ServiceProvider" /> has not been instantiated. This would indicate
+	/// a dependency injection configuration error and should not occur during normal operation.
 	/// </exception>
 
 	private async void OnWidgetViewOpened(object? sender, EventArgs e)
 	{
+		if (_services == null)
+		{
+			throw new InvalidOperationException(Strings.Application_Exception_ServiceProvider_Null);
+		}
+
+		WidgetDialogService widgetDialogService =
+			_services.GetRequiredService<WidgetDialogService>();
+
 		if (!_hasDeserialisationSucceeded)
 		{
-			WidgetDialogService? widgetDialogServiceOrNull =
-				_services?.GetRequiredService<WidgetDialogService>();
-
-			if (widgetDialogServiceOrNull is not WidgetDialogService widgetDialogService)
-			{
-				throw new InvalidOperationException(
-					Strings.ServiceProvider_Exception_FailedToLocateWidgetDialogService);
-			}
-
 			await widgetDialogService.ShowAlertAsync(
 				AlertFlavour.Warning,
 				Strings.Suspension_Exception_FailedToDeserialiseState_Friendly

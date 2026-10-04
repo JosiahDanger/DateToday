@@ -92,7 +92,7 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	/// <summary>
 	/// A calculated property that returns a string representation of the current date and/or time.
 	/// The string's format is determined by <see cref="DateTimeFormat" /> and
-	/// <see cref="DateTimeCulture"/>.
+	/// <see cref="DateTimeCulture" />.
 	/// </summary>
 	/// <remarks>
 	/// The property's initial value is calculated upon access, and is subsequently updated at
@@ -326,8 +326,8 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	}
 
 	/// <summary>
-	/// Leverages the <see cref="ActionScheduler"/> to create a timer that invokes property change
-	/// notifications for <see cref="DateTimeText"/>.
+	/// Leverages the <see cref="ActionScheduler" /> to create a timer that invokes property change
+	/// notifications for <see cref="DateTimeText" />.
 	/// </summary>
 
 	private void ResetWidgetContentUpdateScheduler()

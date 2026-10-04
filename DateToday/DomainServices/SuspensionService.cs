@@ -22,7 +22,7 @@ internal static class SuspensionService
 	/// <typeparam name="T">The state type.</typeparam>
 	/// <param name="state">The state to persist.</param>
 	/// <param name="typeInfo">
-	/// The source-generated metadata for <typeparamref name="T"/>.
+	/// The source-generated metadata for <typeparamref name="T" />.
 	/// </param>
 	/// <exception cref="InvalidOperationException">
 	/// Thrown if the state cannot be persisted.
@@ -53,7 +53,7 @@ internal static class SuspensionService
 	/// </summary>
 	/// <typeparam name="T">The expected state type.</typeparam>
 	/// <param name="typeInfo">
-	/// The source-generated metadata for <typeparamref name="T"/>.
+	/// The source-generated metadata for <typeparamref name="T" />.
 	/// </param>
 	/// <returns>
 	/// The deserialized application state, or <c>null</c> if no persisted state exists.

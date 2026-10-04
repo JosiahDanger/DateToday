@@ -22,13 +22,13 @@ internal static class ActionScheduler
 	/// An action to perform at the specified interval.
 	/// </param>
 	/// <returns>
-	/// A configured <see cref="System.Threading.Timer"/> that must be disposed of by the caller.
+	/// A configured <see cref="System.Threading.Timer" /> that must be disposed of by the caller.
 	/// </returns>
 	/// <exception cref="NotSupportedException">
-	/// Thrown if no <see cref="SynchronizationContext"/> is available on the current thread.
+	/// Thrown if no <see cref="SynchronizationContext" /> is available on the current thread.
 	/// </exception>
 	/// <exception cref="InvalidOperationException">
-	/// Thrown if <paramref name="refreshIntervalSeconds"/> is zero.
+	/// Thrown if <paramref name="refreshIntervalSeconds" /> is zero.
 	/// </exception>
 
 	public static Timer Create(uint intervalSeconds, Action onTick)

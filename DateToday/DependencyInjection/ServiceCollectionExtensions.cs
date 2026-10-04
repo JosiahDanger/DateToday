@@ -16,7 +16,8 @@ internal static class ServiceCollectionExtensions
 	{
 		collection.AddSingleton(widgetModel);
 
-		collection.AddSingleton<IWidgetModelSnapshot>(sp => sp.GetRequiredService<WidgetModel>());
+		collection.AddSingleton<IWidgetModelSnapshot>(
+			serviceProvider => serviceProvider.GetRequiredService<WidgetModel>());
 
 		collection.AddSingleton<WidgetModelMutationService>();
 
@@ -37,8 +38,8 @@ internal static class ServiceCollectionExtensions
 			serviceProvider => serviceProvider.GetRequiredService<WidgetView>());
 
 		collection.AddSingleton<Lazy<IParentScreenWorkingAreaProvider>>(
-			sp => new Lazy<IParentScreenWorkingAreaProvider>(
-				() => sp.GetRequiredService<WidgetView>()));
+			serviceProvider => new Lazy<IParentScreenWorkingAreaProvider>(
+				() => serviceProvider.GetRequiredService<WidgetView>()));
 
 		collection.AddSingleton<WidgetDialogService>();
 

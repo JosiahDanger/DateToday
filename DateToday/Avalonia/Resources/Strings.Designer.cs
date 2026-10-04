@@ -232,15 +232,6 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The ServiceProvider failed to locate the WidgetDialogService..
-        /// </summary>
-        public static string ServiceProvider_Exception_FailedToLocateWidgetDialogService {
-            get {
-                return ResourceManager.GetString("ServiceProvider_Exception_FailedToLocateWidgetDialogService", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to App.
         /// </summary>
         public static string SettingsView_TabStrip_TabStripItem_AppTabLabel {

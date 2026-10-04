@@ -4,9 +4,9 @@ namespace DateToday.Models;
 
 /// <summary>
 /// WidgetModel is a singleton Model layer responsible for mutation of the desktop widget.
-/// Properties are mutable only through <see cref="WidgetModelMutationService"/>;
-/// <see cref="IWidgetModelSnapshot"/> exposes them for read-only access by the
-/// <see cref="WidgetViewModel"/>.
+/// Properties are mutable only through <see cref="WidgetModelMutationService" />;
+/// <see cref="IWidgetModelSnapshot" /> exposes them for read-only access by the
+/// <see cref="WidgetViewModel" />.
 /// </summary>
 
 internal sealed partial class WidgetModel(

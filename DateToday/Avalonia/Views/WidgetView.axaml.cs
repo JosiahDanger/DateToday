@@ -43,8 +43,8 @@ internal sealed partial class WidgetView : Window, IParentScreenWorkingAreaProvi
 	}
 
 	/// <summary>
-	/// Returns the working area of the <see cref="Screen"/> within which the specified
-	/// <paramref name="enclosedPoint"/> is currently enclosed.
+	/// Returns the working area of the <see cref="Screen" /> within which the specified
+	/// <paramref name="enclosedPoint" /> is currently enclosed.
 	/// </summary>
 	/// <remarks>
 	/// The returned working area might be smaller than the Screen bounds in order to account for
