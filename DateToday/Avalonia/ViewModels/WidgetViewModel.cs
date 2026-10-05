@@ -102,6 +102,13 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	public string? DateTimeText => FormatCurrentDateTime();
 
 	[RelayCommand]
+	private void DoubleTapped()
+	{
+		_isWindowDragAfoot = false;
+		WeakReferenceMessenger.Default.Send(new OpenSettingsViewMessage());
+	}
+
+	[RelayCommand]
 	private void Loaded(Size windowSize)
 	{
 		AnchorSelectedWindowCorner(windowSize);

@@ -82,16 +82,21 @@ internal sealed partial class WidgetView : Window, IParentScreenWorkingAreaProvi
 		Dispose();
 	}
 
+	private void OnDoubleTapped(object? sender, TappedEventArgs e) =>
+		_positionController.DoubleTappedCommand.Execute(null);
+
 	private void OnLoaded(object? sender, RoutedEventArgs e)
 	{
 		this.Loaded -= OnLoaded;
-		_positionController.LoadedCommand.Execute(this.ClientSize);
 
+		this.DoubleTapped += OnDoubleTapped;
 		this.PointerPressed += OnPointerPressed;
 		this.PointerMoved += OnPointerMoved;
 		this.PointerReleased += OnPointerReleased;
 		this.Screens.Changed += OnScreensChanged;
 		this.SizeChanged += OnSizeChanged;
+
+		_positionController.LoadedCommand.Execute(this.ClientSize);
 
 		WeakReferenceMessenger.Default.Register<CloseApplicationMessage>(
 			this, (_, _) => this.Close());
@@ -126,6 +131,7 @@ internal sealed partial class WidgetView : Window, IParentScreenWorkingAreaProvi
 
 	public void Dispose()
 	{
+		this.DoubleTapped -= OnDoubleTapped;
 		this.PointerPressed -= OnPointerPressed;
 		this.PointerMoved -= OnPointerMoved;
 		this.PointerReleased -= OnPointerReleased;

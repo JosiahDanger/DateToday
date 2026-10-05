@@ -8,6 +8,7 @@ internal interface IPositionController : INotifyPropertyChanged
 {
 	Point WindowOriginLogicalPosition { get; }
 
+	IRelayCommand DoubleTappedCommand { get; }
 	IRelayCommand<Size> LoadedCommand { get; }
 	IRelayCommand<Point> PointerPressedCommand { get; }
 	IRelayCommand<Point> PointerMovedCommand { get; }
