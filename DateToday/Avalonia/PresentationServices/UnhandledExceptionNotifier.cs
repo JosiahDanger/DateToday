@@ -11,8 +11,8 @@ namespace DateToday.Avalonia.PresentationServices;
 
 /// <summary>
 /// Notifies the user via an alert dialog of unhandled exceptions arising from either the UI thread
-/// or background asynchronous operations. If an alert dialog cannot be displayed, then Avalonia's
-/// <see cref="ParametrizedLogger" /> is instead used as a fallback.
+/// or from background asynchronous operations. If an alert dialog cannot be displayed, then
+/// Avalonia's <see cref="ParametrizedLogger" /> is instead used as a fallback.
 /// </summary>
 /// <remarks>
 /// This service will not function until <see cref="Initialise" /> is called.
@@ -67,7 +67,7 @@ internal sealed class UnhandledExceptionNotifier: IDisposable
 			return;
 		}
 
-		string unhandledExceptionMessage =
+		string unhandledExceptionMessageFriendly =
 			string.Format(
 				CultureInfo.InvariantCulture,
 				s_unhandledExceptionFormat,
@@ -77,7 +77,7 @@ internal sealed class UnhandledExceptionNotifier: IDisposable
 		_ =
 			_widgetDialogService.ShowAlertAsync(
 				AlertFlavour.Error,
-				unhandledExceptionMessage
+				unhandledExceptionMessageFriendly
 			).ContinueWith(task =>
 			{
 				if (task.IsFaulted)

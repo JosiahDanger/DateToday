@@ -114,9 +114,9 @@ internal sealed partial class App : Application, IDisposable
 	}
 
 	/// <summary>
-	///	CleanUpAndCloseAsync(…) orchestrates the app shutdown sequence, including event
-	///	unsubscription. It attempts to serialise the singleton <see cref="WidgetModel" /> state, and
-	///	if it fails, notifies the user via an alert dialog.
+	///	Orchestrates the app shutdown sequence, including event unsubscription. It attempts to
+	///	serialise the singleton <see cref="WidgetModel" /> state, and if it fails, notifies the user
+	///	via an alert dialog.
 	/// </summary>
 	/// <remarks>
 	/// This method is executed asynchronously because it must await
@@ -147,7 +147,10 @@ internal sealed partial class App : Application, IDisposable
 		}
 		finally
 		{
+			/* Dispose() must be called before the primary application window is closed, otherwise
+			 * it won't be executed. */
 			this.Dispose();
+
 			await Dispatcher.UIThread.InvokeAsync(() => widgetView.Close());
 		}
 	}

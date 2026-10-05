@@ -70,7 +70,7 @@
 				Grid.Column="1"
 				Classes="SettingsInnerBorder">
 
-				<ContentControl Content="{Binding SelectedIndex, ElementName=SettingsNavigator, Mode=OneWay, Converter={x:Static conv:SettingsNavigatorConverters.SettingsNavigatorIndexToViewConverter}}" />
+				<ContentControl Content="{Binding SelectedIndex, ElementName=SettingsNavigator, Mode=OneWay, Converter={x:Static conv:SettingsViewConverters.SettingsNavigatorIndexToViewConverter}}" />
 
 			</Border>
 

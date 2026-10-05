@@ -250,9 +250,6 @@ Please consider raising an Issue.</value>
     <value>Unhandled Exception Notifier</value>
   </data>
   <data name="UnhandledExceptionNotifier_ExceptionArea_AsynchronousOperation" xml:space="preserve">
-    <value>Unobserved Asynchronous Operation</value>
-  </data>
-  <data name="UnhandledExceptionNotifier_ExceptionArea_AppDomain" xml:space="preserve">
-    <value>Synchronous Operation on Background Thread</value>
+    <value>Background Asynchronous Operation</value>
   </data>
 </root>
