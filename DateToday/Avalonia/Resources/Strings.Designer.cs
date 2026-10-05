@@ -331,20 +331,20 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unobserved Asynchronous Operation.
+        ///   Looks up a localized string similar to Synchronous Operation on Background Thread.
         /// </summary>
-        public static string UnhandledExceptionNotifier_ExceptionArea_BackgroundThread_Asynchronous {
+        public static string UnhandledExceptionNotifier_ExceptionArea_AppDomain {
             get {
-                return ResourceManager.GetString("UnhandledExceptionNotifier_ExceptionArea_BackgroundThread_Asynchronous", resourceCulture);
+                return ResourceManager.GetString("UnhandledExceptionNotifier_ExceptionArea_AppDomain", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Synchronous Operation on Background Thread.
+        ///   Looks up a localized string similar to Unobserved Asynchronous Operation.
         /// </summary>
-        public static string UnhandledExceptionNotifier_ExceptionArea_BackgroundThread_Synchronous {
+        public static string UnhandledExceptionNotifier_ExceptionArea_AsynchronousOperation {
             get {
-                return ResourceManager.GetString("UnhandledExceptionNotifier_ExceptionArea_BackgroundThread_Synchronous", resourceCulture);
+                return ResourceManager.GetString("UnhandledExceptionNotifier_ExceptionArea_AsynchronousOperation", resourceCulture);
             }
         }
         

@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using DateToday.Avalonia.Messaging;
-using DateToday.Avalonia.ViewModels;
 using DateToday.Avalonia.Views;
 using DateToday.DomainServices;
 using DateToday.Models;
@@ -14,10 +13,11 @@ internal sealed class WidgetDialogService : IDisposable
 	private readonly WidgetView _widgetView;
 	private readonly WidgetModelMutationService _widgetModelMutationService;
 
-	public WidgetDialogService(WidgetView widgetView, WidgetModelMutationService widgetModelMutator)
+	public WidgetDialogService(
+		WidgetView widgetView, WidgetModelMutationService widgetModelMutationService)
 	{
 		_widgetView = widgetView;
-		_widgetModelMutationService = widgetModelMutator;
+		_widgetModelMutationService = widgetModelMutationService;
 
 		WeakReferenceMessenger.Default.Register<OpenSettingsViewMessage>(
 			this, async (_, _) => await this.ShowSettingsAsync().ConfigureAwait(false));
@@ -30,8 +30,8 @@ internal sealed class WidgetDialogService : IDisposable
 			return;
 		}
 
-		SettingsViewModel settingsViewModel = new(_widgetModelMutationService);
-		SettingsView settingsView = new() { DataContext = settingsViewModel };
+		SettingsView settingsView =
+			SettingsViewFactory.CreateSettingsView(_widgetModelMutationService);
 
 		await settingsView.ShowDialog(_widgetView).ConfigureAwait(false);
 	}
@@ -43,9 +43,7 @@ internal sealed class WidgetDialogService : IDisposable
 			return;
 		}
 
-		AlertModel alertModel = new(flavour, message);
-		AlertViewModel alertViewModel = new(alertModel);
-		AlertView alertView = new() { DataContext = alertViewModel };
+		AlertView alertView = AlertViewFactory.CreateAlertView(flavour, message);
 
 		await alertView.ShowDialog(_widgetView).ConfigureAwait(false);
 	}

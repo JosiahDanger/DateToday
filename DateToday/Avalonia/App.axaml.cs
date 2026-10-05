@@ -193,6 +193,7 @@ internal sealed partial class App : Application, IDisposable
 		e.Cancel = true;
 
 		WidgetModel widgetModel = _services.GetRequiredService<WidgetModel>();
+
 		WidgetDialogService widgetDialogService =
 			_services.GetRequiredService<WidgetDialogService>();
 

@@ -22,10 +22,7 @@ internal sealed class UnhandledExceptionNotifier: IDisposable
 		_userInterfaceThreadExceptionHandler;
 
 	private readonly EventHandler<UnobservedTaskExceptionEventArgs>
-		_backgroundThreadAsynchronousOperationExceptionHandler;
-
-	private readonly UnhandledExceptionEventHandler
-		_backgroundThreadSynchronousOperationExceptionHandler;
+		_asynchronousOperationExceptionHandler;
 
 	public UnhandledExceptionNotifier(WidgetDialogService widgetDialogService)
 	{
@@ -34,11 +31,8 @@ internal sealed class UnhandledExceptionNotifier: IDisposable
 		_userInterfaceThreadExceptionHandler =
 			(_, eventArgs) => OnUserInterfaceThreadUnhandledException(eventArgs);
 
-		_backgroundThreadAsynchronousOperationExceptionHandler =
-			(_, eventArgs) => OnBackgroundThreadAsynchronousOperationUnhandledException(eventArgs);
-
-		_backgroundThreadSynchronousOperationExceptionHandler =
-			(_, eventArgs) => OnBackgroundThreadSynchronousOperationUnhandledException(eventArgs);
+		_asynchronousOperationExceptionHandler =
+			(_, eventArgs) => OnAsynchronousOperationUnhandledException(eventArgs);
 	}
 
 	public UnhandledExceptionNotifier Initialise()
@@ -47,10 +41,7 @@ internal sealed class UnhandledExceptionNotifier: IDisposable
 			_userInterfaceThreadExceptionHandler;
 
 		TaskScheduler.UnobservedTaskException +=
-			_backgroundThreadAsynchronousOperationExceptionHandler;
-
-		AppDomain.CurrentDomain.UnhandledException +=
-			_backgroundThreadSynchronousOperationExceptionHandler;
+			_asynchronousOperationExceptionHandler;
 
 		return this;
 	}
@@ -97,25 +88,14 @@ internal sealed class UnhandledExceptionNotifier: IDisposable
 		eventArgs.Handled = true;
 	}
 
-	private void OnBackgroundThreadAsynchronousOperationUnhandledException(
+	private void OnAsynchronousOperationUnhandledException(
 		UnobservedTaskExceptionEventArgs eventArgs)
 	{
 		NotifyUser(
-			Strings.UnhandledExceptionNotifier_ExceptionArea_BackgroundThread_Asynchronous,
+			Strings.UnhandledExceptionNotifier_ExceptionArea_AsynchronousOperation,
 			eventArgs.Exception);
 
 		eventArgs.SetObserved();
-	}
-
-	private void OnBackgroundThreadSynchronousOperationUnhandledException(
-		UnhandledExceptionEventArgs eventArgs)
-	{
-		if (eventArgs.ExceptionObject is Exception exception)
-		{
-			NotifyUser(
-				Strings.UnhandledExceptionNotifier_ExceptionArea_BackgroundThread_Synchronous,
-				exception);
-		}
 	}
 
 	public void Dispose()
@@ -131,9 +111,6 @@ internal sealed class UnhandledExceptionNotifier: IDisposable
 			_userInterfaceThreadExceptionHandler;
 
 		TaskScheduler.UnobservedTaskException -=
-			_backgroundThreadAsynchronousOperationExceptionHandler;
-
-		AppDomain.CurrentDomain.UnhandledException -=
-			_backgroundThreadSynchronousOperationExceptionHandler;
+			_asynchronousOperationExceptionHandler;
 	}
 }
