@@ -9,6 +9,15 @@ using System.Threading.Tasks;
 
 namespace DateToday.Avalonia.PresentationServices;
 
+/// <summary>
+/// Notifies the user via an alert dialog of unhandled exceptions arising from either the UI thread
+/// or background asynchronous operations. If an alert dialog cannot be displayed, then Avalonia's
+/// <see cref="ParametrizedLogger" /> is instead used as a fallback.
+/// </summary>
+/// <remarks>
+/// This service will not function until <see cref="Initialise" /> is called.
+/// </remarks>
+
 internal sealed class UnhandledExceptionNotifier: IDisposable
 {
 	private static readonly CompositeFormat s_unhandledExceptionFormat =
@@ -34,6 +43,11 @@ internal sealed class UnhandledExceptionNotifier: IDisposable
 		_asynchronousOperationExceptionHandler =
 			(_, eventArgs) => OnAsynchronousOperationUnhandledException(eventArgs);
 	}
+
+	/// <summary>
+	/// Subscribes to exception events. This method is intended to be called during application
+	/// startup.
+	/// </summary>
 
 	public UnhandledExceptionNotifier Initialise()
 	{
@@ -107,10 +121,8 @@ internal sealed class UnhandledExceptionNotifier: IDisposable
 
 		_isDisposed = true;
 
-		Dispatcher.UIThread.UnhandledException -=
-			_userInterfaceThreadExceptionHandler;
+		Dispatcher.UIThread.UnhandledException -= _userInterfaceThreadExceptionHandler;
 
-		TaskScheduler.UnobservedTaskException -=
-			_asynchronousOperationExceptionHandler;
+		TaskScheduler.UnobservedTaskException -= _asynchronousOperationExceptionHandler;
 	}
 }
