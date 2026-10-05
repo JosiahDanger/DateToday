@@ -4,11 +4,12 @@ using DateToday.Avalonia.ViewModels;
 using DateToday.Avalonia.Views;
 using DateToday.DomainServices;
 using DateToday.Models;
+using System;
 using System.Threading.Tasks;
 
 namespace DateToday.Avalonia.PresentationServices;
 
-internal sealed class WidgetDialogService
+internal sealed class WidgetDialogService : IDisposable
 {
 	private readonly WidgetView _widgetView;
 	private readonly WidgetModelMutationService _widgetModelMutationService;
@@ -24,6 +25,11 @@ internal sealed class WidgetDialogService
 
 	public async Task ShowSettingsAsync()
 	{
+		if (!_widgetView.IsVisible)
+		{
+			return;
+		}
+
 		SettingsViewModel settingsViewModel = new(_widgetModelMutationService);
 		SettingsView settingsView = new() { DataContext = settingsViewModel };
 
@@ -32,10 +38,20 @@ internal sealed class WidgetDialogService
 
 	public async Task ShowAlertAsync(AlertFlavour flavour, string message)
 	{
+		if (!_widgetView.IsVisible)
+		{
+			return;
+		}
+
 		AlertModel alertModel = new(flavour, message);
 		AlertViewModel alertViewModel = new(alertModel);
 		AlertView alertView = new() { DataContext = alertViewModel };
 
 		await alertView.ShowDialog(_widgetView).ConfigureAwait(false);
+	}
+
+	public void Dispose()
+	{
+		WeakReferenceMessenger.Default.Unregister<OpenSettingsViewMessage>(this);
 	}
 }

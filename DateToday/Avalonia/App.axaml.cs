@@ -27,7 +27,7 @@ internal sealed partial class App : Application, IDisposable
 	/// </summary>
 
 	private ServiceProvider? _services;
-	private bool _hasDeserialisationSucceeded;
+	private bool _hasDeserialisationSucceeded, _isAppShutdownAfoot;
 
 	public override void Initialize()
 	{
@@ -124,10 +124,7 @@ internal sealed partial class App : Application, IDisposable
 	/// The alert dialog must be closed via the UI thread before its parent window closes, otherwise
 	/// a runtime error will occur. To ensure the intended chronology of events, closure of the
 	/// <see cref="WidgetView" /> is marshalled back to the UI thread via the Dispatcher. Thus is
-	/// satisfied Avalonia's requirement that windows are closed on the UI thread. Finally, note
-	/// that the method's unsubscription from <see cref="Window.Closing" /> is absolutely necessary
-	/// in order to prevent unintended UI behaviour in the event that the WidgetModel state could
-	/// not be persisted.
+	/// satisfied Avalonia's requirement that windows are closed on the UI thread.
 	/// </remarks>
 
 	private async Task CleanUpAndCloseAsync(
@@ -150,8 +147,8 @@ internal sealed partial class App : Application, IDisposable
 		}
 		finally
 		{
-			await Dispatcher.UIThread.InvokeAsync(() => widgetView.Close());
 			this.Dispose();
+			await Dispatcher.UIThread.InvokeAsync(() => widgetView.Close());
 		}
 	}
 
@@ -175,6 +172,13 @@ internal sealed partial class App : Application, IDisposable
 
 	private void OnWidgetViewClosing(object? sender, WindowClosingEventArgs e)
 	{
+		if (_isAppShutdownAfoot)
+		{
+			return;
+		}
+
+		_isAppShutdownAfoot = true;
+
 		if (_services == null)
 		{
 			throw new InvalidOperationException(Strings.Application_Exception_ServiceProvider_Null);
@@ -196,15 +200,18 @@ internal sealed partial class App : Application, IDisposable
 	}
 
 	/// <summary>
-	/// Handles the <see cref="WidgetView" /> <see cref="Window.Opened" /> event. One of its
-	/// responsibilities is to instantiate the WidgetDialogService. An alert is displayed to the
-	/// user if prior deserialisation of the application state by
+	/// Handles the <see cref="WidgetView" /> <see cref="Window.Opened" /> event. Its
+	/// responsibilities include instantiation of the <see cref="WidgetDialogService" /> and
+	/// <see cref="UnhandledExceptionNotifier" />. An alert is displayed to the user if prior
+	/// deserialisation of the application state by
 	/// <see cref="OnFrameworkInitializationCompleted" /> was unsuccessful.
 	/// </summary>
 	/// <remarks>
 	/// It is intentional that this event handler is responsible for instantiating the
-	/// <see cref="WidgetDialogService" />. Consider that Avalonia permits modal dialogs to spawn
-	/// only when their parent window is open.
+	/// WidgetDialogService. Consider that Avalonia permits modal dialogs to spawn only when their
+	/// parent window is open. Furthermore, since the UnhandledExceptionNotifier is itself dependent
+	/// on the WidgetDialogService, it too is instantiated immediately afterwards. Thus is minimised
+	/// the period of vulnerability during which no exception handler is active.
 	/// </remarks>
 	/// <exception cref="InvalidOperationException">
 	/// Thrown if the <see cref="ServiceProvider" /> has not been instantiated. This would indicate
@@ -220,6 +227,9 @@ internal sealed partial class App : Application, IDisposable
 
 		WidgetDialogService widgetDialogService =
 			_services.GetRequiredService<WidgetDialogService>();
+
+		// Force instantiation of the UnhandledExceptionNotifier.
+		_ = _services.GetRequiredService<UnhandledExceptionNotifier>();
 
 		if (!_hasDeserialisationSucceeded)
 		{

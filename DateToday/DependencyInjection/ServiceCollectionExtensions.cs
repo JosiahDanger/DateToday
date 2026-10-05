@@ -45,6 +45,12 @@ internal static class ServiceCollectionExtensions
 
 		collection.AddSingleton(new GeometryProvider(application));
 
+		collection.AddSingleton<UnhandledExceptionNotifier>(
+			serviceProvider =>
+				ActivatorUtilities.CreateInstance<UnhandledExceptionNotifier>(
+					serviceProvider
+				).Initialise());
+
 		return collection;
 	}
 }

@@ -46,7 +46,6 @@
 		<Setter Property="CanMinimize" Value="False" />
 		<Setter Property="CanResize" Value="False" />
 		<Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
-		<Setter Property="MaxHeight" Value="400" />
 		<Setter Property="ShowInTaskbar" Value="True" />
 		<Setter Property="SizeToContent" Value="Height" />
 		<Setter Property="Width" Value="450" />
@@ -78,7 +77,7 @@
 		<Setter Property="Background" Value="{DynamicResource SystemControlBackgroundAltMediumHighBrush}" />
 		<Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
 		<Setter Property="Margin" Value="25" />
-		<Setter Property="MaxHeight" Value="150" />
+		<Setter Property="MaxHeight" Value="175" />
 		<Setter Property="Width" Value="350" />
 		<Setter Property="WindowDecorationProperties.ElementRole" Value="None" />
 	</Style>

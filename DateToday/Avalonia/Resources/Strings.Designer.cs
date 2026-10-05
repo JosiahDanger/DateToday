@@ -331,6 +331,57 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unobserved Asynchronous Operation.
+        /// </summary>
+        public static string UnhandledExceptionNotifier_ExceptionArea_BackgroundThread_Asynchronous {
+            get {
+                return ResourceManager.GetString("UnhandledExceptionNotifier_ExceptionArea_BackgroundThread_Asynchronous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Synchronous Operation on Background Thread.
+        /// </summary>
+        public static string UnhandledExceptionNotifier_ExceptionArea_BackgroundThread_Synchronous {
+            get {
+                return ResourceManager.GetString("UnhandledExceptionNotifier_ExceptionArea_BackgroundThread_Synchronous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UI Thread.
+        /// </summary>
+        public static string UnhandledExceptionNotifier_ExceptionArea_UserInterfaceThread {
+            get {
+                return ResourceManager.GetString("UnhandledExceptionNotifier_ExceptionArea_UserInterfaceThread", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unhandled Exception Notifier.
+        /// </summary>
+        public static string UnhandledExceptionNotifier_Logger_LogSource {
+            get {
+                return ResourceManager.GetString("UnhandledExceptionNotifier_Logger_LogSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An unhandled exception has occurred in Area: 
+        ///{0}
+        ///
+        ///Exception message: 
+        ///{1}
+        ///
+        ///Please consider raising an Issue..
+        /// </summary>
+        public static string UnhandledExceptionNotifier_MessageTemplate {
+            get {
+                return ResourceManager.GetString("UnhandledExceptionNotifier_MessageTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Prevent Widget Dragging.
         /// </summary>
         public static string WidgetView_ContextMenu_MenuItem_DisableMouseDrag {

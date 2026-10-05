@@ -234,4 +234,25 @@
   <data name="Application_Exception_UnsupportedWidgetViewClosureInstigator" xml:space="preserve">
     <value>Only the WidgetView may instigate closure of itself.</value>
   </data>
+  <data name="UnhandledExceptionNotifier_MessageTemplate" xml:space="preserve">
+    <value>An unhandled exception has occurred in Area: 
+{0}
+
+Exception message: 
+{1}
+
+Please consider raising an Issue.</value>
+  </data>
+  <data name="UnhandledExceptionNotifier_ExceptionArea_UserInterfaceThread" xml:space="preserve">
+    <value>UI Thread</value>
+  </data>
+  <data name="UnhandledExceptionNotifier_Logger_LogSource" xml:space="preserve">
+    <value>Unhandled Exception Notifier</value>
+  </data>
+  <data name="UnhandledExceptionNotifier_ExceptionArea_BackgroundThread_Asynchronous" xml:space="preserve">
+    <value>Unobserved Asynchronous Operation</value>
+  </data>
+  <data name="UnhandledExceptionNotifier_ExceptionArea_BackgroundThread_Synchronous" xml:space="preserve">
+    <value>Synchronous Operation on Background Thread</value>
+  </data>
 </root>
