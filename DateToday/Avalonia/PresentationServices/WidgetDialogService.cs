@@ -11,12 +11,16 @@ namespace DateToday.Avalonia.PresentationServices;
 internal sealed class WidgetDialogService : IDisposable
 {
 	private readonly WidgetView _widgetView;
+	private readonly IWidgetModelSnapshot _widgetModelSnapshot;
 	private readonly WidgetModelMutationService _widgetModelMutationService;
 
 	public WidgetDialogService(
-		WidgetView widgetView, WidgetModelMutationService widgetModelMutationService)
+		WidgetView widgetView,
+		IWidgetModelSnapshot widgetModelSnapshot,
+		WidgetModelMutationService widgetModelMutationService)
 	{
 		_widgetView = widgetView;
+		_widgetModelSnapshot = widgetModelSnapshot;
 		_widgetModelMutationService = widgetModelMutationService;
 
 		WeakReferenceMessenger.Default.Register<OpenSettingsViewMessage>(
@@ -31,7 +35,8 @@ internal sealed class WidgetDialogService : IDisposable
 		}
 
 		SettingsView settingsView =
-			SettingsViewFactory.CreateSettingsView(_widgetModelMutationService);
+			SettingsViewFactory.CreateSettingsView(
+				_widgetModelSnapshot, _widgetModelMutationService);
 
 		await settingsView.ShowDialog(_widgetView).ConfigureAwait(false);
 	}

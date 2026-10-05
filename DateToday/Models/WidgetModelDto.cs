@@ -45,14 +45,17 @@ internal sealed class WidgetModelDto : ISuspensionState
 	[JsonPropertyName("fontRenderingMode")]
 	public TextRenderingMode FontRenderingMode { get; set; }
 
-	[JsonPropertyName("customFontColour")]
-	public uint? CustomFontColour { get; set; }
+	[JsonPropertyName("fontColour")]
+	public uint? FontColour { get; set; }
 
-	[JsonPropertyName("customDropShadowColour")]
-	public uint? CustomDropShadowColour { get; set; }
+	[JsonPropertyName("dropShadowColour")]
+	public uint? DropShadowColour { get; set; }
 
 	[JsonPropertyName("appCultureIdentifier")]
 	public required string AppCultureIdentifier { get; set; }
+
+	[JsonPropertyName("requestedTheme")]
+	public required ThemePreference RequestedTheme { get; set; }
 
 	public WidgetModel ToModel()
 	{
@@ -64,13 +67,13 @@ internal sealed class WidgetModelDto : ISuspensionState
 
 		FontWeight fontWeight = (FontWeight)FontWeight;
 
-		Color? customFontColour =
-			CustomFontColour.HasValue ?
-			Color.FromUInt32(CustomFontColour.Value) : null;
+		Color? fontColour =
+			FontColour.HasValue ?
+			Color.FromUInt32(FontColour.Value) : null;
 
-		Color? customDropShadowColour =
-			CustomDropShadowColour.HasValue ?
-			Color.FromUInt32(CustomDropShadowColour.Value) : null;
+		Color? dropShadowColour =
+			DropShadowColour.HasValue ?
+			Color.FromUInt32(DropShadowColour.Value) : null;
 
 		CultureInfo appCulture = new(AppCultureIdentifier);
 
@@ -92,11 +95,12 @@ internal sealed class WidgetModelDto : ISuspensionState
 					FontSize,
 					fontWeight,
 					FontRenderingMode,
-					customFontColour,
-					customDropShadowColour),
+					fontColour,
+					dropShadowColour),
 
 			new AppConfig(
-					appCulture));
+					appCulture,
+					RequestedTheme));
 	}
 
 	public static WidgetModelDto FromModel(WidgetModel model)
@@ -117,10 +121,11 @@ internal sealed class WidgetModelDto : ISuspensionState
 			FontSize = model.Font.FontSize,
 			FontWeight = (int)model.Font.FontWeight,
 			FontRenderingMode = model.Font.FontRenderingMode,
-			CustomFontColour = model.Font.CustomFontColour?.ToUInt32(),
-			CustomDropShadowColour = model.Font.CustomDropShadowColour?.ToUInt32(),
+			FontColour = model.Font.FontColour?.ToUInt32(),
+			DropShadowColour = model.Font.DropShadowColour?.ToUInt32(),
 
-			AppCultureIdentifier = model.App.AppCulture.Name
+			AppCultureIdentifier = model.App.AppCulture.Name,
+			RequestedTheme = model.App.RequestedTheme
 		};
 	}
 }

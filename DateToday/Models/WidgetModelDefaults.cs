@@ -24,10 +24,11 @@ internal static class WidgetModelDefaults
 			FontSize: 70,
 			FontWeight: FontWeight.Normal,
 			FontRenderingMode: TextRenderingMode.Unspecified,
-			CustomFontColour: null,
-			CustomDropShadowColour: null);
+			FontColour: null,
+			DropShadowColour: null);
 
 	public static AppConfig DefaultAppConfig =>
 		new(
-			AppCulture: CultureInfo.CurrentUICulture);
+			AppCulture: CultureInfo.CurrentUICulture,
+			RequestedTheme: ThemePreference.Automatic);
 }

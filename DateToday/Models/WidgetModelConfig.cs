@@ -20,8 +20,9 @@ internal sealed record FontConfig(
 	int FontSize,
 	FontWeight FontWeight,
 	TextRenderingMode FontRenderingMode,
-	Color? CustomFontColour,
-	Color? CustomDropShadowColour);
+	Color? FontColour,
+	Color? DropShadowColour);
 
 internal sealed record AppConfig(
-	CultureInfo AppCulture);
+	CultureInfo AppCulture,
+	ThemePreference RequestedTheme);
