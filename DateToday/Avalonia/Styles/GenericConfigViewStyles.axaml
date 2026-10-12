@@ -1,0 +1,35 @@
+<Styles
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<Design.PreviewWith>
+
+		<Border Padding="20">
+			<!--  Add Controls for Previewer Here  -->
+		</Border>
+
+	</Design.PreviewWith>
+
+	<!--  Add Styles Here  -->
+
+	<Style Selector="Grid.ConfigViewOuterGrid">
+		<Setter Property="Margin" Value="0 20 20 20" />
+		<Setter Property="RowSpacing" Value="17.5" />
+		<Setter Property="VerticalAlignment" Value="Top" />
+	</Style>
+
+	<Style Selector="TextBlock.FieldLabel">
+		<Setter Property="FontFamily" Value="fonts:FontCollection#Jost*" />
+		<Setter Property="FontSize" Value="15" />
+		<Setter Property="FontWeight" Value="Light" />
+		<Setter Property="Margin" Value="20 0 10 0" />
+		<Setter Property="TextAlignment" Value="Right" />
+		<Setter Property="VerticalAlignment" Value="Center" />
+	</Style>
+
+	<Style Selector="ToggleSwitch.ToggleSwitch">
+		<Setter Property="OffContent" Value="" />
+		<Setter Property="OnContent" Value="" />
+	</Style>
+
+</Styles>

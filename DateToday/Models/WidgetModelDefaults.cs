@@ -9,7 +9,7 @@ internal static class WidgetModelDefaults
 		new(
 			DateTimeFormat: "dddd, \"the\" d \"of\" MMMM",
 			DateTimeCulture: CultureInfo.CurrentCulture,
-			OrdinalDaySuffixPosition: 13,
+			IsOrdinalDaySuffixEnabled: false,
 			RefreshIntervalSeconds: 60);
 
 	public static PositionConfig DefaultPositionConfig =>
@@ -23,6 +23,7 @@ internal static class WidgetModelDefaults
 			FontFamily: FontFamily.Default,
 			FontSize: 70,
 			FontWeight: FontWeight.Normal,
+			TextAlignment: TextAlignment.Center,
 			FontRenderingMode: TextRenderingMode.Unspecified,
 			FontColour: null,
 			DropShadowColour: null);

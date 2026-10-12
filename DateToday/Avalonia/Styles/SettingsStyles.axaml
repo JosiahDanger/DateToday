@@ -8,7 +8,7 @@
 
 		<Border
 			Width="600"
-			Height="400"
+			Height="300"
 			Classes="SettingsOuterBorder">
 
 			<Grid
@@ -25,7 +25,7 @@
 					<Grid
 						Classes="SettingsOuterNavigationGrid"
 						ColumnDefinitions="Auto"
-						RowDefinitions="365, Auto">
+						RowDefinitions="*, Auto">
 
 						<TabStrip
 							Grid.Row="0"
@@ -98,7 +98,7 @@
 		<Setter Property="CanMinimize" Value="False" />
 		<Setter Property="CanResize" Value="True" />
 		<Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
-		<Setter Property="Height" Value="400" />
+		<Setter Property="MaxHeight" Value="340" />
 		<Setter Property="MaxWidth" Value="800" />
 		<Setter Property="MinWidth" Value="600" />
 		<Setter Property="ShowInTaskbar" Value="True" />
@@ -138,10 +138,6 @@
 		<Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
 	</Style>
 
-	<Style Selector="Grid.SettingsOuterNavigationGrid">
-		<!--  Placeholder  -->
-	</Style>
-
 	<Style Selector="TabStrip.SettingsNavigator">
 		<Setter Property="ItemsPanel">
 			<ItemsPanelTemplate>
@@ -171,9 +167,10 @@
 
 	<Style Selector="TextBlock.AppVersion">
 		<Setter Property="FontFamily" Value="fonts:FontCollection#Drafting* Mono" />
-		<Setter Property="FontSize" Value="8" />
+		<Setter Property="FontSize" Value="9" />
 		<Setter Property="FontWeight" Value="ExtraLight" />
 		<Setter Property="HorizontalAlignment" Value="Center" />
+		<Setter Property="Margin" Value="0 0 0 5" />
 		<Setter Property="TextAlignment" Value="Center" />
 	</Style>
 

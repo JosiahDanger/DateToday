@@ -15,8 +15,8 @@ internal sealed class WidgetModelDto : ISuspensionState
 	[JsonPropertyName("dateTimeCultureIdentifier")]
 	public required string DateTimeCultureIdentifier { get; set; }
 
-	[JsonPropertyName("ordinalDaySuffixPosition")]
-	public byte? OrdinalDaySuffixPosition { get; set; }
+	[JsonPropertyName("isOrdinalDaySuffixEnabled")]
+	public bool IsOrdinalDaySuffixEnabled { get; set; }
 
 	[JsonPropertyName("refreshIntervalSeconds")]
 	public uint RefreshIntervalSeconds { get; set; }
@@ -41,6 +41,9 @@ internal sealed class WidgetModelDto : ISuspensionState
 
 	[JsonPropertyName("fontWeight")]
 	public int FontWeight { get; set; }
+
+	[JsonPropertyName("textAlignment")]
+	public TextAlignment TextAlignment { get; set; }
 
 	[JsonPropertyName("fontRenderingMode")]
 	public TextRenderingMode FontRenderingMode { get; set; }
@@ -82,7 +85,7 @@ internal sealed class WidgetModelDto : ISuspensionState
 			new ContentConfig(
 					DateTimeFormat,
 					dateTimeCulture,
-					OrdinalDaySuffixPosition,
+					IsOrdinalDaySuffixEnabled,
 					RefreshIntervalSeconds),
 
 			new PositionConfig(
@@ -94,6 +97,7 @@ internal sealed class WidgetModelDto : ISuspensionState
 					fontFamily,
 					FontSize,
 					fontWeight,
+					TextAlignment,
 					FontRenderingMode,
 					fontColour,
 					dropShadowColour),
@@ -109,7 +113,7 @@ internal sealed class WidgetModelDto : ISuspensionState
 		{
 			DateTimeFormat = model.Content.DateTimeFormat,
 			DateTimeCultureIdentifier = model.Content.DateTimeCulture.Name,
-			OrdinalDaySuffixPosition = model.Content.OrdinalDaySuffixPosition,
+			IsOrdinalDaySuffixEnabled = model.Content.IsOrdinalDaySuffixEnabled,
 			RefreshIntervalSeconds = model.Content.RefreshIntervalSeconds,
 
 			AnchoredCorner = model.Position.AnchoredCorner,
@@ -120,6 +124,7 @@ internal sealed class WidgetModelDto : ISuspensionState
 			FontFamilyName = model.Font.FontFamily.Name,
 			FontSize = model.Font.FontSize,
 			FontWeight = (int)model.Font.FontWeight,
+			TextAlignment = model.Font.TextAlignment,
 			FontRenderingMode = model.Font.FontRenderingMode,
 			FontColour = model.Font.FontColour?.ToUInt32(),
 			DropShadowColour = model.Font.DropShadowColour?.ToUInt32(),

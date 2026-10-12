@@ -7,7 +7,7 @@ namespace DateToday.Models;
 internal sealed record ContentConfig(
 	string DateTimeFormat,
 	CultureInfo DateTimeCulture,
-	byte? OrdinalDaySuffixPosition,
+	bool IsOrdinalDaySuffixEnabled,
 	uint RefreshIntervalSeconds);
 
 internal sealed record PositionConfig(
@@ -19,6 +19,7 @@ internal sealed record FontConfig(
 	FontFamily FontFamily,
 	int FontSize,
 	FontWeight FontWeight,
+	TextAlignment TextAlignment,
 	TextRenderingMode FontRenderingMode,
 	Color? FontColour,
 	Color? DropShadowColour);

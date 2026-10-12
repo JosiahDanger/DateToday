@@ -178,6 +178,60 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Documentation: &apos;Custom date and time format strings&apos;.
+        /// </summary>
+        public static string ContentConfigView_HyperlinkButton_DateTimeFormatField_Documentation_Content {
+            get {
+                return ResourceManager.GetString("ContentConfigView_HyperlinkButton_DateTimeFormatField_Documentation_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://learn.microsoft.com/dotnet/standard/base-types/custom-date-and-time-format-strings.
+        /// </summary>
+        public static string ContentConfigView_HyperlinkButton_DateTimeFormatField_Documentation_NavigateUri {
+            get {
+                return ResourceManager.GetString("ContentConfigView_HyperlinkButton_DateTimeFormatField_Documentation_NavigateUri", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Date / time format:.
+        /// </summary>
+        public static string ContentConfigView_TextBlock_DateTimeFormatField_Label {
+            get {
+                return ResourceManager.GetString("ContentConfigView_TextBlock_DateTimeFormatField_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locale:.
+        /// </summary>
+        public static string ContentConfigView_TextBlock_LocaleSelector_Label {
+            get {
+                return ResourceManager.GetString("ContentConfigView_TextBlock_LocaleSelector_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ordinal day suffix:.
+        /// </summary>
+        public static string ContentConfigView_TextBlock_OrdinalDaySuffixToggle_Label {
+            get {
+                return ResourceManager.GetString("ContentConfigView_TextBlock_OrdinalDaySuffixToggle_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh interval:.
+        /// </summary>
+        public static string ContentConfigView_TextBlock_RefreshIntervalInput_Label {
+            get {
+                return ResourceManager.GetString("ContentConfigView_TextBlock_RefreshIntervalInput_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The GeometryProvider failed to locate StreamGeometry associated with key &apos;{0}&apos;..
         /// </summary>
         public static string GeometryProvider_Exception_FailedToLocateRequestedGeometry {
@@ -234,36 +288,36 @@ namespace DateToday.Avalonia.Resources {
         /// <summary>
         ///   Looks up a localized string similar to App.
         /// </summary>
-        public static string SettingsView_TabStrip_TabStripItem_AppTabLabel {
+        public static string SettingsView_TabStrip_TabStripItem_AppTab_Header {
             get {
-                return ResourceManager.GetString("SettingsView_TabStrip_TabStripItem_AppTabLabel", resourceCulture);
+                return ResourceManager.GetString("SettingsView_TabStrip_TabStripItem_AppTab_Header", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Content.
         /// </summary>
-        public static string SettingsView_TabStrip_TabStripItem_ContentTabLabel {
+        public static string SettingsView_TabStrip_TabStripItem_ContentTab_Header {
             get {
-                return ResourceManager.GetString("SettingsView_TabStrip_TabStripItem_ContentTabLabel", resourceCulture);
+                return ResourceManager.GetString("SettingsView_TabStrip_TabStripItem_ContentTab_Header", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Font.
         /// </summary>
-        public static string SettingsView_TabStrip_TabStripItem_FontTabLabel {
+        public static string SettingsView_TabStrip_TabStripItem_FontTab_Header {
             get {
-                return ResourceManager.GetString("SettingsView_TabStrip_TabStripItem_FontTabLabel", resourceCulture);
+                return ResourceManager.GetString("SettingsView_TabStrip_TabStripItem_FontTab_Header", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Position.
         /// </summary>
-        public static string SettingsView_TabStrip_TabStripItem_PositionTabLabel {
+        public static string SettingsView_TabStrip_TabStripItem_PositionTab_Header {
             get {
-                return ResourceManager.GetString("SettingsView_TabStrip_TabStripItem_PositionTabLabel", resourceCulture);
+                return ResourceManager.GetString("SettingsView_TabStrip_TabStripItem_PositionTab_Header", resourceCulture);
             }
         }
         
@@ -418,7 +472,7 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The operating system reports that zero monitors are available to facilitate display of the widget..
+        ///   Looks up a localized string similar to The operating system reports that zero monitors are available..
         /// </summary>
         public static string WidgetView_Exception_NoAvailableMonitors {
             get {
@@ -432,24 +486,6 @@ namespace DateToday.Avalonia.Resources {
         public static string WidgetView_Window_Title {
             get {
                 return ResourceManager.GetString("WidgetView_Window_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The value of OrdinalDaySuffixPosition must be positive..
-        /// </summary>
-        public static string WidgetViewModel_Exception_OrdinalDaySuffixPosition_Negative {
-            get {
-                return ResourceManager.GetString("WidgetViewModel_Exception_OrdinalDaySuffixPosition_Negative", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The value of OrdinalDaySuffixPosition exceeds the length of DateTimeFormat..
-        /// </summary>
-        public static string WidgetViewModel_Exception_OrdinalDaySuffixPosition_OutOfRange {
-            get {
-                return ResourceManager.GetString("WidgetViewModel_Exception_OrdinalDaySuffixPosition_OutOfRange", resourceCulture);
             }
         }
     }

@@ -188,54 +188,44 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 
 	private string FormatCurrentDateTime()
 	{
-		static string GetOrdinalDaySuffix(int ordinalDayOfMonth) =>
-			ordinalDayOfMonth switch
-			{
-				1 or 21 or 31 => "st",
-				2 or 22 => "nd",
-				3 or 23 => "rd",
-				_ => "th",
-			};
+		//static string GetOrdinalDaySuffix(int ordinalDayOfMonth) =>
+		//	ordinalDayOfMonth switch
+		//	{
+		//		1 or 21 or 31 => "st",
+		//		2 or 22 => "nd",
+		//		3 or 23 => "rd",
+		//		_ => "th",
+		//	};
 
 		DateTime currentDateTime = DateTime.Now;
 
-		if (Content.OrdinalDaySuffixPosition == null)
-		{
-			return currentDateTime.ToString(Content.DateTimeFormat, Content.DateTimeCulture);
-		}
+		return currentDateTime.ToString(Content.DateTimeFormat, Content.DateTimeCulture);
 
-		if (Content.OrdinalDaySuffixPosition < 0)
-		{
-			throw new InvalidOperationException(
-				Strings.WidgetViewModel_Exception_OrdinalDaySuffixPosition_Negative);
-		}
-
-		if (Content.OrdinalDaySuffixPosition > Content.DateTimeFormat.Length)
-		{
-			throw new InvalidOperationException(
-				Strings.WidgetViewModel_Exception_OrdinalDaySuffixPosition_OutOfRange);
-		}
+		//if (!Content.IsOrdinalDaySuffixEnabled)
+		//{
+		//	return currentDateTime.ToString(Content.DateTimeFormat, Content.DateTimeCulture);
+		//}
 
 		/* This code makes use of .NET composite formatting.
 		 *
 		 * See the following Microsoft Learn article:
 		 * https://learn.microsoft.com/dotnet/standard/base-types/composite-formatting */
 
-		int ordinalDayOfMonth = currentDateTime.Day;
-		string ordinalDaySuffix = GetOrdinalDaySuffix(ordinalDayOfMonth);
+		//int ordinalDayOfMonth = currentDateTime.Day;
+		//string ordinalDaySuffix = GetOrdinalDaySuffix(ordinalDayOfMonth);
 
-		string dateTimeFormatIncludingSuffixPlaceholder =
-			Content.DateTimeFormat.Insert((int)Content.OrdinalDaySuffixPosition, "{0}");
+		//string dateTimeFormatIncludingSuffixPlaceholder =
+		//	Content.DateTimeFormat.Insert((int)Content.OrdinalDaySuffixPosition, "{0}");
 
-		string dateTimeStringIncludingSuffixPlaceholder =
-			currentDateTime.ToString(
-								dateTimeFormatIncludingSuffixPlaceholder,
-								App.AppCulture);
+		//string dateTimeStringIncludingSuffixPlaceholder =
+		//	currentDateTime.ToString(
+		//						dateTimeFormatIncludingSuffixPlaceholder,
+		//						App.AppCulture);
 
-		return string.Format(
-							App.AppCulture,
-							dateTimeStringIncludingSuffixPlaceholder,
-							ordinalDaySuffix);
+		//return string.Format(
+		//					App.AppCulture,
+		//					dateTimeStringIncludingSuffixPlaceholder,
+		//					ordinalDaySuffix);
 	}
 
 	/// <summary>

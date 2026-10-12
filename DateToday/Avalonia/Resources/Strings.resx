@@ -135,28 +135,13 @@
   <data name="ActionScheduler_Exception_RefreshIntervalSeconds_Zero" xml:space="preserve">
     <value>The value of RefreshIntervalSeconds must be greater than zero.</value>
   </data>
-  <data name="WidgetViewModel_Exception_OrdinalDaySuffixPosition_OutOfRange" xml:space="preserve">
-    <value>The value of OrdinalDaySuffixPosition exceeds the length of DateTimeFormat.</value>
-  </data>
-  <data name="WidgetViewModel_Exception_OrdinalDaySuffixPosition_Negative" xml:space="preserve">
-    <value>The value of OrdinalDaySuffixPosition must be positive.</value>
-  </data>
   <data name="SettingsView_Window_Title" xml:space="preserve">
     <value>DateToday - Settings</value>
   </data>
   <data name="WidgetView_Window_Title" xml:space="preserve">
     <value>DateToday</value>
   </data>
-  <data name="SettingsView_TabStrip_TabStripItem_ContentTabLabel" xml:space="preserve">
-    <value>Content</value>
-  </data>
-  <data name="SettingsView_TabStrip_TabStripItem_PositionTabLabel" xml:space="preserve">
-    <value>Position</value>
-  </data>
-  <data name="SettingsView_TabStrip_TabStripItem_FontTabLabel" xml:space="preserve">
-    <value>Font</value>
-  </data>
-  <data name="SettingsView_TabStrip_TabStripItem_AppTabLabel" xml:space="preserve">
+  <data name="SettingsView_TabStrip_TabStripItem_AppTab_Header" xml:space="preserve">
     <value>App</value>
   </data>
   <data name="AppVersionProvider_Exception_ExecutableFilepathNotAvailable" xml:space="preserve">
@@ -220,7 +205,7 @@
     <value>icon_settings</value>
   </data>
   <data name="WidgetView_Exception_NoAvailableMonitors" xml:space="preserve">
-    <value>The operating system reports that zero monitors are available to facilitate display of the widget.</value>
+    <value>The operating system reports that zero monitors are available.</value>
   </data>
   <data name="WidgetView_Exception_CornerIdentifierNotSupported" xml:space="preserve">
     <value>Homie, I need you to understand that a rectangle cannot have more than four corners.</value>
@@ -251,5 +236,32 @@ Please consider raising an Issue.</value>
   </data>
   <data name="UnhandledExceptionNotifier_ExceptionArea_AsynchronousOperation" xml:space="preserve">
     <value>Background Asynchronous Operation</value>
+  </data>
+  <data name="SettingsView_TabStrip_TabStripItem_ContentTab_Header" xml:space="preserve">
+    <value>Content</value>
+  </data>
+  <data name="SettingsView_TabStrip_TabStripItem_FontTab_Header" xml:space="preserve">
+    <value>Font</value>
+  </data>
+  <data name="SettingsView_TabStrip_TabStripItem_PositionTab_Header" xml:space="preserve">
+    <value>Position</value>
+  </data>
+  <data name="ContentConfigView_TextBlock_DateTimeFormatField_Label" xml:space="preserve">
+    <value>Date / time format:</value>
+  </data>
+  <data name="ContentConfigView_HyperlinkButton_DateTimeFormatField_Documentation_Content" xml:space="preserve">
+    <value>Documentation: 'Custom date and time format strings'</value>
+  </data>
+  <data name="ContentConfigView_HyperlinkButton_DateTimeFormatField_Documentation_NavigateUri" xml:space="preserve">
+    <value>https://learn.microsoft.com/dotnet/standard/base-types/custom-date-and-time-format-strings</value>
+  </data>
+  <data name="ContentConfigView_TextBlock_LocaleSelector_Label" xml:space="preserve">
+    <value>Locale:</value>
+  </data>
+  <data name="ContentConfigView_TextBlock_OrdinalDaySuffixToggle_Label" xml:space="preserve">
+    <value>Ordinal day suffix:</value>
+  </data>
+  <data name="ContentConfigView_TextBlock_RefreshIntervalInput_Label" xml:space="preserve">
+    <value>Refresh interval:</value>
   </data>
 </root>

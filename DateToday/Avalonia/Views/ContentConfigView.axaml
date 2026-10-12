@@ -2,10 +2,74 @@
 	x:Class="DateToday.Avalonia.Views.ContentConfigView"
 	xmlns="https://github.com/avaloniaui"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	Background="Purple">
+	xmlns:res="using:DateToday.Avalonia.Resources">
 
-	<TextBlock
-		HorizontalAlignment="Center"
-		Text="Content Config View" />
+	<UserControl.Styles>
+		<StyleInclude Source="/Avalonia/Styles/GenericConfigViewStyles.axaml" />
+		<StyleInclude Source="/Avalonia/Styles/ContentConfigViewStyles.axaml" />
+	</UserControl.Styles>
+
+	<Grid
+		Classes="ConfigViewOuterGrid"
+		ColumnDefinitions="Auto,Auto,Auto,*"
+		RowDefinitions="Auto,Auto,Auto,Auto">
+
+		<TextBlock
+			Grid.Row="0"
+			Grid.Column="0"
+			Classes="FieldLabel"
+			Text="{x:Static res:Strings.ContentConfigView_TextBlock_DateTimeFormatField_Label}" />
+
+		<TextBox
+			Grid.Row="0"
+			Grid.Column="1"
+			Grid.ColumnSpan="3"
+			Classes="DateTimeFormatInput" />
+
+		<HyperlinkButton
+			Grid.Row="1"
+			Grid.Column="0"
+			Grid.ColumnSpan="4"
+			HorizontalAlignment="Right"
+			Content="{x:Static res:Strings.ContentConfigView_HyperlinkButton_DateTimeFormatField_Documentation_Content}"
+			FontFamily="fonts:FontCollection#Libre Franklin"
+			FontSize="13"
+			NavigateUri="{x:Static res:Strings.ContentConfigView_HyperlinkButton_DateTimeFormatField_Documentation_NavigateUri}" />
+
+		<TextBlock
+			Grid.Row="2"
+			Grid.Column="0"
+			Classes="FieldLabel"
+			Text="{x:Static res:Strings.ContentConfigView_TextBlock_LocaleSelector_Label}" />
+
+		<ComboBox
+			Grid.Row="2"
+			Grid.Column="1"
+			Classes="LocaleSelector" />
+
+		<TextBlock
+			Grid.Row="2"
+			Grid.Column="2"
+			Classes="FieldLabel"
+			Text="{x:Static res:Strings.ContentConfigView_TextBlock_OrdinalDaySuffixToggle_Label}" />
+
+		<ToggleSwitch
+			Grid.Row="2"
+			Grid.Column="3"
+			Classes="ToggleSwitch" />
+
+		<TextBlock
+			Grid.Row="3"
+			Grid.Column="0"
+			Classes="FieldLabel"
+			Text="{x:Static res:Strings.ContentConfigView_TextBlock_RefreshIntervalInput_Label}" />
+
+		<NumericUpDown
+			Grid.Row="3"
+			Grid.Column="1"
+			Grid.ColumnSpan="2"
+			Classes="RefreshIntervalInput" />
+
+	</Grid>
 
 </UserControl>

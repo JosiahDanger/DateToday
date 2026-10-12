@@ -29,7 +29,7 @@
 				<Grid
 					Classes="SettingsOuterNavigationGrid"
 					ColumnDefinitions="Auto"
-					RowDefinitions="365, Auto">
+					RowDefinitions="*, Auto">
 
 					<TabStrip
 						Name="SettingsNavigator"
@@ -39,19 +39,19 @@
 
 						<TabStripItem
 							Classes="SettingsNavigatorItem"
-							Content="{x:Static res:Strings.SettingsView_TabStrip_TabStripItem_ContentTabLabel}" />
+							Content="{x:Static res:Strings.SettingsView_TabStrip_TabStripItem_ContentTab_Header}" />
 
 						<TabStripItem
 							Classes="SettingsNavigatorItem"
-							Content="{x:Static res:Strings.SettingsView_TabStrip_TabStripItem_PositionTabLabel}" />
+							Content="{x:Static res:Strings.SettingsView_TabStrip_TabStripItem_PositionTab_Header}" />
 
 						<TabStripItem
 							Classes="SettingsNavigatorItem"
-							Content="{x:Static res:Strings.SettingsView_TabStrip_TabStripItem_FontTabLabel}" />
+							Content="{x:Static res:Strings.SettingsView_TabStrip_TabStripItem_FontTab_Header}" />
 
 						<TabStripItem
 							Classes="SettingsNavigatorItem"
-							Content="{x:Static res:Strings.SettingsView_TabStrip_TabStripItem_AppTabLabel}" />
+							Content="{x:Static res:Strings.SettingsView_TabStrip_TabStripItem_AppTab_Header}" />
 
 					</TabStrip>
 
