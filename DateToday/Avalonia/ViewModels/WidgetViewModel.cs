@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Media;
+using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -31,7 +32,7 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 {
 	private readonly IWidgetModelSnapshot _widgetModelSnapshot;
 	private readonly WidgetModelMutationService _widgetModelMutationService;
-	private readonly Lazy<IParentScreenWorkingAreaProvider> _parentScreenWorkingAreaProvider;
+	private readonly Lazy<IScreenInformationProvider> _screenInformationProvider;
 	private readonly GeometryProvider _geometryProvider;
 	private readonly bool _isPropertyInitialisationComplete;
 	private Timer? _widgetContentUpdateScheduler;
@@ -42,12 +43,12 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	public WidgetViewModel(
 		IWidgetModelSnapshot widgetModelSnapshot,
 		WidgetModelMutationService widgetModelMutationService,
-		Lazy<IParentScreenWorkingAreaProvider> parentScreenWorkingAreaProvider,
+		Lazy<IScreenInformationProvider> screenInformationProvider,
 		GeometryProvider geometryProvider)
 	{
 		_widgetModelSnapshot = widgetModelSnapshot;
 		_widgetModelMutationService = widgetModelMutationService;
-		_parentScreenWorkingAreaProvider = parentScreenWorkingAreaProvider;
+		_screenInformationProvider = screenInformationProvider;
 		_geometryProvider = geometryProvider;
 
 		_widgetModelSnapshot.PropertyChanged += OnWidgetModelPropertyChanged;
@@ -158,7 +159,14 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	[RelayCommand]
 	private void SizeChanged(Size windowSize)
 	{
-		AnchorSelectedWindowCorner(windowSize);
+		if (!_isWindowDragAfoot)
+		{
+			/* The window's SizeChanged event can be raised when it is dragged between monitors that
+			 * use differing scaling factors. Under these circumstances, its position doesn't need
+			 * to be adjusted until the pointer is released. */
+
+			AnchorSelectedWindowCorner(windowSize);
+		}
 	}
 
 	[RelayCommand]
@@ -295,20 +303,28 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 
 	private void FitWindowToWorkingArea()
 	{
-		Size parentScreenWorkingAreaSize =
-			_parentScreenWorkingAreaProvider.Value.GetParentScreenWorkingArea(
-				this.WindowOriginLogicalPosition);
+		Screen parentScreen =
+			_screenInformationProvider
+			.Value
+			.GetScreenEnclosingLogicalCoordinate(this.WindowOriginLogicalPosition);
 
-		double logicalPositionMaxX =
-			Math.Max(0, parentScreenWorkingAreaSize.Width - _cachedWindowSize.Width);
+		Rect parentScreenWorkingArea = parentScreen.WorkingArea.ToRect(parentScreen.Scaling);
 
-		double logicalPositionMaxY =
-			Math.Max(0, parentScreenWorkingAreaSize.Height - _cachedWindowSize.Height);
+		double logicalPositionMinX = parentScreenWorkingArea.Left;
+		double logicalPositionMaxX = parentScreenWorkingArea.Right - _cachedWindowSize.Width;
 
-		Point windowOriginLogicalPositionConstrained =
-			new(
-				Math.Clamp(this.WindowOriginLogicalPosition.X, 0, logicalPositionMaxX),
-				Math.Clamp(this.WindowOriginLogicalPosition.Y, 0, logicalPositionMaxY));
+		double logicalPositionMinY = parentScreenWorkingArea.Top;
+		double logicalPositionMaxY = parentScreenWorkingArea.Bottom - _cachedWindowSize.Height;
+
+		double constrainedX =
+			Math.Clamp(
+				this.WindowOriginLogicalPosition.X, logicalPositionMinX, logicalPositionMaxX);
+
+		double constrainedY =
+			Math.Clamp(
+				this.WindowOriginLogicalPosition.Y, logicalPositionMinY, logicalPositionMaxY);
+
+		Point windowOriginLogicalPositionConstrained = new(constrainedX, constrainedY);
 
 		this.WindowOriginLogicalPosition = windowOriginLogicalPositionConstrained;
 	}

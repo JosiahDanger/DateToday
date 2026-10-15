@@ -26,10 +26,11 @@ namespace DateToday.Avalonia.Views;
 /// area occupied by the WidgetView window on the user's monitor exists in physical space.
 /// </remarks>
 
-internal sealed partial class WidgetView : Window, IParentScreenWorkingAreaProvider, IDisposable
+internal sealed partial class WidgetView : Window, IScreenInformationProvider, IDisposable
 {
 	private readonly IPositionController _positionController;
-	private Screen? _fallbackParentScreen;
+	private Screen? _lastKnownScreen;
+	private bool _isInitialPhysicalPositionApplied;
 
 	public WidgetView(IPositionController positionController)
 	{
@@ -43,37 +44,32 @@ internal sealed partial class WidgetView : Window, IParentScreenWorkingAreaProvi
 	}
 
 	/// <summary>
-	/// Returns the working area of the <see cref="Screen" /> within which the specified
-	/// <paramref name="enclosedPoint" /> is currently enclosed.
+	/// Returns the <see cref="Screen" /> within which the specified
+	///	<paramref name="logicalCoordinate" /> is enclosed.
 	/// </summary>
-	/// <remarks>
-	/// The returned working area might be smaller than the Screen bounds in order to account for
-	/// the taskbar, but this is handled by Avalonia.
-	/// </remarks>
 	/// <exception cref="InvalidOperationException">
 	/// Thrown if no monitors are detected.
 	/// </exception>
 
-	public Size GetParentScreenWorkingArea(Point enclosedPoint)
+	public Screen GetScreenEnclosingLogicalCoordinate(Point logicalCoordinate)
 	{
-		PixelPoint enclosedPixelPoint = PixelPoint.FromPoint(enclosedPoint, this.DesktopScaling);
+		PixelPoint enclosedPhysicalPosition =
+			PixelPoint.FromPoint(logicalCoordinate, this.DesktopScaling);
 
-		Screen? currentParentScreen =
-			Screens.All.FirstOrDefault(screen => screen.Bounds.Contains(enclosedPixelPoint));
+		Screen? currentEnclosingScreen =
+			Screens.All.FirstOrDefault(screen => screen.Bounds.Contains(enclosedPhysicalPosition));
 
-		if (currentParentScreen != null)
+		if (currentEnclosingScreen != null)
 		{
-			_fallbackParentScreen = currentParentScreen;
+			_lastKnownScreen = currentEnclosingScreen;
 		}
 
-		Screen parentScreen =
-			currentParentScreen
-			?? _fallbackParentScreen
-			?? Screens.Primary
+		return
+			currentEnclosingScreen
+			?? _lastKnownScreen
+			?? this.Screens.Primary
 			?? throw new InvalidOperationException(
-				Strings.WidgetView_Exception_NoAvailableMonitors);
-
-		return parentScreen.WorkingArea.Size.ToSize(this.DesktopScaling);
+							Strings.WidgetView_Exception_NoAvailableMonitors);
 	}
 
 	private void OnClosed(object? sender, EventArgs e)
@@ -85,6 +81,21 @@ internal sealed partial class WidgetView : Window, IParentScreenWorkingAreaProvi
 	private void OnDoubleTapped(object? sender, TappedEventArgs e) =>
 		_positionController.DoubleTappedCommand.Execute(null);
 
+	/// <summary>
+	/// Performs one-time initialisation: registers event handlers, and notifies the
+	/// <see cref="IPositionController" /> that the window is loaded.
+	/// </summary>
+	/// <remarks>
+	/// When the <see cref="IPositionController.LoadedCommand" /> is executed during initialisation,
+	/// the IPositionController will anchor the selected window corner. However, the
+	/// IPositionController will also anchor the selected window corner in response to the window's
+	/// <see cref="Control.SizeChanged" /> event, which can be raised inadvertently should the
+	/// window move to another monitor when it is assigned its initial physical position
+	/// (see <see cref="OnPositionConfigChanged" />). It is redundant for this process to occur
+	/// twice. Therefore, subscription to the SizeChanged event is delayed until the LoadedCommand
+	/// has been executed.
+	/// </remarks>
+
 	private void OnLoaded(object? sender, RoutedEventArgs e)
 	{
 		this.Loaded -= OnLoaded;
@@ -94,12 +105,12 @@ internal sealed partial class WidgetView : Window, IParentScreenWorkingAreaProvi
 		this.PointerMoved += OnPointerMoved;
 		this.PointerReleased += OnPointerReleased;
 		this.Screens.Changed += OnScreensChanged;
-		this.SizeChanged += OnSizeChanged;
-
-		_positionController.LoadedCommand.Execute(this.ClientSize);
 
 		WeakReferenceMessenger.Default.Register<CloseApplicationMessage>(
 			this, (_, _) => this.Close());
+
+		_positionController.LoadedCommand.Execute(this.ClientSize);
+		this.SizeChanged += OnSizeChanged;
 	}
 
 	private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
@@ -122,11 +133,39 @@ internal sealed partial class WidgetView : Window, IParentScreenWorkingAreaProvi
 	private void OnSizeChanged(object? sender, SizeChangedEventArgs e) =>
 		_positionController.SizeChangedCommand.Execute(this.ClientSize);
 
+	/// <summary>
+	/// Updates the window's position in physical space based on changes to
+	/// <see cref="IPositionController.WindowOriginLogicalPosition" />.
+	/// </summary>
+	/// <remarks>
+	/// An edge-case has been observed to occur in multi-monitor configurations, but only before
+	/// the window's initial physical position is applied. Consider that
+	/// <see cref="WindowBase.DesktopScaling" /> will always return the scaling factor of the
+	/// monitor on which the window is currently displayed, regardless of which monitor will later
+	/// display the window. Before the window's initial position is applied,
+	/// <see cref="OnPositionConfigChanged" /> determines explicitly the window's intended parent
+	/// monitor, and uses its scaling factor to calculate the window's initial position.
+	/// </remarks>
+
 	private void OnPositionConfigChanged(object? sender, PropertyChangedEventArgs e)
 	{
-		this.Position =
-			PixelPoint.FromPoint(
-				_positionController.WindowOriginLogicalPosition, this.DesktopScaling);
+		Point newLogicalPosition = _positionController.WindowOriginLogicalPosition;
+
+		if (!_isInitialPhysicalPositionApplied)
+		{
+			Screen parentScreen = GetScreenEnclosingLogicalCoordinate(newLogicalPosition);
+
+			PixelPoint newPhysicalPosition =
+				PixelPoint.FromPoint(newLogicalPosition, parentScreen.Scaling);
+
+			this.Position = newPhysicalPosition;
+
+			_isInitialPhysicalPositionApplied = true;
+		}
+		else
+		{
+			this.Position = PixelPoint.FromPoint(newLogicalPosition, this.DesktopScaling);
+		}
 	}
 
 	public void Dispose()

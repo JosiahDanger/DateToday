@@ -34,11 +34,11 @@ internal static class ServiceCollectionExtensions
 
 		collection.AddSingleton<WidgetView>();
 
-		collection.AddSingleton<IParentScreenWorkingAreaProvider>(
+		collection.AddSingleton<IScreenInformationProvider>(
 			serviceProvider => serviceProvider.GetRequiredService<WidgetView>());
 
-		collection.AddSingleton<Lazy<IParentScreenWorkingAreaProvider>>(
-			serviceProvider => new Lazy<IParentScreenWorkingAreaProvider>(
+		collection.AddSingleton<Lazy<IScreenInformationProvider>>(
+			serviceProvider => new Lazy<IScreenInformationProvider>(
 				() => serviceProvider.GetRequiredService<WidgetView>()));
 
 		collection.AddSingleton<WidgetDialogService>();
