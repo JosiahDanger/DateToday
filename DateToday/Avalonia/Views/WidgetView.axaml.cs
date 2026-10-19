@@ -37,7 +37,6 @@ internal sealed partial class WidgetView : Window, IScreenInformationProvider, I
 		InitializeComponent();
 
 		_positionController = positionController;
-		_positionController.PropertyChanged += OnPositionConfigChanged;
 
 		this.Closed += OnClosed;
 		this.Loaded += OnLoaded;
@@ -45,7 +44,7 @@ internal sealed partial class WidgetView : Window, IScreenInformationProvider, I
 
 	/// <summary>
 	/// Returns the <see cref="Screen" /> within which the specified
-	///	<paramref name="logicalCoordinate" /> is enclosed.
+	/// <paramref name="logicalCoordinate" /> is enclosed.
 	/// </summary>
 	/// <exception cref="InvalidOperationException">
 	/// Thrown if no monitors are detected.
@@ -90,10 +89,10 @@ internal sealed partial class WidgetView : Window, IScreenInformationProvider, I
 	/// the IPositionController will anchor the selected window corner. However, the
 	/// IPositionController will also anchor the selected window corner in response to the window's
 	/// <see cref="Control.SizeChanged" /> event, which can be raised inadvertently should the
-	/// window move to another monitor when it is assigned its initial physical position
-	/// (see <see cref="OnPositionConfigChanged" />). It is redundant for this process to occur
-	/// twice. Therefore, subscription to the SizeChanged event is delayed until the LoadedCommand
-	/// has been executed.
+	/// window move, when it is assigned its initial physical position, between monitors using
+	/// differing scaling factors (see <see cref="OnPositionConfigChanged" />). It is redundant for
+	/// this process to occur twice. Therefore, subscription to the SizeChanged event is delayed
+	/// until the LoadedCommand has been executed.
 	/// </remarks>
 
 	private void OnLoaded(object? sender, RoutedEventArgs e)
@@ -104,13 +103,15 @@ internal sealed partial class WidgetView : Window, IScreenInformationProvider, I
 		this.PointerPressed += OnPointerPressed;
 		this.PointerMoved += OnPointerMoved;
 		this.PointerReleased += OnPointerReleased;
-		this.Screens.Changed += OnScreensChanged;
 
 		WeakReferenceMessenger.Default.Register<CloseApplicationMessage>(
 			this, (_, _) => this.Close());
 
+		_positionController.PropertyChanged += OnPositionConfigChanged;
 		_positionController.LoadedCommand.Execute(this.ClientSize);
+
 		this.SizeChanged += OnSizeChanged;
+		this.Screens.Changed += OnScreensChanged;
 	}
 
 	private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
@@ -127,8 +128,11 @@ internal sealed partial class WidgetView : Window, IScreenInformationProvider, I
 	private void OnPointerReleased(object? sender, PointerReleasedEventArgs e) =>
 		_positionController.PointerReleasedCommand.Execute(null);
 
-	private void OnScreensChanged(object? sender, EventArgs e) =>
+	private void OnScreensChanged(object? sender, EventArgs e)
+	{
+		_isInitialPhysicalPositionApplied = false;
 		_positionController.ScreensChangedCommand.Execute(null);
+	}
 
 	private void OnSizeChanged(object? sender, SizeChangedEventArgs e) =>
 		_positionController.SizeChangedCommand.Execute(this.ClientSize);

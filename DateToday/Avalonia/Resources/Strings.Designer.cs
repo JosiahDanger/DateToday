@@ -196,6 +196,15 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to seconds.
+        /// </summary>
+        public static string ContentConfigView_NumericUpDown_RefreshIntervalInput_Unit {
+            get {
+                return ResourceManager.GetString("ContentConfigView_NumericUpDown_RefreshIntervalInput_Unit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Date / time format:.
         /// </summary>
         public static string ContentConfigView_TextBlock_DateTimeFormatField_Label {

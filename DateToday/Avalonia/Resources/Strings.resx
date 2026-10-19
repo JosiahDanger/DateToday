@@ -264,4 +264,7 @@ Please consider raising an Issue.</value>
   <data name="ContentConfigView_TextBlock_RefreshIntervalInput_Label" xml:space="preserve">
     <value>Refresh interval:</value>
   </data>
+  <data name="ContentConfigView_NumericUpDown_RefreshIntervalInput_Unit" xml:space="preserve">
+    <value>seconds</value>
+  </data>
 </root>

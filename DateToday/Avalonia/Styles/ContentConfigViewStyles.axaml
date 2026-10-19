@@ -1,6 +1,7 @@
 <Styles
 	xmlns="https://github.com/avaloniaui"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:res="using:DateToday.Avalonia.Resources">
 
 	<Design.PreviewWith>
 
@@ -15,35 +16,35 @@
 	<Style Selector="TextBox.DateTimeFormatInput">
 		<Setter Property="AcceptsReturn" Value="True" />
 		<Setter Property="AcceptsTab" Value="True" />
-		<Setter Property="FontFamily" Value="fonts:FontCollection#Drafting* Mono" />
-		<Setter Property="FontSize" Value="12" />
-		<Setter Property="FontWeight" Value="ExtraLight" />
+		<Setter Property="MaxLines" Value="4" />
 		<Setter Property="TextWrapping" Value="Wrap" />
-		<Setter Property="VerticalContentAlignment" Value="Center" />
+	</Style>
+
+	<Style Selector="HyperlinkButton.DateTimeFormatDocumentationLink">
+		<Setter Property="FontSize" Value="13.5" />
 	</Style>
 
 	<Style Selector="ComboBox.LocaleSelector">
-		<Setter Property="FontFamily" Value="fonts:FontCollection#Drafting* Mono" />
-		<Setter Property="FontSize" Value="12" />
-		<Setter Property="FontWeight" Value="ExtraLight" />
 		<Setter Property="IsEditable" Value="True" />
-		<Setter Property="VerticalAlignment" Value="Center" />
 	</Style>
 
 	<Style Selector="NumericUpDown.RefreshIntervalInput">
-		<Setter Property="FontFamily" Value="fonts:FontCollection#Drafting* Mono" />
-		<Setter Property="FontSize" Value="12" />
-		<Setter Property="FontWeight" Value="ExtraLight" />
+		<Setter Property="ClipValueToMinMax" Value="True" />
+		<Setter Property="FormatString" Value="N0" />
 		<Setter Property="HorizontalAlignment" Value="Left" />
+		<Setter Property="Increment" Value="1" />
 		<Setter Property="Maximum" Value="86400" />
+		<Setter Property="MaxWidth" Value="194" />
 		<Setter Property="Minimum" Value="1" />
-		<Setter Property="VerticalContentAlignment" Value="Center" />
-		<Setter Property="Width" Value="175" />
+		<Setter Property="Padding" Value="10 5 0 5" />
+		<Setter Property="ParsingNumberStyle" Value="Integer" />
 		<Setter Property="NumericUpDown.InnerRightContent">
 			<Template>
 				<TextBlock
-					Margin="0 0 5 0"
-					Text="seconds" />
+					Margin="5 2.5 10 0"
+					VerticalAlignment="Center"
+					FontSize="12"
+					Text="{x:Static res:Strings.ContentConfigView_NumericUpDown_RefreshIntervalInput_Unit}" />
 			</Template>
 		</Setter>
 	</Style>
