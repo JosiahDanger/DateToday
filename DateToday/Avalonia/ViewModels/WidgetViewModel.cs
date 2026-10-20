@@ -13,6 +13,7 @@ using DateToday.Models;
 using DateToday.Utilities;
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 
 namespace DateToday.Avalonia.ViewModels;
@@ -112,7 +113,8 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	[RelayCommand]
 	private void Loaded(Size windowSize)
 	{
-		AnchorSelectedWindowCorner(windowSize);
+		_cachedWindowSize = windowSize;
+		AnchorSelectedWindowCorner();
 	}
 
 	[RelayCommand]
@@ -165,7 +167,8 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 			 * use differing scaling factors. Under these circumstances, its position doesn't need
 			 * to be adjusted until the pointer is released. */
 
-			AnchorSelectedWindowCorner(windowSize);
+			_cachedWindowSize = windowSize;
+			AnchorSelectedWindowCorner();
 		}
 	}
 
@@ -178,8 +181,6 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 				{
 					IsMouseDragEnabled = !this.Position.IsMouseDragEnabled
 				});
-
-		MouseDragToggleIcon = GetNewMouseDragToggleIcon();
 	}
 
 	[RelayCommand]
@@ -237,12 +238,19 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	}
 
 	/// <summary>
-	/// Applies the configured anchored corner position and fits the window to the working area.
+	/// When the <see cref="WidgetView" /> window changes in size, this method may be called to
+	/// adjust its position in logical space such that the
+	/// <see cref="PositionConfig.AnchoredCorner" /> pinned by the user again becomes anchored to
+	/// its intended co-ordinate.
 	/// </summary>
+	/// <remarks>
+	/// Note that <see cref="FitWindowToWorkingArea" /> is called by this method after anchoring the
+	/// selected corner. This behaviour is intended as a safeguard to prevent the widget from moving
+	/// outside its <see cref="Screen.WorkingArea" />.
+	/// </remarks>
 
-	private void AnchorSelectedWindowCorner(Size windowSize)
+	private void AnchorSelectedWindowCorner()
 	{
-		_cachedWindowSize = windowSize;
 		CornerIdentifier anchoredCorner = this.Position.AnchoredCorner;
 
 		double offsetX =
@@ -264,49 +272,84 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	}
 
 	/// <summary>
-	/// Calculates and commits to the <see cref="WidgetModel" /> the current logical position of the
-	/// <see cref="WidgetView" /> window's anchored corner.
+	/// Calculates the logical position of the <see cref="WidgetView" /> window's specified corner.
+	/// </summary>
+	/// <param name="corner">
+	/// The <see cref="CornerIdentifier" /> of the corner whose logical position will be calculated.
+	/// </param>
+
+	private Point CalculateWindowCornerLogicalPosition(CornerIdentifier corner)
+	{
+		Point windowOriginLogicalPosition = this.WindowOriginLogicalPosition;
+
+		double cornerX = corner switch
+		{
+			CornerIdentifier.TopRight or CornerIdentifier.BottomRight
+				=> windowOriginLogicalPosition.X + _cachedWindowSize.Width,
+			_ => windowOriginLogicalPosition.X
+		};
+
+		double cornerY = corner switch
+		{
+			CornerIdentifier.BottomLeft or CornerIdentifier.BottomRight
+				=> windowOriginLogicalPosition.Y + _cachedWindowSize.Height,
+			_ => windowOriginLogicalPosition.Y
+		};
+
+		return new Point(cornerX, cornerY);
+	}
+
+	/// <summary>
+	/// Commits to the <see cref="WidgetModel" /> the current logical position of the
+	/// <see cref="WidgetView" /> window's <see cref="PositionConfig.AnchoredCorner" />.
 	/// </summary>
 
 	private void UpdateAnchoredCornerLogicalPosition()
 	{
-		CornerIdentifier anchoredCorner = this.Position.AnchoredCorner;
-		Point windowOriginLogicalPosition = this.WindowOriginLogicalPosition;
-		Size windowSize = _cachedWindowSize;
-
-		double originX = anchoredCorner switch
-		{
-			CornerIdentifier.TopRight or CornerIdentifier.BottomRight
-				=> windowOriginLogicalPosition.X + windowSize.Width,
-			_ => windowOriginLogicalPosition.X
-		};
-
-		double originY = anchoredCorner switch
-		{
-			CornerIdentifier.BottomLeft or CornerIdentifier.BottomRight
-				=> windowOriginLogicalPosition.Y + windowSize.Height,
-			_ => windowOriginLogicalPosition.Y
-		};
-
 		_widgetModelMutationService.MutatePositionConfig(
 			positionConfig =>
 				positionConfig with
 				{
-					AnchoredCornerLogicalPosition = new Point(originX, originY)
+					AnchoredCornerLogicalPosition =
+						CalculateWindowCornerLogicalPosition(this.Position.AnchoredCorner)
 				});
 	}
 
 	/// <summary>
-	/// Adjusts in logical space the current position of the <see cref="WidgetView" /> window such
-	/// that it becomes enclosed entirely within its working area.
+	/// Adjusts in logical space the position of the <see cref="WidgetView" /> window such that it
+	/// becomes enclosed entirely within its current <see cref="Screen.WorkingArea" />.
 	/// </summary>
+	/// <remarks>
+	/// A target WorkingArea is inferred from the WidgetView window corner opposite the selected
+	/// <see cref="PositionConfig.AnchoredCorner" />. The intent in doing so is to make an educated
+	/// guess, in the event that multiple monitors are connected, as to which monitor the user
+	/// expects to display the widget.
+	/// </remarks>
 
 	private void FitWindowToWorkingArea()
 	{
+		static CornerIdentifier GetOppositeCorner(CornerIdentifier corner)
+		{
+			return corner switch
+			{
+				CornerIdentifier.TopLeft => CornerIdentifier.BottomRight,
+				CornerIdentifier.TopRight => CornerIdentifier.BottomLeft,
+				CornerIdentifier.BottomLeft => CornerIdentifier.TopRight,
+				CornerIdentifier.BottomRight => CornerIdentifier.TopLeft,
+				_ => throw new ArgumentException(
+						Strings.WidgetViewModel_Exception_CornerIdentifierNotSupported)
+			};
+		}
+
+		CornerIdentifier anchoredCorner = this.Position.AnchoredCorner;
+		CornerIdentifier oppositeCorner = GetOppositeCorner(anchoredCorner);
+
+		Point oppositeCornerLogicalPosition = CalculateWindowCornerLogicalPosition(oppositeCorner);
+
 		Screen parentScreen =
 			_screenInformationProvider
 			.Value
-			.GetScreenEnclosingLogicalCoordinate(this.WindowOriginLogicalPosition);
+			.GetScreenEnclosingLogicalCoordinate(oppositeCornerLogicalPosition);
 
 		Rect parentScreenWorkingArea = parentScreen.WorkingArea.ToRect(parentScreen.Scaling);
 
@@ -385,6 +428,60 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 		if (newValue.RefreshIntervalSeconds != oldValue.RefreshIntervalSeconds)
 		{
 			ResetWidgetContentUpdateScheduler();
+		}
+	}
+
+	partial void OnPositionChanged(PositionConfig oldValue, PositionConfig newValue)
+	{
+		if (!_isPropertyInitialisationComplete)
+		{
+			return;
+		}
+
+		if (_isWindowDragAfoot)
+		{
+			return;
+		}
+
+		bool hasAnchoredCornerChanged =
+			newValue.AnchoredCorner != oldValue.AnchoredCorner;
+
+		bool hasAnchoredCornerLogicalPositionChanged =
+			newValue.AnchoredCornerLogicalPosition != oldValue.AnchoredCornerLogicalPosition;
+
+		bool hasIsMouseDragEnabledChanged =
+			newValue.IsMouseDragEnabled != oldValue.IsMouseDragEnabled;
+
+		int propertyChangeCount =
+			new[]
+			{
+				hasAnchoredCornerChanged,
+				hasAnchoredCornerLogicalPositionChanged,
+				hasIsMouseDragEnabledChanged
+			}
+			.Count(hasChanged => hasChanged);
+
+		if (propertyChangeCount > 1)
+		{
+			throw new InvalidOperationException(
+						Strings.WidgetViewModel_Exception_PositionConfigSimultaneousChanges);
+		}
+
+		if (hasAnchoredCornerChanged)
+		{
+			AnchorSelectedWindowCorner();
+			UpdateAnchoredCornerLogicalPosition();
+		}
+		else if (hasAnchoredCornerLogicalPositionChanged)
+		{
+			Vector translationVector =
+				newValue.AnchoredCornerLogicalPosition - oldValue.AnchoredCornerLogicalPosition;
+
+			this.WindowOriginLogicalPosition += translationVector;
+		}
+		else if (hasIsMouseDragEnabledChanged)
+		{
+			MouseDragToggleIcon = GetNewMouseDragToggleIcon();
 		}
 	}
 

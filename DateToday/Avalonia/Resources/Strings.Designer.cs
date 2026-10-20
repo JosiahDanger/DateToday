@@ -472,15 +472,6 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Homie, I need you to understand that a rectangle cannot have more than four corners..
-        /// </summary>
-        public static string WidgetView_Exception_CornerIdentifierNotSupported {
-            get {
-                return ResourceManager.GetString("WidgetView_Exception_CornerIdentifierNotSupported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The operating system reports that zero monitors are available..
         /// </summary>
         public static string WidgetView_Exception_NoAvailableMonitors {
@@ -495,6 +486,24 @@ namespace DateToday.Avalonia.Resources {
         public static string WidgetView_Window_Title {
             get {
                 return ResourceManager.GetString("WidgetView_Window_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Homie, I need you to understand that a rectangle cannot have more than four corners..
+        /// </summary>
+        public static string WidgetViewModel_Exception_CornerIdentifierNotSupported {
+            get {
+                return ResourceManager.GetString("WidgetViewModel_Exception_CornerIdentifierNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are not permitted to make changes to multiple Position fields simultaneously. Your frame-perfect inputs aren&apos;t welcome here, speedrunner..
+        /// </summary>
+        public static string WidgetViewModel_Exception_PositionConfigSimultaneousChanges {
+            get {
+                return ResourceManager.GetString("WidgetViewModel_Exception_PositionConfigSimultaneousChanges", resourceCulture);
             }
         }
     }

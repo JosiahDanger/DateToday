@@ -207,7 +207,7 @@
   <data name="WidgetView_Exception_NoAvailableMonitors" xml:space="preserve">
     <value>The operating system reports that zero monitors are available.</value>
   </data>
-  <data name="WidgetView_Exception_CornerIdentifierNotSupported" xml:space="preserve">
+  <data name="WidgetViewModel_Exception_CornerIdentifierNotSupported" xml:space="preserve">
     <value>Homie, I need you to understand that a rectangle cannot have more than four corners.</value>
   </data>
   <data name="GeometryProvider_Exception_FailedToLocateRequestedGeometry" xml:space="preserve">
@@ -266,5 +266,8 @@ Please consider raising an Issue.</value>
   </data>
   <data name="ContentConfigView_NumericUpDown_RefreshIntervalInput_Unit" xml:space="preserve">
     <value>seconds</value>
+  </data>
+  <data name="WidgetViewModel_Exception_PositionConfigSimultaneousChanges" xml:space="preserve">
+    <value>You are not permitted to make changes to multiple Position fields simultaneously. Your frame-perfect inputs aren't welcome here, speedrunner.</value>
   </data>
 </root>
