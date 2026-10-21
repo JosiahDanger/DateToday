@@ -18,14 +18,14 @@ internal static class SuspensionService
 	private static readonly string s_roamingAppDataDirectoryPath =
 		Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
-	private static readonly string s_dateTodayConfigDirectory =
+	private static readonly string s_dateTodayConfigDirectoryPath =
 		Path.Combine(
 			s_roamingAppDataDirectoryPath,
 			Strings.Suspension_DirectoryName_DateToday);
 
 	private static readonly string s_widgetStateFilepath =
 		Path.Combine(
-			s_dateTodayConfigDirectory,
+			s_dateTodayConfigDirectoryPath,
 			Strings.Suspension_Filename_WidgetState);
 
 	private static readonly CompositeFormat s_failedToDeserialiseStateExceptionFormat =
@@ -54,7 +54,7 @@ internal static class SuspensionService
 
 		try
 		{
-			Directory.CreateDirectory(s_dateTodayConfigDirectory);
+			Directory.CreateDirectory(s_dateTodayConfigDirectoryPath);
 
 			using FileStream targetFileStream =
 				File.Open(s_widgetStateFilepath, FileMode.Create, FileAccess.Write, FileShare.None);
@@ -67,7 +67,7 @@ internal static class SuspensionService
 				string.Format(
 					CultureInfo.InvariantCulture,
 					s_failedToPersistStateExceptionFormat,
-					s_dateTodayConfigDirectory,
+					s_dateTodayConfigDirectoryPath,
 					ex.Message);
 
 			throw new IOException(exceptionMessageFriendly, ex);
@@ -110,7 +110,7 @@ internal static class SuspensionService
 				string.Format(
 					CultureInfo.InvariantCulture,
 					s_failedToDeserialiseStateExceptionFormat,
-					s_dateTodayConfigDirectory,
+					s_dateTodayConfigDirectoryPath,
 					ex.Message);
 
 			throw new IOException(exceptionMessageFriendly, ex);

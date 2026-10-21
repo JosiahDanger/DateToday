@@ -45,7 +45,7 @@ internal sealed class UnhandledExceptionNotifier: IDisposable
 	}
 
 	/// <summary>
-	/// Subscribes to exception events. This method is intended to be called during application
+	/// Subscribes to Exception events. This method is intended to be called during application
 	/// startup.
 	/// </summary>
 
