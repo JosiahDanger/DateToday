@@ -93,12 +93,12 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 
 	/// <summary>
 	/// A calculated property that returns a string representation of the current date and/or time.
-	/// The string's format is determined by <see cref="DateTimeFormat" /> and
-	/// <see cref="DateTimeCulture" />.
+	/// The string's format is determined by <see cref="ContentConfig.DateTimeFormat" /> and
+	/// <see cref="ContentConfig.DateTimeCulture" />.
 	/// </summary>
 	/// <remarks>
 	/// The property's initial value is calculated upon access, and is subsequently updated at
-	/// real-time clock boundaries specified by <see cref="RefreshIntervalSeconds" />.
+	/// real-time clock boundaries specified by <see cref="ContentConfig.RefreshIntervalSeconds" />.
 	/// </remarks>
 
 	public string? DateTimeText => FormatCurrentDateTime();

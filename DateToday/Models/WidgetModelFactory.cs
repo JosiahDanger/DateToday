@@ -1,60 +1,34 @@
 ﻿using DateToday.DomainServices;
-using System;
 using System.Text.Json.Serialization.Metadata;
 
 namespace DateToday.Models;
 
 internal static class WidgetModelFactory
 {
-	public static (WidgetModel initialWidgetModel, bool hasDeserialisationSucceeded)
-		GetInitialWidgetModel()
-	{
-		bool hasDeserialisationSucceeded = TryRestoreState(out WidgetModel? restoredState);
-		WidgetModel initialWidgetModel = restoredState ?? CreateDefault();
-
-		return (initialWidgetModel, hasDeserialisationSucceeded);
-	}
-
 	/// <summary>
-	/// Should a persisted <see cref="WidgetModelDto" /> object already exist on disk, this method
-	/// will attempt to deserialise it into a <see cref="WidgetModel" />.
+	/// Should a persisted <see cref="WidgetModelDto" /> already exist on disk, this method will
+	/// attempt to deserialise it into a <see cref="WidgetModel" />.
 	/// </summary>
-	/// <param name="restoredState">
-	/// This parameter is assigned a <see cref="WidgetModel" /> upon successful deserialisation. In
-	/// the event that no persisted state exists, or a deserialisation error occurs, this parameter
-	/// is assigned a value of <c>null</c>.
-	/// </param>
 	/// <returns>
-	/// <c>true</c> if restoration succeeded or no persisted state exists; <c>false</c> if a
-	/// deserialisation error occurred.
+	/// An instantiated WidgetModel, or <c>null</c>.
 	/// </returns>
+	/// <exception cref="System.IO.IOException">
+	/// Thrown if the persisted state exists but cannot be deserialised.
+	/// </exception>
 
-	private static bool TryRestoreState(out WidgetModel? restoredState)
+	public static WidgetModel? GetPersistedWidgetModel()
 	{
-		restoredState = null;
-
 		JsonTypeInfo<WidgetModelDto> typeInfo =
 			WidgetModelDtoSerialiserContext.Default.WidgetModelDto;
 
-		try
-		{
-			WidgetModelDto? restoredStateDtoOrNull =
-				SuspensionService.LoadState<WidgetModelDto>(typeInfo);
+		// This might raise an IOException.
+		WidgetModelDto? restoredStateDtoOrNull =
+			SuspensionService.LoadState<WidgetModelDto>(typeInfo);
 
-			if (restoredStateDtoOrNull is WidgetModelDto restoredStateDto)
-			{
-				restoredState = restoredStateDto.ToModel();
-			}
-		}
-		catch (InvalidOperationException)
-		{
-			return false;
-		}
-
-		return true;
+		return restoredStateDtoOrNull?.ToModel();
 	}
 
-	private static WidgetModel CreateDefault() =>
+	public static WidgetModel CreateDefault() =>
 		new(
 			WidgetModelDefaults.DefaultContentConfig,
 			WidgetModelDefaults.DefaultPositionConfig,

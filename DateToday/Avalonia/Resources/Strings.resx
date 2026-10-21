@@ -117,12 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Suspension_Exception_FailedToPersistState" xml:space="preserve">
-    <value>Failed to persist the application state.</value>
-  </data>
-  <data name="Suspension_Exception_FailedToDeserialiseState" xml:space="preserve">
-    <value>Failed to deserialise the persisted application state.</value>
-  </data>
   <data name="Suspension_Filename_WidgetState" xml:space="preserve">
     <value>datetoday-widget-state.json</value>
   </data>
@@ -165,12 +159,6 @@
   <data name="AlertView_ErrorFlavour_Caption" xml:space="preserve">
     <value>DateToday has shat the bed.</value>
   </data>
-  <data name="Suspension_Exception_FailedToDeserialiseState_Friendly" xml:space="preserve">
-    <value>Your existing settings file is either inaccessible or invalid. The widget has instead been initialised using a default configuration.</value>
-  </data>
-  <data name="Suspension_Exception_FailedToPersistState_Friendly" xml:space="preserve">
-    <value>The app attempted to save your widget configuration, but it was unable to do so. Please ensure that the app executable is permitted write access within its containing folder.</value>
-  </data>
   <data name="AlertViewConverters_Exception_EnumerationTypeMemberNotSupported" xml:space="preserve">
     <value>A converter utilised by AlertView received an unsupported member of an enumeration type.</value>
   </data>
@@ -208,7 +196,7 @@
     <value>The operating system reports that zero monitors are available.</value>
   </data>
   <data name="WidgetViewModel_Exception_CornerIdentifierNotSupported" xml:space="preserve">
-    <value>Homie, I need you to understand that a rectangle cannot have more than four corners.</value>
+    <value>I need you to understand that a rectangle cannot have more than four corners.</value>
   </data>
   <data name="GeometryProvider_Exception_FailedToLocateRequestedGeometry" xml:space="preserve">
     <value>The GeometryProvider failed to locate StreamGeometry associated with key '{0}'.</value>
@@ -269,5 +257,26 @@ Please consider raising an Issue.</value>
   </data>
   <data name="WidgetViewModel_Exception_PositionConfigSimultaneousChanges" xml:space="preserve">
     <value>You are not permitted to make changes to multiple Position fields simultaneously. Your frame-perfect inputs aren't welcome here, speedrunner.</value>
+  </data>
+  <data name="Suspension_DirectoryName_DateToday" xml:space="preserve">
+    <value>DateToday</value>
+  </data>
+  <data name="Suspension_Exception_FailedToPersistState_MessageTemplate" xml:space="preserve">
+    <value>The app failed to save your widget configuration to the following directory: 
+{0}
+
+Exception message: 
+{1}</value>
+  </data>
+  <data name="Suspension_Exception_FailedToDeserialiseState_MessageTemplate" xml:space="preserve">
+    <value>The app failed to read your existing widget configuration from the following directory: 
+{0} 
+
+A default widget configuration will be used instead. 
+
+If you were particularly attached to your existing configuration, you now have a window of opportunity within which to make a manual backup before it is overwritten. 
+
+Exception message: 
+{1}</value>
   </data>
 </root>

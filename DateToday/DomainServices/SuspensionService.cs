@@ -1,7 +1,9 @@
 ﻿using DateToday.Avalonia.Resources;
 using DateToday.Models;
 using System;
+using System.Globalization;
 using System.IO;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
@@ -13,18 +15,35 @@ namespace DateToday.DomainServices;
 
 internal static class SuspensionService
 {
-	private static readonly string s_filepath =
-		Path.Combine(AppContext.BaseDirectory, Strings.Suspension_Filename_WidgetState);
+	private static readonly string s_roamingAppDataDirectoryPath =
+		Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+	private static readonly string s_dateTodayConfigDirectory =
+		Path.Combine(
+			s_roamingAppDataDirectoryPath,
+			Strings.Suspension_DirectoryName_DateToday);
+
+	private static readonly string s_widgetStateFilepath =
+		Path.Combine(
+			s_dateTodayConfigDirectory,
+			Strings.Suspension_Filename_WidgetState);
+
+	private static readonly CompositeFormat s_failedToDeserialiseStateExceptionFormat =
+		CompositeFormat.Parse(
+			Strings.Suspension_Exception_FailedToDeserialiseState_MessageTemplate);
+
+	private static readonly CompositeFormat s_failedToPersistStateExceptionFormat =
+		CompositeFormat.Parse(Strings.Suspension_Exception_FailedToPersistState_MessageTemplate);
 
 	/// <summary>
-	/// Save an application state to persistent storage by means of synchronous operations.
+	/// Saves an application state to persistent storage by means of synchronous operations.
 	/// </summary>
 	/// <typeparam name="T">The state type.</typeparam>
 	/// <param name="state">The state to persist.</param>
 	/// <param name="typeInfo">
 	/// The source-generated metadata for <typeparamref name="T" />.
 	/// </param>
-	/// <exception cref="InvalidOperationException">
+	/// <exception cref="IOException">
 	/// Thrown if the state cannot be persisted.
 	/// </exception>
 
@@ -35,16 +54,23 @@ internal static class SuspensionService
 
 		try
 		{
+			Directory.CreateDirectory(s_dateTodayConfigDirectory);
+
 			using FileStream targetFileStream =
-				File.Open(s_filepath, FileMode.Create, FileAccess.Write, FileShare.None);
+				File.Open(s_widgetStateFilepath, FileMode.Create, FileAccess.Write, FileShare.None);
 
 			JsonSerializer.Serialize(targetFileStream, state, typeInfo);
 		}
 		catch (Exception ex)
 		{
-			throw new InvalidOperationException(
-				Strings.Suspension_Exception_FailedToPersistState,
-				ex);
+			string exceptionMessageFriendly =
+				string.Format(
+					CultureInfo.InvariantCulture,
+					s_failedToPersistStateExceptionFormat,
+					s_dateTodayConfigDirectory,
+					ex.Message);
+
+			throw new IOException(exceptionMessageFriendly, ex);
 		}
 	}
 
@@ -56,33 +82,38 @@ internal static class SuspensionService
 	/// The source-generated metadata for <typeparamref name="T" />.
 	/// </param>
 	/// <returns>
-	/// The deserialized application state, or <c>null</c> if no persisted state exists.
+	/// The deserialised application state, or <c>null</c> if no persisted state exists.
 	/// </returns>
-	/// <exception cref="InvalidOperationException">
-	/// Thrown if the persisted state cannot be deserialized.
+	/// <exception cref="IOException">
+	/// Thrown if the persisted state exists but cannot be deserialised.
 	/// </exception>
 
 	public static T? LoadState<T>(JsonTypeInfo<T> typeInfo) where T : ISuspensionState
 	{
 		ArgumentNullException.ThrowIfNull(typeInfo);
 
-		if (!File.Exists(s_filepath))
+		if (!File.Exists(s_widgetStateFilepath))
 		{
 			return default;
 		}
 
 		try
 		{
-			using FileStream targetFileStream = File.OpenRead(s_filepath);
+			using FileStream targetFileStream = File.OpenRead(s_widgetStateFilepath);
 			T? result = JsonSerializer.Deserialize(targetFileStream, typeInfo);
 
 			return result;
 		}
 		catch (Exception ex)
 		{
-			throw new InvalidOperationException(
-				Strings.Suspension_Exception_FailedToDeserialiseState,
-				ex);
+			string exceptionMessageFriendly =
+				string.Format(
+					CultureInfo.InvariantCulture,
+					s_failedToDeserialiseStateExceptionFormat,
+					s_dateTodayConfigDirectory,
+					ex.Message);
+
+			throw new IOException(exceptionMessageFriendly, ex);
 		}
 	}
 }

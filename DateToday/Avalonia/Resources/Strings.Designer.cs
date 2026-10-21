@@ -349,38 +349,41 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to deserialise the persisted application state..
+        ///   Looks up a localized string similar to DateToday.
         /// </summary>
-        public static string Suspension_Exception_FailedToDeserialiseState {
+        public static string Suspension_DirectoryName_DateToday {
             get {
-                return ResourceManager.GetString("Suspension_Exception_FailedToDeserialiseState", resourceCulture);
+                return ResourceManager.GetString("Suspension_DirectoryName_DateToday", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your existing settings file is either inaccessible or invalid. The widget has instead been initialised using a default configuration..
+        ///   Looks up a localized string similar to The app failed to read your existing widget configuration from the following directory: 
+        ///{0} 
+        ///
+        ///A default widget configuration will be used instead. 
+        ///
+        ///If you were particularly attached to your existing configuration, you now have a window of opportunity within which to make a manual backup before it is overwritten. 
+        ///
+        ///Exception message: 
+        ///{1}.
         /// </summary>
-        public static string Suspension_Exception_FailedToDeserialiseState_Friendly {
+        public static string Suspension_Exception_FailedToDeserialiseState_MessageTemplate {
             get {
-                return ResourceManager.GetString("Suspension_Exception_FailedToDeserialiseState_Friendly", resourceCulture);
+                return ResourceManager.GetString("Suspension_Exception_FailedToDeserialiseState_MessageTemplate", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to persist the application state..
+        ///   Looks up a localized string similar to The app failed to save your widget configuration to the following directory: 
+        ///{0}
+        ///
+        ///Exception message: 
+        ///{1}.
         /// </summary>
-        public static string Suspension_Exception_FailedToPersistState {
+        public static string Suspension_Exception_FailedToPersistState_MessageTemplate {
             get {
-                return ResourceManager.GetString("Suspension_Exception_FailedToPersistState", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The app attempted to save your widget configuration, but it was unable to do so. Please ensure that the app executable is permitted write access within its containing folder..
-        /// </summary>
-        public static string Suspension_Exception_FailedToPersistState_Friendly {
-            get {
-                return ResourceManager.GetString("Suspension_Exception_FailedToPersistState_Friendly", resourceCulture);
+                return ResourceManager.GetString("Suspension_Exception_FailedToPersistState_MessageTemplate", resourceCulture);
             }
         }
         
@@ -490,7 +493,7 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Homie, I need you to understand that a rectangle cannot have more than four corners..
+        ///   Looks up a localized string similar to I need you to understand that a rectangle cannot have more than four corners..
         /// </summary>
         public static string WidgetViewModel_Exception_CornerIdentifierNotSupported {
             get {

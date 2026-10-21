@@ -13,6 +13,7 @@ using DateToday.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 
@@ -27,7 +28,8 @@ internal sealed partial class App : Application, IDisposable
 	/// </summary>
 
 	private ServiceProvider? _services;
-	private bool _hasDeserialisationSucceeded, _isAppShutdownAfoot;
+	private IOException? _startupDeserialisationException;
+	private bool _isAppShutdownAfoot;
 
 	public override void Initialize()
 	{
@@ -41,9 +43,8 @@ internal sealed partial class App : Application, IDisposable
 	/// application window (<see cref="WidgetView" />).
 	/// </summary>
 	/// <remarks>
-	/// In the event that a persisted application state exists, deserialisation success is recorded
-	/// in <see cref="_hasDeserialisationSucceeded" /> for later error handling. Note that, if no
-	/// persisted state exists, this flag will always reflect a Success state.
+	/// In the event that a persisted application state exists, deserialisation failure is recorded
+	/// in <see cref="_startupDeserialisationException" /> for later error handling.
 	/// </remarks>
 
 	[SuppressMessage(
@@ -60,8 +61,18 @@ internal sealed partial class App : Application, IDisposable
 	{
 		if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)
 		{
-			(WidgetModel? widgetModel, _hasDeserialisationSucceeded) =
-				WidgetModelFactory.GetInitialWidgetModel();
+			WidgetModel? widgetModel = null;
+
+			try
+			{
+				widgetModel = WidgetModelFactory.GetPersistedWidgetModel();
+			}
+			catch (IOException ex)
+			{
+				_startupDeserialisationException = ex;
+			}
+
+			widgetModel ??= WidgetModelFactory.CreateDefault();
 
 			_services = new ServiceCollection()
 				.AddDomainServices(widgetModel)
@@ -85,16 +96,13 @@ internal sealed partial class App : Application, IDisposable
 	/// <summary>
 	/// Attempts to serialise the <paramref name="widgetModel" /> to persistent storage.
 	/// </summary>
-	/// <returns>
-	/// <c>true</c> if serialisation succeeded; <c>false</c> if serialisation failed.
-	/// </returns>
 	/// <remarks>
 	/// In order to allow the application shutdown process to continue gracefully in the event of a
 	/// serialisation failure, exceptions are caught internally; Error state is reflected in the
-	/// returned boolean value.
+	/// returned nullable <see cref="IOException" />.
 	/// </remarks>
 
-	private static bool PersistStateBeforeClosure(WidgetModel widgetModel)
+	private static IOException? PersistStateBeforeClosure(WidgetModel widgetModel)
 	{
 		JsonTypeInfo<WidgetModelDto> typeInfo =
 			WidgetModelDtoSerialiserContext.Default.WidgetModelDto;
@@ -105,12 +113,12 @@ internal sealed partial class App : Application, IDisposable
 		{
 			SuspensionService.SaveState(widgetModelDto, typeInfo);
 		}
-		catch (InvalidOperationException)
+		catch (IOException ex)
 		{
-			return false;
+			return ex;
 		}
 
-		return true;
+		return null;
 	}
 
 	/// <summary>
@@ -135,13 +143,11 @@ internal sealed partial class App : Application, IDisposable
 
 		try
 		{
-			bool hasSerialisationSucceeded = PersistStateBeforeClosure(widgetModel);
-
-			if (!hasSerialisationSucceeded)
+			if (PersistStateBeforeClosure(widgetModel) is IOException ex)
 			{
 				await widgetDialogService.ShowAlertAsync(
 					AlertFlavour.Warning,
-					Strings.Suspension_Exception_FailedToPersistState_Friendly
+					ex.Message
 				).ConfigureAwait(false);
 			}
 		}
@@ -235,11 +241,11 @@ internal sealed partial class App : Application, IDisposable
 		// Force instantiation of the UnhandledExceptionNotifier.
 		_ = _services.GetRequiredService<UnhandledExceptionNotifier>();
 
-		if (!_hasDeserialisationSucceeded)
+		if (_startupDeserialisationException != null)
 		{
 			await widgetDialogService.ShowAlertAsync(
 				AlertFlavour.Warning,
-				Strings.Suspension_Exception_FailedToDeserialiseState_Friendly
+				_startupDeserialisationException.Message
 			).ConfigureAwait(false);
 		}
 	}

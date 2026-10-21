@@ -15,10 +15,11 @@
 
 	<Window.ContextMenu>
 
-		<ContextMenu Classes="WidgetContextMenu">
+		<ContextMenu>
 
 			<MenuItem
-				Classes="WidgetContextMenuQuickSetting"
+				Padding="10 6.5 -5 3.5"
+				Classes="WidgetContextMenuItem"
 				Command="{Binding ToggleMouseDragCommand, Mode=OneTime}"
 				Header="{Binding Position.IsMouseDragEnabled, Mode=OneWay, Converter={x:Static conv:WidgetViewConverters.IsMouseDragEnabledToggleLabelConverter}}">
 
