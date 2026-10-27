@@ -62,7 +62,7 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 		_isPropertyInitialisationComplete = true;
 
 		ResetWidgetContentUpdateScheduler();
-		MouseDragToggleIcon = GetNewMouseDragToggleIcon();
+		MouseDragToggleIcon = GetMouseDragToggleIcon();
 	}
 
 	[ObservableProperty]
@@ -104,21 +104,21 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	public string? DateTimeText => FormatCurrentDateTime();
 
 	[RelayCommand]
-	private void DoubleTapped()
+	private void OnDoubleTapped()
 	{
 		_isWindowDragAfoot = false;
 		WeakReferenceMessenger.Default.Send(new OpenSettingsViewMessage());
 	}
 
 	[RelayCommand]
-	private void Loaded(Size windowSize)
+	private void OnLoaded(Size windowSize)
 	{
 		_cachedWindowSize = windowSize;
 		AnchorSelectedWindowCorner();
 	}
 
 	[RelayCommand]
-	private void PointerPressed(Point cursorLogicalPosition)
+	private void OnPointerPressed(Point cursorLogicalPosition)
 	{
 		if (Position.IsMouseDragEnabled)
 		{
@@ -128,7 +128,7 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	}
 
 	[RelayCommand]
-	private void PointerMoved(Point cursorLogicalPosition)
+	private void OnPointerMoved(Point cursorLogicalPosition)
 	{
 		if (_isWindowDragAfoot)
 		{
@@ -140,7 +140,7 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	}
 
 	[RelayCommand]
-	private void PointerReleased()
+	private void OnPointerReleased()
 	{
 		if (_isWindowDragAfoot)
 		{
@@ -152,14 +152,14 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	}
 
 	[RelayCommand]
-	private void ScreensChanged()
+	private void OnScreensChanged()
 	{
 		FitWindowToWorkingArea();
 		UpdateAnchoredCornerLogicalPosition();
 	}
 
 	[RelayCommand]
-	private void SizeChanged(Size windowSize)
+	private void OnSizeChanged(Size windowSize)
 	{
 		if (!_isWindowDragAfoot)
 		{
@@ -372,7 +372,7 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 		this.WindowOriginLogicalPosition = windowOriginLogicalPositionConstrained;
 	}
 
-	private StreamGeometry GetNewMouseDragToggleIcon()
+	private StreamGeometry GetMouseDragToggleIcon()
 	{
 		string iconKey = this.Position.IsMouseDragEnabled
 			? Strings.Icons_Key_Lock
@@ -429,6 +429,10 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 		{
 			ResetWidgetContentUpdateScheduler();
 		}
+		else
+		{
+			OnPropertyChanged(nameof(DateTimeText));
+		}
 	}
 
 	partial void OnPositionChanged(PositionConfig oldValue, PositionConfig newValue)
@@ -481,20 +485,7 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 		}
 		else if (hasIsMouseDragEnabledChanged)
 		{
-			MouseDragToggleIcon = GetNewMouseDragToggleIcon();
-		}
-	}
-
-	partial void OnAppChanged(AppConfig oldValue, AppConfig newValue)
-	{
-		if (!_isPropertyInitialisationComplete)
-		{
-			return;
-		}
-
-		if (newValue.AppCulture != oldValue.AppCulture)
-		{
-			OnPropertyChanged(nameof(DateTimeText));
+			MouseDragToggleIcon = GetMouseDragToggleIcon();
 		}
 	}
 

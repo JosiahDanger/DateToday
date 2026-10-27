@@ -165,9 +165,6 @@
   <data name="AlertView_Window_Title" xml:space="preserve">
     <value>DateToday - Alert</value>
   </data>
-  <data name="SettingsViewConverters_Exception_SettingsNavigatorIndexNotSupported" xml:space="preserve">
-    <value>A converter utilised by SettingsView failed to locate a child View corresponding to the selected SettingsView navigator index.</value>
-  </data>
   <data name="ActionScheduler_Exception_SynchronizationContext_Null" xml:space="preserve">
     <value>ActionScheduler requires a SynchronizationContext.</value>
   </data>

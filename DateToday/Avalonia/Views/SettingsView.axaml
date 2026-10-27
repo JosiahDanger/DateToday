@@ -3,11 +3,16 @@
 	xmlns="https://github.com/avaloniaui"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:conv="using:DateToday.Avalonia.Converters"
+	xmlns:dataTemplates="using:DateToday.Avalonia.DataTemplates"
 	xmlns:res="using:DateToday.Avalonia.Resources"
 	xmlns:vm="using:DateToday.Avalonia.ViewModels"
 	Title="{x:Static res:Strings.SettingsView_Window_Title}"
 	x:DataType="vm:SettingsViewModel"
 	Classes="SettingsWindow">
+
+	<Window.Resources>
+		<dataTemplates:SettingsDataTemplate x:Key="SettingsDataTemplate" />
+	</Window.Resources>
 
 	<Window.Styles>
 		<StyleInclude Source="/Avalonia/Styles/SettingsStyles.axaml" />
@@ -35,7 +40,8 @@
 						Name="SettingsNavigator"
 						Grid.Row="0"
 						Grid.Column="0"
-						Classes="SettingsNavigator">
+						Classes="SettingsNavigator"
+						TabIndex="{Binding SelectedTabIndex, Mode=OneWay}">
 
 						<TabStripItem
 							Classes="SettingsNavigatorItem"
@@ -72,7 +78,8 @@
 
 				<ContentControl
 					Classes="SettingsPage"
-					Content="{Binding SelectedIndex, ElementName=SettingsNavigator, Mode=OneWay, Converter={x:Static conv:SettingsViewConverters.SettingsNavigatorIndexToViewConverter}}" />
+					Content="{Binding SelectedConfigViewModel}"
+					ContentTemplate="{StaticResource SettingsDataTemplate}" />
 
 			</Border>
 

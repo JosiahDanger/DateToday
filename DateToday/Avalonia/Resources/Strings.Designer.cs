@@ -340,15 +340,6 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A converter utilised by SettingsView failed to locate a child View corresponding to the selected SettingsView navigator index..
-        /// </summary>
-        public static string SettingsViewConverters_Exception_SettingsNavigatorIndexNotSupported {
-            get {
-                return ResourceManager.GetString("SettingsViewConverters_Exception_SettingsNavigatorIndexNotSupported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to DateToday.
         /// </summary>
         public static string Suspension_DirectoryName_DateToday {

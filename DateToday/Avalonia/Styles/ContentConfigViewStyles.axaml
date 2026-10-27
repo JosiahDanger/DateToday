@@ -25,7 +25,17 @@
 	</Style>
 
 	<Style Selector="ComboBox.LocaleSelector">
+		<Setter Property="AutoScrollToSelectedItem" Value="True" />
+		<Setter Property="MaxDropDownHeight" Value="300" />
 		<Setter Property="IsEditable" Value="True" />
+	</Style>
+
+	<Style Selector="ComboBoxItem">
+		<Setter Property="CornerRadius" Value="1" />
+		<Setter Property="FontSize" Value="13" />
+		<Setter Property="Margin" Value="7.5 0 22.5 0" />
+		<Setter Property="MinWidth" Value="350" />
+		<Setter Property="Padding" Value="7.5 8 7.5 7" />
 	</Style>
 
 	<Style Selector="NumericUpDown.RefreshIntervalInput">
@@ -41,7 +51,7 @@
 		<Setter Property="NumericUpDown.InnerRightContent">
 			<Template>
 				<TextBlock
-					Margin="5 2.5 10 0"
+					Margin="5 2 10 0"
 					VerticalAlignment="Center"
 					FontSize="12"
 					Text="{x:Static res:Strings.ContentConfigView_NumericUpDown_RefreshIntervalInput_Unit}" />

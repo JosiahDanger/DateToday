@@ -100,7 +100,7 @@
 		<Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
 		<Setter Property="Height" Value="300" />
 		<Setter Property="MaxWidth" Value="800" />
-		<Setter Property="MinWidth" Value="625" />
+		<Setter Property="MinWidth" Value="650" />
 		<Setter Property="ShowInTaskbar" Value="True" />
 		<Setter Property="SizeToContent" Value="Width" />
 		<Setter Property="TransparencyLevelHint" Value="AcrylicBlur, Transparent" />
