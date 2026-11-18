@@ -336,8 +336,7 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 				CornerIdentifier.TopRight => CornerIdentifier.BottomLeft,
 				CornerIdentifier.BottomLeft => CornerIdentifier.TopRight,
 				CornerIdentifier.BottomRight => CornerIdentifier.TopLeft,
-				_ => throw new ArgumentException(
-						Strings.WidgetViewModel_Exception_CornerIdentifierNotSupported)
+				_ => throw new ArgumentOutOfRangeException(nameof(corner))
 			};
 		}
 

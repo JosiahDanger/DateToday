@@ -38,15 +38,16 @@
 
 	<!-- App Dependencies -->
 	<ItemGroup Label="App Dependencies">
-		<PackageReference Include="Avalonia" Version="12.1.4" />
-		<PackageReference Include="Avalonia.Desktop" Version="12.1.4" />
-		<PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.4" />
+		<PackageReference Include="Avalonia" Version="12.1.6" />
+		<PackageReference Include="Avalonia.Desktop" Version="12.1.6" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.6" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+		<PackageReference Include="Darp.CommunityToolkit.MvvmValidator" Version="0.1.1" />
 		<PackageReference Include="IDisposableAnalyzers" Version="4.0.8">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.13" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0" />
 		<PackageReference Include="PublishAotCompressed" Version="1.0.5" />
 	</ItemGroup>
 
@@ -71,7 +72,7 @@
 	</ItemGroup>
 
 	<!-- Embedded StreamGeometry -->
-	<ItemGroup Label="Embedded Fonts">
+	<ItemGroup Label="Embedded StreamGeometry">
 		<AvaloniaResource Include="Avalonia\Geometries\Icons.axaml" />
 	</ItemGroup>
 

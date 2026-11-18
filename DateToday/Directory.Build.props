@@ -27,6 +27,8 @@
 		<StackTraceSupport>false</StackTraceSupport>
 		<UseSystemResourceKeys>true</UseSystemResourceKeys>
 		<NoWin32Manifest>true</NoWin32Manifest>
+		<JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+		<GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
 	</PropertyGroup>
 
 	<!-- Windows x64 Native Linker Dependencies -->

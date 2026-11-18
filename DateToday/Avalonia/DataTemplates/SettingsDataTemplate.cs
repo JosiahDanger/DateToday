@@ -6,7 +6,7 @@ using System;
 
 namespace DateToday.Avalonia.DataTemplates;
 
-internal class SettingsDataTemplate : IDataTemplate
+internal sealed class SettingsDataTemplate : IDataTemplate
 {
 	public Control Build(object? data) =>
 		data switch

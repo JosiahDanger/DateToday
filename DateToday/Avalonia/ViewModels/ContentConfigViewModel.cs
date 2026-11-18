@@ -1,14 +1,20 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Darp.MvvmValidator;
+using DateToday.Avalonia.Resources;
 using DateToday.DomainServices;
 using DateToday.Models;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 
 namespace DateToday.Avalonia.ViewModels;
 
-internal sealed partial class ContentConfigViewModel : ObservableObject
+internal sealed partial class ContentConfigViewModel : ValidatingObservableObject
 {
+	private static readonly ReadOnlyObservableCollection<CultureInfo> s_availableLocales =
+		GetAvailableLocales();
+
 	private readonly IWidgetModelSnapshot _widgetModelSnapshot;
 	private readonly WidgetModelMutationService _widgetModelMutationService;
 	private readonly bool _isPropertyInitialisationComplete;
@@ -29,9 +35,13 @@ internal sealed partial class ContentConfigViewModel : ObservableObject
 	}
 
 	[ObservableProperty]
+	[Required]
 	public partial string DateTimeFormat { get; set; }
 
 	[ObservableProperty]
+	[Required(
+		ErrorMessageResourceType = typeof(Strings),
+		ErrorMessageResourceName = nameof(Strings.ContentConfigViewModel_Validation_DateTimeCulture_Invalid))]
 	public partial CultureInfo DateTimeCulture { get; set; }
 
 	[ObservableProperty]
@@ -40,8 +50,7 @@ internal sealed partial class ContentConfigViewModel : ObservableObject
 	[ObservableProperty]
 	public partial uint RefreshIntervalSeconds { get; set; }
 
-	public static ReadOnlyObservableCollection<CultureInfo> AvailableLocales =>
-		GetAvailableLocales();
+	public static ReadOnlyObservableCollection<CultureInfo> AvailableLocales => s_availableLocales;
 
 	private static ReadOnlyObservableCollection<CultureInfo> GetAvailableLocales()
 	{
@@ -63,6 +72,11 @@ internal sealed partial class ContentConfigViewModel : ObservableObject
 			return;
 		}
 
+		if (GetErrors(nameof(DateTimeFormat)).Any())
+		{
+			return;
+		}
+
 		_widgetModelMutationService.MutateContentConfig(
 			content => content with { DateTimeFormat = value });
 	}
@@ -70,6 +84,11 @@ internal sealed partial class ContentConfigViewModel : ObservableObject
 	partial void OnDateTimeCultureChanged(CultureInfo value)
 	{
 		if (!_isPropertyInitialisationComplete)
+		{
+			return;
+		}
+
+		if (GetErrors(nameof(DateTimeCulture)).Any())
 		{
 			return;
 		}

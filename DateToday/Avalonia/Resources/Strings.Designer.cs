@@ -124,16 +124,7 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A converter utilised by AlertView received an unsupported member of an enumeration type..
-        /// </summary>
-        public static string AlertViewConverters_Exception_EnumerationTypeMemberNotSupported {
-            get {
-                return ResourceManager.GetString("AlertViewConverters_Exception_EnumerationTypeMemberNotSupported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The ServiceProvider has not been instantiated..
+        ///   Looks up a localized string similar to The ServiceProvider has not been instantiated. This scenario should never occur during normal operation of the app..
         /// </summary>
         public static string Application_Exception_ServiceProvider_Null {
             get {
@@ -237,6 +228,15 @@ namespace DateToday.Avalonia.Resources {
         public static string ContentConfigView_TextBlock_RefreshIntervalInput_Label {
             get {
                 return ResourceManager.GetString("ContentConfigView_TextBlock_RefreshIntervalInput_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid locale identifier..
+        /// </summary>
+        public static string ContentConfigViewModel_Validation_DateTimeCulture_Invalid {
+            get {
+                return ResourceManager.GetString("ContentConfigViewModel_Validation_DateTimeCulture_Invalid", resourceCulture);
             }
         }
         
@@ -354,7 +354,7 @@ namespace DateToday.Avalonia.Resources {
         ///
         ///A default widget configuration will be used instead. 
         ///
-        ///If you were particularly attached to your existing configuration, you now have a window of opportunity within which to make a manual backup before it is overwritten. 
+        ///If you were particularly attached to your existing configuration, you now have a window of opportunity before it is overwritten within which to make a manual backup.
         ///
         ///Exception message: 
         ///{1}.
@@ -484,16 +484,7 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to I need you to understand that a rectangle cannot have more than four corners..
-        /// </summary>
-        public static string WidgetViewModel_Exception_CornerIdentifierNotSupported {
-            get {
-                return ResourceManager.GetString("WidgetViewModel_Exception_CornerIdentifierNotSupported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to You are not permitted to make changes to multiple Position fields simultaneously. Your frame-perfect inputs aren&apos;t welcome here, speedrunner..
+        ///   Looks up a localized string similar to You are not permitted to make changes to multiple Position fields simultaneously. Your frame-perfect inputs aren&apos;t appreciated here, speedrunner..
         /// </summary>
         public static string WidgetViewModel_Exception_PositionConfigSimultaneousChanges {
             get {

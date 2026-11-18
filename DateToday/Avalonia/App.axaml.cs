@@ -131,8 +131,7 @@ internal sealed partial class App : Application, IDisposable
 	/// <see cref="WidgetDialogService.ShowAlertAsync" /> and <see cref="Dispatcher.InvokeAsync" />.
 	/// The alert dialog must be closed via the UI thread before its parent window closes, otherwise
 	/// a runtime error will occur. To ensure the intended chronology of events, closure of the
-	/// <see cref="WidgetView" /> is marshalled back to the UI thread via the Dispatcher. Thus is
-	/// satisfied Avalonia's requirement that windows are closed on the UI thread.
+	/// <see cref="WidgetView" /> is marshalled back to the UI thread via the Dispatcher.
 	/// </remarks>
 
 	private async Task CleanUpAndCloseAsync(

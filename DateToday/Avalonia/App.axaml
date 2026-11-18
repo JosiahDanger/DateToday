@@ -6,6 +6,9 @@
 
 	<Application.Styles>
 		<FluentTheme DensityStyle="Compact" />
+		<Style Selector="DataValidationErrors">
+			<Setter Property="Theme" Value="{DynamicResource TooltipDataValidationErrors}" />
+		</Style>
 	</Application.Styles>
 
 	<Application.Resources>

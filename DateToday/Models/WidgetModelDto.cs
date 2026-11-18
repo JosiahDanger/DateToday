@@ -1,12 +1,10 @@
 ﻿using Avalonia;
 using Avalonia.Media;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.Json.Serialization;
 
 namespace DateToday.Models;
 
-[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
 internal sealed class WidgetModelDto : ISuspensionState
 {
 	[JsonPropertyName("dateTimeFormat")]

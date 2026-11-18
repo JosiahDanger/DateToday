@@ -159,9 +159,6 @@
   <data name="AlertView_ErrorFlavour_Caption" xml:space="preserve">
     <value>DateToday has shat the bed.</value>
   </data>
-  <data name="AlertViewConverters_Exception_EnumerationTypeMemberNotSupported" xml:space="preserve">
-    <value>A converter utilised by AlertView received an unsupported member of an enumeration type.</value>
-  </data>
   <data name="AlertView_Window_Title" xml:space="preserve">
     <value>DateToday - Alert</value>
   </data>
@@ -192,14 +189,11 @@
   <data name="WidgetView_Exception_NoAvailableMonitors" xml:space="preserve">
     <value>The operating system reports that zero monitors are available.</value>
   </data>
-  <data name="WidgetViewModel_Exception_CornerIdentifierNotSupported" xml:space="preserve">
-    <value>I need you to understand that a rectangle cannot have more than four corners.</value>
-  </data>
   <data name="GeometryProvider_Exception_FailedToLocateRequestedGeometry" xml:space="preserve">
     <value>The GeometryProvider failed to locate StreamGeometry associated with key '{0}'.</value>
   </data>
   <data name="Application_Exception_ServiceProvider_Null" xml:space="preserve">
-    <value>The ServiceProvider has not been instantiated.</value>
+    <value>The ServiceProvider has not been instantiated. This scenario should never occur during normal operation of the app.</value>
   </data>
   <data name="Application_Exception_UnsupportedWidgetViewClosureInstigator" xml:space="preserve">
     <value>Only the WidgetView may instigate closure of itself.</value>
@@ -253,7 +247,7 @@ Please consider raising an Issue.</value>
     <value>seconds</value>
   </data>
   <data name="WidgetViewModel_Exception_PositionConfigSimultaneousChanges" xml:space="preserve">
-    <value>You are not permitted to make changes to multiple Position fields simultaneously. Your frame-perfect inputs aren't welcome here, speedrunner.</value>
+    <value>You are not permitted to make changes to multiple Position fields simultaneously. Your frame-perfect inputs aren't appreciated here, speedrunner.</value>
   </data>
   <data name="Suspension_DirectoryName_DateToday" xml:space="preserve">
     <value>DateToday</value>
@@ -271,9 +265,12 @@ Exception message:
 
 A default widget configuration will be used instead. 
 
-If you were particularly attached to your existing configuration, you now have a window of opportunity within which to make a manual backup before it is overwritten. 
+If you were particularly attached to your existing configuration, you now have a window of opportunity before it is overwritten within which to make a manual backup.
 
 Exception message: 
 {1}</value>
+  </data>
+  <data name="ContentConfigViewModel_Validation_DateTimeCulture_Invalid" xml:space="preserve">
+    <value>Invalid locale identifier.</value>
   </data>
 </root>
