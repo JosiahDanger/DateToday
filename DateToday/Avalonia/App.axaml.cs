@@ -12,7 +12,6 @@ using DateToday.DomainServices;
 using DateToday.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
@@ -46,16 +45,6 @@ internal sealed partial class App : Application, IDisposable
 	/// In the event that a persisted application state exists, deserialisation failure is recorded
 	/// in <see cref="_startupDeserialisationException" /> for later error handling.
 	/// </remarks>
-
-	[SuppressMessage(
-	"IDisposableAnalyzers.IDISP003",
-	"IDISP003",
-	Justification =
-		"""
-			An existing ServiceProvider instance cannot exist already, because
-			OnFrameworkInitializationCompleted() is executed during app initialisation exactly
-			once.
-		""")]
 
 	public override void OnFrameworkInitializationCompleted()
 	{
