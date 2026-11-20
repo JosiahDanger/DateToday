@@ -1,6 +1,8 @@
 <Solution>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
+    <File Path="LICENCE.txt" />
+    <File Path="THIRD-PARTY-LICENCES.txt" />
   </Folder>
   <Project Path="DateToday/DateToday.csproj" />
 </Solution>
