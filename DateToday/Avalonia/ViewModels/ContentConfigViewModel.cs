@@ -4,6 +4,7 @@ using DateToday.Avalonia.Resources;
 using DateToday.DomainServices;
 using DateToday.Models;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
@@ -40,8 +41,10 @@ internal sealed partial class ContentConfigViewModel : ValidatingObservableObjec
 
 	[ObservableProperty]
 	[Required(
-		ErrorMessageResourceType = typeof(Strings),
-		ErrorMessageResourceName = nameof(Strings.ContentConfigViewModel_Validation_DateTimeCulture_Invalid))]
+		ErrorMessageResourceType =
+			typeof(Strings),
+		ErrorMessageResourceName =
+			nameof(Strings.ContentConfigViewModel_Validation_DateTimeCulture_Invalid))]
 	public partial CultureInfo DateTimeCulture { get; set; }
 
 	[ObservableProperty]
@@ -60,62 +63,65 @@ internal sealed partial class ContentConfigViewModel : ValidatingObservableObjec
 					   .OrderBy(culture => culture.DisplayName);
 
 		ObservableCollection<CultureInfo> allLocalesObservableCollection =
-			new(allLocalesOrderedEnumerable);
+			[with(allLocalesOrderedEnumerable)];
 
 		return new ReadOnlyObservableCollection<CultureInfo>(allLocalesObservableCollection);
 	}
 
-	partial void OnDateTimeFormatChanged(string value)
+	protected override void OnPropertyChanged(PropertyChangedEventArgs e)
 	{
+		base.OnPropertyChanged(e);
+
 		if (!_isPropertyInitialisationComplete)
 		{
 			return;
 		}
 
-		if (GetErrors(nameof(DateTimeFormat)).Any())
+		switch (e.PropertyName)
 		{
-			return;
+			case nameof(DateTimeFormat) when !(GetErrors(nameof(DateTimeFormat)).Any()):
+
+				_widgetModelMutationService.MutateContentConfig(
+					content =>
+						content with
+						{
+							DateTimeFormat = this.DateTimeFormat
+						});
+
+				break;
+
+			case nameof(DateTimeCulture) when !(GetErrors(nameof(DateTimeCulture)).Any()):
+
+				_widgetModelMutationService.MutateContentConfig(
+					content =>
+						content with
+						{
+							DateTimeCulture = this.DateTimeCulture
+						});
+
+				break;
+
+			case nameof(IsOrdinalDaySuffixEnabled):
+
+				_widgetModelMutationService.MutateContentConfig(
+					content =>
+						content with
+						{
+							IsOrdinalDaySuffixEnabled = this.IsOrdinalDaySuffixEnabled
+						});
+
+				break;
+
+			case nameof(RefreshIntervalSeconds):
+
+				_widgetModelMutationService.MutateContentConfig(
+					content =>
+						content with
+						{
+							RefreshIntervalSeconds = this.RefreshIntervalSeconds
+						});
+
+				break;
 		}
-
-		_widgetModelMutationService.MutateContentConfig(
-			content => content with { DateTimeFormat = value });
-	}
-
-	partial void OnDateTimeCultureChanged(CultureInfo value)
-	{
-		if (!_isPropertyInitialisationComplete)
-		{
-			return;
-		}
-
-		if (GetErrors(nameof(DateTimeCulture)).Any())
-		{
-			return;
-		}
-
-		_widgetModelMutationService.MutateContentConfig(
-			content => content with { DateTimeCulture = value });
-	}
-
-	partial void OnIsOrdinalDaySuffixEnabledChanged(bool value)
-	{
-		if (!_isPropertyInitialisationComplete)
-		{
-			return;
-		}
-
-		_widgetModelMutationService.MutateContentConfig(
-			content => content with { IsOrdinalDaySuffixEnabled = value });
-	}
-
-	partial void OnRefreshIntervalSecondsChanged(uint value)
-	{
-		if (!_isPropertyInitialisationComplete)
-		{
-			return;
-		}
-
-		_widgetModelMutationService.MutateContentConfig(
-			content => content with { RefreshIntervalSeconds = value });
 	}
 }
