@@ -1,10 +1,5 @@
 ﻿<!-- This file, 'Directory.Build.props', is a source of exclusive control over configuration for
-	 trimming and NativeAOT compilation.
-
-	 The contents of this file have been adapted from an example on GitHub provided by PeaceShi.
-	 Thank you!
-
-	 See: https://github.com/peaceshi/Avalonia-NativeAOT-SingleFile -->
+	 trimming and NativeAOT compilation. -->
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
@@ -29,6 +24,12 @@
 		<OptimizationPreference>Size</OptimizationPreference>
 		<IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
 	</PropertyGroup>
+
+	<!-- The configuration of Windows x64 Native Libraries and Native Linking has been adapted from
+		 an example available in the Avalonia-NativeAOT-SingleFile repository of GitHub user
+		 PeaceShi. Thank you!
+
+		 See: https://github.com/peaceshi/Avalonia-NativeAOT-SingleFile -->
 
 	<!-- Windows x64 Native Libraries -->
 	<ItemGroup Condition="'$(RuntimeIdentifier)' == 'win-x64'">
