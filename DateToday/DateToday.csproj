@@ -1,11 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<!-- See 'Directory.Build.props' for configuration related to AOT compilation, trimming, and
-		 self-contained publishing. -->
+	<!-- See 'Directory.Build.props' for configuration related to trimming and NativeAOT. -->
 
-	<!-- Project Core Settings -->
-	<PropertyGroup Label="Project Core Settings">
-		<TargetFramework>net10.0</TargetFramework>
+	<!-- Build Target -->
+	<PropertyGroup>
+		<TargetFramework>net11.0</TargetFramework>
 		<OutputType>WinExe</OutputType>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<StartupObject>DateToday.Avalonia.Program</StartupObject>
@@ -13,31 +12,25 @@
 		<NeutralLanguage>en-GB</NeutralLanguage>
 	</PropertyGroup>
 
-	<!-- Avalonia Configuration -->
-	<PropertyGroup Label="Avalonia Configuration">
-		<AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-	</PropertyGroup>
-
 	<!-- Analyser Configuration -->
-	<PropertyGroup Label="Analyser Configuration">
-		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+	<PropertyGroup>
 		<AnalysisLevel>latest-all</AnalysisLevel>
 		<IsAotCompatible>true</IsAotCompatible>
 	</PropertyGroup>
 
-	<!-- App Metadata -->
-	<PropertyGroup Label="App Metadata">
-		<Title>DateToday</Title>
+	<!-- Package Metadata -->
+	<PropertyGroup>
+		<Product>DateToday</Product>
 		<Version>2.0.0</Version>
 		<Description>A beautiful, lightweight desktop widget that displays the current date and/or time in a configurable format.</Description>
+		<Authors>Josiah Danger Shaahin</Authors>
 		<Copyright>© 2026 Josiah Danger Shaahin</Copyright>
 		<RepositoryUrl>https://github.com/JosiahDanger/DateToday</RepositoryUrl>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
-		<ApplicationIcon>DateToday Icon.ico</ApplicationIcon>
 	</PropertyGroup>
 
-	<!-- App Dependencies -->
-	<ItemGroup Label="App Dependencies">
+	<!-- Direct NuGet Dependencies -->
+	<ItemGroup>
 		<PackageReference Include="Avalonia" Version="12.1.6" />
 		<PackageReference Include="Avalonia.Desktop" Version="12.1.6" />
 		<PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.6" />
@@ -47,8 +40,8 @@
 		<PackageReference Include="PublishAotCompressed" Version="1.0.5" />
 	</ItemGroup>
 
-	<!-- Embedded Strings -->
-	<ItemGroup Label="Embedded Strings">
+	<!-- Localised Resources -->
+	<ItemGroup>
 		<EmbeddedResource Update="Avalonia\Resources\Strings.resx">
 			<Generator>PublicResXFileCodeGenerator</Generator>
 			<LastGenOutput>Strings.Designer.cs</LastGenOutput>
@@ -61,15 +54,17 @@
 		</Compile>
 	</ItemGroup>
 
-	<!-- Embedded Fonts -->
-	<ItemGroup Label="Embedded Fonts">
+	<!-- Avalonia Resources -->
+	<ItemGroup>
 		<AvaloniaResource Include="Avalonia\Fonts\*.otf" />
 		<AvaloniaResource Include="Avalonia\Fonts\*.ttf" />
-	</ItemGroup>
-
-	<!-- Embedded StreamGeometry -->
-	<ItemGroup Label="Embedded StreamGeometry">
 		<AvaloniaResource Include="Avalonia\Geometries\Icons.axaml" />
 	</ItemGroup>
+
+	<!-- Windows Platform -->
+	<PropertyGroup Condition="'$(RuntimeIdentifier)' == 'win-x64'">
+		<ApplicationIcon>DateToday Icon.ico</ApplicationIcon>
+		<NoWin32Manifest>true</NoWin32Manifest>
+	</PropertyGroup>
 
 </Project>
