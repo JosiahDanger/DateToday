@@ -10,11 +10,9 @@ using DateToday.Avalonia.Resources;
 using DateToday.Avalonia.Views;
 using DateToday.DomainServices;
 using DateToday.Models;
-using DateToday.Utilities;
 using System;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading;
 
 namespace DateToday.Avalonia.ViewModels;
 
@@ -36,7 +34,6 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	private readonly Lazy<IScreenInformationProvider> _screenInformationProvider;
 	private readonly GeometryProvider _geometryProvider;
 	private readonly bool _isPropertyInitialisationComplete;
-	private Timer? _widgetContentUpdateScheduler;
 	private bool _isWindowDragAfoot;
 	private Point _cursorLogicalPositionAtWindowDragStart;
 	private Size _cachedWindowSize;
@@ -61,7 +58,6 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 
 		_isPropertyInitialisationComplete = true;
 
-		ResetWidgetContentUpdateScheduler();
 		MouseDragToggleIcon = GetMouseDragToggleIcon();
 	}
 
@@ -77,6 +73,8 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	[ObservableProperty]
 	public partial AppConfig App { get; private set; }
 
+	public string DateTimeText => _widgetModelSnapshot.DateTimeText;
+
 	/// <summary>
 	/// Controls the logical position of the <see cref="WidgetView" /> window's origin.
 	/// </summary>
@@ -90,18 +88,6 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 
 	[ObservableProperty]
 	public partial StreamGeometry MouseDragToggleIcon { get; private set; }
-
-	/// <summary>
-	/// A calculated property that returns a string representation of the current date and/or time.
-	/// The string's format is determined by <see cref="ContentConfig.DateTimeFormat" /> and
-	/// <see cref="ContentConfig.DateTimeCulture" />.
-	/// </summary>
-	/// <remarks>
-	/// The property's initial value is calculated upon access, and is subsequently updated at
-	/// real-time clock boundaries specified by <see cref="ContentConfig.RefreshIntervalSeconds" />.
-	/// </remarks>
-
-	public string? DateTimeText => FormatCurrentDateTime();
 
 	[RelayCommand]
 	private void OnDoubleTapped()
@@ -193,48 +179,6 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	private static void CloseApplication()
 	{
 		WeakReferenceMessenger.Default.Send(new CloseApplicationMessage());
-	}
-
-	private string FormatCurrentDateTime()
-	{
-		//static string GetOrdinalDaySuffix(int ordinalDayOfMonth) =>
-		//	ordinalDayOfMonth switch
-		//	{
-		//		1 or 21 or 31 => "st",
-		//		2 or 22 => "nd",
-		//		3 or 23 => "rd",
-		//		_ => "th",
-		//	};
-
-		DateTime currentDateTime = DateTime.Now;
-
-		return currentDateTime.ToString(Content.DateTimeFormat, Content.DateTimeCulture);
-
-		//if (!Content.IsOrdinalDaySuffixEnabled)
-		//{
-		//	return currentDateTime.ToString(Content.DateTimeFormat, Content.DateTimeCulture);
-		//}
-
-		/* This code makes use of .NET composite formatting.
-		 *
-		 * See the following Microsoft Learn article:
-		 * https://learn.microsoft.com/dotnet/standard/base-types/composite-formatting */
-
-		//int ordinalDayOfMonth = currentDateTime.Day;
-		//string ordinalDaySuffix = GetOrdinalDaySuffix(ordinalDayOfMonth);
-
-		//string dateTimeFormatIncludingSuffixPlaceholder =
-		//	Content.DateTimeFormat.Insert((int)Content.OrdinalDaySuffixPosition, "{0}");
-
-		//string dateTimeStringIncludingSuffixPlaceholder =
-		//	currentDateTime.ToString(
-		//						dateTimeFormatIncludingSuffixPlaceholder,
-		//						App.AppCulture);
-
-		//return string.Format(
-		//					App.AppCulture,
-		//					dateTimeStringIncludingSuffixPlaceholder,
-		//					ordinalDaySuffix);
 	}
 
 	/// <summary>
@@ -380,25 +324,14 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 		return _geometryProvider.GetGeometry(iconKey);
 	}
 
-	/// <summary>
-	/// Leverages the <see cref="ActionScheduler" /> to create a timer that invokes property change
-	/// notifications for <see cref="DateTimeText" />.
-	/// </summary>
-
-	private void ResetWidgetContentUpdateScheduler()
-	{
-		_widgetContentUpdateScheduler?.Dispose();
-
-		_widgetContentUpdateScheduler =
-			ActionScheduler.Create(
-				Content.RefreshIntervalSeconds,
-				() => OnPropertyChanged(nameof(DateTimeText)));
-	}
-
 	private void OnWidgetModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
 	{
 		switch (e.PropertyName)
 		{
+			case nameof(WidgetModel.DateTimeText):
+				OnPropertyChanged(nameof(DateTimeText));
+				break;
+
 			case nameof(WidgetModel.Content):
 				this.Content = _widgetModelSnapshot.Content;
 				break;
@@ -414,23 +347,6 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 			case nameof(WidgetModel.App):
 				this.App = _widgetModelSnapshot.App;
 				break;
-		}
-	}
-
-	partial void OnContentChanged(ContentConfig oldValue, ContentConfig newValue)
-	{
-		if (!_isPropertyInitialisationComplete)
-		{
-			return;
-		}
-
-		if (newValue.RefreshIntervalSeconds != oldValue.RefreshIntervalSeconds)
-		{
-			ResetWidgetContentUpdateScheduler();
-		}
-		else
-		{
-			OnPropertyChanged(nameof(DateTimeText));
 		}
 	}
 
@@ -491,6 +407,5 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	public void Dispose()
 	{
 		_widgetModelSnapshot.PropertyChanged -= OnWidgetModelPropertyChanged;
-		_widgetContentUpdateScheduler?.Dispose();
 	}
 }

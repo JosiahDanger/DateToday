@@ -241,6 +241,15 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Required..
+        /// </summary>
+        public static string ContentConfigViewModel_Validation_RequiredFieldIsEmpty {
+            get {
+                return ResourceManager.GetString("ContentConfigViewModel_Validation_RequiredFieldIsEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The GeometryProvider failed to locate StreamGeometry associated with key &apos;{0}&apos;..
         /// </summary>
         public static string GeometryProvider_Exception_FailedToLocateRequestedGeometry {
@@ -426,6 +435,15 @@ namespace DateToday.Avalonia.Resources {
         public static string UnhandledExceptionNotifier_MessageTemplate {
             get {
                 return ResourceManager.GetString("UnhandledExceptionNotifier_MessageTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The provided DateTime format is invalid..
+        /// </summary>
+        public static string WidgetModel_Exception_DateTimeFormat_Invalid {
+            get {
+                return ResourceManager.GetString("WidgetModel_Exception_DateTimeFormat_Invalid", resourceCulture);
             }
         }
         

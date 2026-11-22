@@ -273,4 +273,10 @@ Exception message:
   <data name="ContentConfigViewModel_Validation_DateTimeCulture_Invalid" xml:space="preserve">
     <value>Invalid locale identifier.</value>
   </data>
+  <data name="ContentConfigViewModel_Validation_RequiredFieldIsEmpty" xml:space="preserve">
+    <value>Required.</value>
+  </data>
+  <data name="WidgetModel_Exception_DateTimeFormat_Invalid" xml:space="preserve">
+    <value>The provided DateTime format is invalid.</value>
+  </data>
 </root>

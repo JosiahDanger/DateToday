@@ -110,6 +110,7 @@ internal sealed class WidgetModelDto : ISuspensionState
 		return new WidgetModelDto
 		{
 			DateTimeFormat = model.Content.DateTimeFormat,
+
 			DateTimeCultureIdentifier = model.Content.DateTimeCulture.Name,
 			IsOrdinalDaySuffixEnabled = model.Content.IsOrdinalDaySuffixEnabled,
 			RefreshIntervalSeconds = model.Content.RefreshIntervalSeconds,

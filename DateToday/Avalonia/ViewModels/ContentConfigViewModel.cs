@@ -36,7 +36,11 @@ internal sealed partial class ContentConfigViewModel : ValidatingObservableObjec
 	}
 
 	[ObservableProperty]
-	[Required]
+	[Required(
+		ErrorMessageResourceType =
+			typeof(Strings),
+		ErrorMessageResourceName =
+			nameof(Strings.ContentConfigViewModel_Validation_RequiredFieldIsEmpty))]
 	public partial string DateTimeFormat { get; set; }
 
 	[ObservableProperty]
@@ -81,12 +85,7 @@ internal sealed partial class ContentConfigViewModel : ValidatingObservableObjec
 		{
 			case nameof(DateTimeFormat) when !(GetErrors(nameof(DateTimeFormat)).Any()):
 
-				_widgetModelMutationService.MutateContentConfig(
-					content =>
-						content with
-						{
-							DateTimeFormat = this.DateTimeFormat
-						});
+				TryMutateDateTimeFormat(DateTimeFormat);
 
 				break;
 
@@ -122,6 +121,19 @@ internal sealed partial class ContentConfigViewModel : ValidatingObservableObjec
 						});
 
 				break;
+		}
+	}
+
+	private void TryMutateDateTimeFormat(string dateTimeFormat)
+	{
+		try
+		{
+			_widgetModelMutationService.MutateContentConfig(
+				content => content with { DateTimeFormat = dateTimeFormat });
+		}
+		catch (ValidationException ex)
+		{
+			SetErrors(nameof(DateTimeFormat), [ex.ValidationResult]);
 		}
 	}
 }

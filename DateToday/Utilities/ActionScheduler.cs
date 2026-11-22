@@ -28,20 +28,20 @@ internal static class ActionScheduler
 	/// Thrown if no <see cref="SynchronizationContext" /> is available on the current thread.
 	/// </exception>
 	/// <exception cref="InvalidOperationException">
-	/// Thrown if <paramref name="refreshIntervalSeconds" /> is zero.
+	/// Thrown if <paramref name="intervalSeconds" /> is zero.
 	/// </exception>
 
 	public static Timer Create(uint intervalSeconds, Action onTick)
 	{
-		SynchronizationContext synchronisationContext = SynchronizationContext.Current
-			?? throw new NotSupportedException(
-				Strings.ActionScheduler_Exception_SynchronizationContext_Null);
-
 		if (intervalSeconds == 0)
 		{
 			throw new InvalidOperationException(
 				Strings.ActionScheduler_Exception_RefreshIntervalSeconds_Zero);
 		}
+
+		SynchronizationContext synchronisationContext = SynchronizationContext.Current
+			?? throw new NotSupportedException(
+				Strings.ActionScheduler_Exception_SynchronizationContext_Null);
 
 		long millisecondsPerInterval = intervalSeconds * TimeSpan.MillisecondsPerSecond;
 
