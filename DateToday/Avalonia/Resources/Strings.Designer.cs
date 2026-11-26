@@ -124,7 +124,7 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The ServiceProvider has not been instantiated. This scenario should never occur during normal operation of the app..
+        ///   Looks up a localized string similar to The ServiceProvider has not been instantiated..
         /// </summary>
         public static string Application_Exception_ServiceProvider_Null {
             get {
@@ -232,6 +232,24 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The DateTimeCulture property has not been initialised..
+        /// </summary>
+        public static string ContentConfigViewModel_Exception_DateTimeCulture_Null {
+            get {
+                return ResourceManager.GetString("ContentConfigViewModel_Exception_DateTimeCulture_Null", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unsupported ValidationContext..
+        /// </summary>
+        public static string ContentConfigViewModel_Exception_UnsupportedValidationContext {
+            get {
+                return ResourceManager.GetString("ContentConfigViewModel_Exception_UnsupportedValidationContext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid locale identifier..
         /// </summary>
         public static string ContentConfigViewModel_Validation_DateTimeCulture_Invalid {
@@ -241,11 +259,20 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Required..
+        ///   Looks up a localized string similar to You must provide a date / time format..
         /// </summary>
-        public static string ContentConfigViewModel_Validation_RequiredFieldIsEmpty {
+        public static string ContentConfigViewModel_Validation_DateTimeFormat_Empty {
             get {
-                return ResourceManager.GetString("ContentConfigViewModel_Validation_RequiredFieldIsEmpty", resourceCulture);
+                return ResourceManager.GetString("ContentConfigViewModel_Validation_DateTimeFormat_Empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The provided date / time format is invalid..
+        /// </summary>
+        public static string DateTimeTextFormatter_Exception_DateTimeFormat_Invalid {
+            get {
+                return ResourceManager.GetString("DateTimeTextFormatter_Exception_DateTimeFormat_Invalid", resourceCulture);
             }
         }
         
@@ -439,15 +466,6 @@ namespace DateToday.Avalonia.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The provided DateTime format is invalid..
-        /// </summary>
-        public static string WidgetModel_Exception_DateTimeFormat_Invalid {
-            get {
-                return ResourceManager.GetString("WidgetModel_Exception_DateTimeFormat_Invalid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Prevent Widget Dragging.
         /// </summary>
         public static string WidgetView_ContextMenu_MenuItem_DisableMouseDrag {
@@ -498,15 +516,6 @@ namespace DateToday.Avalonia.Resources {
         public static string WidgetView_Window_Title {
             get {
                 return ResourceManager.GetString("WidgetView_Window_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to You are not permitted to make changes to multiple Position fields simultaneously. Your frame-perfect inputs aren&apos;t appreciated here, speedrunner..
-        /// </summary>
-        public static string WidgetViewModel_Exception_PositionConfigSimultaneousChanges {
-            get {
-                return ResourceManager.GetString("WidgetViewModel_Exception_PositionConfigSimultaneousChanges", resourceCulture);
             }
         }
     }

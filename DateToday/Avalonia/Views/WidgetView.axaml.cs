@@ -68,7 +68,7 @@ internal sealed partial class WidgetView : Window, IScreenInformationProvider, I
 			?? _lastKnownScreen
 			?? this.Screens.Primary
 			?? throw new InvalidOperationException(
-							Strings.WidgetView_Exception_NoAvailableMonitors);
+				Strings.WidgetView_Exception_NoAvailableMonitors);
 	}
 
 	private void OnClosed(object? sender, EventArgs e)
@@ -116,7 +116,7 @@ internal sealed partial class WidgetView : Window, IScreenInformationProvider, I
 
 	private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
 	{
-		if (e.Properties.IsLeftButtonPressed)
+		if (e.Properties.IsLeftButtonPressed && !WidgetContextMenu.IsOpen)
 		{
 			_positionController.PointerPressedCommand.Execute(e.GetPosition(this));
 		}

@@ -10,9 +10,10 @@ using DateToday.Avalonia.Resources;
 using DateToday.Avalonia.Views;
 using DateToday.DomainServices;
 using DateToday.Models;
+using DateToday.Utilities;
 using System;
 using System.ComponentModel;
-using System.Linq;
+using System.Threading;
 
 namespace DateToday.Avalonia.ViewModels;
 
@@ -33,7 +34,11 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	private readonly WidgetModelMutationService _widgetModelMutationService;
 	private readonly Lazy<IScreenInformationProvider> _screenInformationProvider;
 	private readonly GeometryProvider _geometryProvider;
+	private Timer? _widgetContentUpdateScheduler;
+
 	private readonly bool _isPropertyInitialisationComplete;
+
+	private readonly StreamGeometry _lockIcon, _unlockIcon;
 	private bool _isWindowDragAfoot;
 	private Point _cursorLogicalPositionAtWindowDragStart;
 	private Size _cachedWindowSize;
@@ -58,6 +63,15 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 
 		_isPropertyInitialisationComplete = true;
 
+		WeakReferenceMessenger.Default.Register<DateTimeTextChangedMessage>(
+			this, (_, message) => this.DateTimeText = message.DateTimeText);
+
+		UpdateDateTimeText();
+		ResetWidgetContentUpdateScheduler();
+
+		_lockIcon = _geometryProvider.GetGeometry(Strings.Icons_Key_Lock);
+		_unlockIcon = _geometryProvider.GetGeometry(Strings.Icons_Key_Unlock);
+
 		MouseDragToggleIcon = GetMouseDragToggleIcon();
 	}
 
@@ -73,7 +87,8 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	[ObservableProperty]
 	public partial AppConfig App { get; private set; }
 
-	public string DateTimeText => _widgetModelSnapshot.DateTimeText;
+	[ObservableProperty]
+	public partial string? DateTimeText { get; private set; }
 
 	/// <summary>
 	/// Controls the logical position of the <see cref="WidgetView" /> window's origin.
@@ -163,10 +178,7 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	{
 		_widgetModelMutationService.MutatePositionConfig(
 			positionConfig =>
-				positionConfig with
-				{
-					IsMouseDragEnabled = !this.Position.IsMouseDragEnabled
-				});
+				positionConfig with { IsMouseDragEnabled = !this.Position.IsMouseDragEnabled });
 	}
 
 	[RelayCommand]
@@ -179,6 +191,25 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	private static void CloseApplication()
 	{
 		WeakReferenceMessenger.Default.Send(new CloseApplicationMessage());
+	}
+
+	/// <summary>
+	/// Leverages the <see cref="ActionScheduler" /> to create a timer that updates
+	/// <see cref="DateTimeText" />.
+	/// </summary>
+
+	private void ResetWidgetContentUpdateScheduler()
+	{
+		_widgetContentUpdateScheduler?.Dispose();
+
+		_widgetContentUpdateScheduler =
+			ActionScheduler.Create(Content.RefreshIntervalSeconds, () => UpdateDateTimeText());
+	}
+
+	private void UpdateDateTimeText()
+	{
+		DateTimeText =
+			DateTimeTextFormatter.FormatOrThrow(Content.DateTimeFormat, Content.DateTimeCulture);
 	}
 
 	/// <summary>
@@ -317,21 +348,16 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 
 	private StreamGeometry GetMouseDragToggleIcon()
 	{
-		string iconKey = this.Position.IsMouseDragEnabled
-			? Strings.Icons_Key_Lock
-			: Strings.Icons_Key_Unlock;
-
-		return _geometryProvider.GetGeometry(iconKey);
+		return
+			this.Position.IsMouseDragEnabled
+			? _lockIcon
+			: _unlockIcon;
 	}
 
 	private void OnWidgetModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
 	{
 		switch (e.PropertyName)
 		{
-			case nameof(WidgetModel.DateTimeText):
-				OnPropertyChanged(nameof(DateTimeText));
-				break;
-
 			case nameof(WidgetModel.Content):
 				this.Content = _widgetModelSnapshot.Content;
 				break;
@@ -350,55 +376,46 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 		}
 	}
 
-	partial void OnPositionChanged(PositionConfig oldValue, PositionConfig newValue)
+	partial void OnContentChanged(ContentConfig oldValue, ContentConfig newValue)
 	{
 		if (!_isPropertyInitialisationComplete)
 		{
 			return;
 		}
 
-		if (_isWindowDragAfoot)
+		if (newValue.DateTimeCulture != oldValue.DateTimeCulture)
+		{
+			UpdateDateTimeText();
+		}
+
+		if (newValue.RefreshIntervalSeconds != oldValue.RefreshIntervalSeconds)
+		{
+			ResetWidgetContentUpdateScheduler();
+		}
+	}
+
+	partial void OnPositionChanged(PositionConfig oldValue, PositionConfig newValue)
+	{
+		if (!_isPropertyInitialisationComplete || _isWindowDragAfoot)
 		{
 			return;
 		}
 
-		bool hasAnchoredCornerChanged =
-			newValue.AnchoredCorner != oldValue.AnchoredCorner;
-
-		bool hasAnchoredCornerLogicalPositionChanged =
-			newValue.AnchoredCornerLogicalPosition != oldValue.AnchoredCornerLogicalPosition;
-
-		bool hasIsMouseDragEnabledChanged =
-			newValue.IsMouseDragEnabled != oldValue.IsMouseDragEnabled;
-
-		int propertyChangeCount =
-			new[]
-			{
-				hasAnchoredCornerChanged,
-				hasAnchoredCornerLogicalPositionChanged,
-				hasIsMouseDragEnabledChanged
-			}
-			.Count(hasChanged => hasChanged);
-
-		if (propertyChangeCount > 1)
-		{
-			throw new InvalidOperationException(
-						Strings.WidgetViewModel_Exception_PositionConfigSimultaneousChanges);
-		}
-
-		if (hasAnchoredCornerChanged)
+		if (newValue.AnchoredCorner != oldValue.AnchoredCorner)
 		{
 			AnchorSelectedWindowCorner();
 			UpdateAnchoredCornerLogicalPosition();
 		}
-		else if (hasAnchoredCornerLogicalPositionChanged)
+
+		if (newValue.AnchoredCornerLogicalPosition != oldValue.AnchoredCornerLogicalPosition)
 		{
 			Vector translationVector =
 				newValue.AnchoredCornerLogicalPosition - oldValue.AnchoredCornerLogicalPosition;
 
 			this.WindowOriginLogicalPosition += translationVector;
 		}
-		else if (hasIsMouseDragEnabledChanged)
+
+		if (newValue.IsMouseDragEnabled != oldValue.IsMouseDragEnabled)
 		{
 			MouseDragToggleIcon = GetMouseDragToggleIcon();
 		}
@@ -407,5 +424,8 @@ internal sealed partial class WidgetViewModel : ObservableObject, IPositionContr
 	public void Dispose()
 	{
 		_widgetModelSnapshot.PropertyChanged -= OnWidgetModelPropertyChanged;
+		_widgetContentUpdateScheduler?.Dispose();
+
+		WeakReferenceMessenger.Default.Unregister<DateTimeTextChangedMessage>(this);
 	}
 }

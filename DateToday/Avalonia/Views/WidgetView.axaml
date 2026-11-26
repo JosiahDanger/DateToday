@@ -15,7 +15,7 @@
 
 	<Window.ContextMenu>
 
-		<ContextMenu>
+		<ContextMenu Name="WidgetContextMenu">
 
 			<MenuItem
 				Padding="10 6.5 -5 3.5"

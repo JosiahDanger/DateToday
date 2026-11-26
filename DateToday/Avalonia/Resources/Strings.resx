@@ -193,7 +193,7 @@
     <value>The GeometryProvider failed to locate StreamGeometry associated with key '{0}'.</value>
   </data>
   <data name="Application_Exception_ServiceProvider_Null" xml:space="preserve">
-    <value>The ServiceProvider has not been instantiated. This scenario should never occur during normal operation of the app.</value>
+    <value>The ServiceProvider has not been instantiated.</value>
   </data>
   <data name="Application_Exception_UnsupportedWidgetViewClosureInstigator" xml:space="preserve">
     <value>Only the WidgetView may instigate closure of itself.</value>
@@ -246,9 +246,6 @@ Please consider raising an Issue.</value>
   <data name="ContentConfigView_NumericUpDown_RefreshIntervalInput_Unit" xml:space="preserve">
     <value>seconds</value>
   </data>
-  <data name="WidgetViewModel_Exception_PositionConfigSimultaneousChanges" xml:space="preserve">
-    <value>You are not permitted to make changes to multiple Position fields simultaneously. Your frame-perfect inputs aren't appreciated here, speedrunner.</value>
-  </data>
   <data name="Suspension_DirectoryName_DateToday" xml:space="preserve">
     <value>DateToday</value>
   </data>
@@ -273,10 +270,16 @@ Exception message:
   <data name="ContentConfigViewModel_Validation_DateTimeCulture_Invalid" xml:space="preserve">
     <value>Invalid locale identifier.</value>
   </data>
-  <data name="ContentConfigViewModel_Validation_RequiredFieldIsEmpty" xml:space="preserve">
-    <value>Required.</value>
+  <data name="DateTimeTextFormatter_Exception_DateTimeFormat_Invalid" xml:space="preserve">
+    <value>The provided date / time format is invalid.</value>
   </data>
-  <data name="WidgetModel_Exception_DateTimeFormat_Invalid" xml:space="preserve">
-    <value>The provided DateTime format is invalid.</value>
+  <data name="ContentConfigViewModel_Validation_DateTimeFormat_Empty" xml:space="preserve">
+    <value>You must provide a date / time format.</value>
+  </data>
+  <data name="ContentConfigViewModel_Exception_UnsupportedValidationContext" xml:space="preserve">
+    <value>Unsupported ValidationContext.</value>
+  </data>
+  <data name="ContentConfigViewModel_Exception_DateTimeCulture_Null" xml:space="preserve">
+    <value>The DateTimeCulture property has not been initialised.</value>
   </data>
 </root>

@@ -33,15 +33,15 @@ internal static class ActionScheduler
 
 	public static Timer Create(uint intervalSeconds, Action onTick)
 	{
+		SynchronizationContext synchronisationContext = SynchronizationContext.Current
+			?? throw new NotSupportedException(
+				Strings.ActionScheduler_Exception_SynchronizationContext_Null);
+
 		if (intervalSeconds == 0)
 		{
 			throw new InvalidOperationException(
 				Strings.ActionScheduler_Exception_RefreshIntervalSeconds_Zero);
 		}
-
-		SynchronizationContext synchronisationContext = SynchronizationContext.Current
-			?? throw new NotSupportedException(
-				Strings.ActionScheduler_Exception_SynchronizationContext_Null);
 
 		long millisecondsPerInterval = intervalSeconds * TimeSpan.MillisecondsPerSecond;
 

@@ -1,8 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using Darp.MvvmValidator;
+using DateToday.Avalonia.Messaging;
 using DateToday.Avalonia.Resources;
 using DateToday.DomainServices;
 using DateToday.Models;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -27,10 +30,15 @@ internal sealed partial class ContentConfigViewModel : ValidatingObservableObjec
 		_widgetModelSnapshot = widgetModelSnapshot;
 		_widgetModelMutationService = widgetModelMutationService;
 
-		DateTimeFormat = _widgetModelSnapshot.Content.DateTimeFormat;
 		DateTimeCulture = _widgetModelSnapshot.Content.DateTimeCulture;
 		IsOrdinalDaySuffixEnabled = _widgetModelSnapshot.Content.IsOrdinalDaySuffixEnabled;
 		RefreshIntervalSeconds = _widgetModelSnapshot.Content.RefreshIntervalSeconds;
+
+		/* Initialisation of DateTimeFormat will call ValidateDateTimeFormat(…), which in turn
+		 * requires DateTimeCulture to be initialised. Therefore, DateTimeFormat must be initialised
+		 * after DateTimeCulture. */
+
+		DateTimeFormat = _widgetModelSnapshot.Content.DateTimeFormat;
 
 		_isPropertyInitialisationComplete = true;
 	}
@@ -40,7 +48,8 @@ internal sealed partial class ContentConfigViewModel : ValidatingObservableObjec
 		ErrorMessageResourceType =
 			typeof(Strings),
 		ErrorMessageResourceName =
-			nameof(Strings.ContentConfigViewModel_Validation_RequiredFieldIsEmpty))]
+			nameof(Strings.ContentConfigViewModel_Validation_DateTimeFormat_Empty))]
+	[CustomValidation(typeof(ContentConfigViewModel), nameof(ValidateDateTimeFormat))]
 	public partial string DateTimeFormat { get; set; }
 
 	[ObservableProperty]
@@ -85,7 +94,12 @@ internal sealed partial class ContentConfigViewModel : ValidatingObservableObjec
 		{
 			case nameof(DateTimeFormat) when !(GetErrors(nameof(DateTimeFormat)).Any()):
 
-				TryMutateDateTimeFormat(DateTimeFormat);
+				_widgetModelMutationService.MutateContentConfig(
+					content =>
+						content with
+						{
+							DateTimeFormat = this.DateTimeFormat
+						});
 
 				break;
 
@@ -124,16 +138,36 @@ internal sealed partial class ContentConfigViewModel : ValidatingObservableObjec
 		}
 	}
 
-	private void TryMutateDateTimeFormat(string dateTimeFormat)
+	public static ValidationResult? ValidateDateTimeFormat(
+		string dateTimeFormat, ValidationContext context)
 	{
+		if (context.ObjectInstance is not ContentConfigViewModel contentConfigViewModel)
+		{
+			throw new InvalidOperationException(
+				Strings.ContentConfigViewModel_Exception_UnsupportedValidationContext);
+		}
+
+		CultureInfo dateTimeCulture =
+			contentConfigViewModel.DateTimeCulture
+			?? throw new InvalidOperationException(
+				Strings.ContentConfigViewModel_Exception_DateTimeCulture_Null);
+
 		try
 		{
-			_widgetModelMutationService.MutateContentConfig(
-				content => content with { DateTimeFormat = dateTimeFormat });
+			string dateTimeText =
+				DateTimeTextFormatter.FormatOrThrow(dateTimeFormat, dateTimeCulture);
+
+			/* Yes, this method is used for data validation. But that's no excuse to throw away a
+			 * perfectly good DateTimeText value. Therefore, the new value is sent off via the
+			 * WeakReferenceMessenger, for use by the WidgetViewModel. */
+
+			WeakReferenceMessenger.Default.Send(new DateTimeTextChangedMessage(dateTimeText));
 		}
 		catch (ValidationException ex)
 		{
-			SetErrors(nameof(DateTimeFormat), [ex.ValidationResult]);
+			return new ValidationResult(ex.Message, [nameof(DateTimeFormat)]);
 		}
+
+		return ValidationResult.Success;
 	}
 }
