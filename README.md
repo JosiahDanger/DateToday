@@ -2,7 +2,7 @@
 
 This branch hosts DateToday 2.0, which is currently in development.
 
-A FOSS desktop app for people who want to see the current date and/or time directly on their desktop. Beautiful and lightweight. No bullshit; just quality software.
+A [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) desktop app for people who want to see the current date and/or time directly on their desktop. Beautiful and lightweight. No bullshit; just quality software.
 
 Features
 
