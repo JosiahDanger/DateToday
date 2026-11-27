@@ -26,6 +26,8 @@ A [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) desktop ap
 - The app never even attempts to connect to the internet.
 - This will never change in the future.
 
+---
+
 ### Platform Support
 
 I perform Windows builds, test them, and distribute them via GitHub. I want to do the same for Linux builds in the future. I anticipate that macOS and Linux builds will compile successfully, but I haven't tried.
