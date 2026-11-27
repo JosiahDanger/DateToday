@@ -4,7 +4,7 @@ This branch hosts DateToday 2.0, which is currently in development.
 
 A FOSS desktop app for people who want to see the current date and/or time directly on their desktop. Beautiful and lightweight. No bullshit; just quality software.
 
-Features:
+Features
 
 - Extensive date/time format configuration.
 - Customise typeface family, size, weight, alignment, colour, and shadow.
@@ -18,7 +18,13 @@ Features:
 - The executable is only 11 MB in size, and occupies about 65 MB of RAM while running.
 - The groundwork has been laid for future translation into different languages.
 
-Privacy:
+Platform Support
+
+- I perform Windows builds, test them, and distribute them via GitHub.
+- I want to do the same for Linux builds in the future.
+- I expect that macOS and Linux builds should compile successfully, but I haven't tried.
+
+Privacy
 
 - Absolutely no data-collection whatsoever.
 - The app never even attempts to connect to the internet.
