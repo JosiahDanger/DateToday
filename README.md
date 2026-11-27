@@ -18,7 +18,7 @@ A [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) desktop ap
 - Supports high-DPI monitors.
 - A [portable application](https://en.wikipedia.org/wiki/Portable_application). Just run the executable; no installation necessary.
 - The executable is only 11 MB in size, and occupies about 65 MB of RAM while running.
-- The groundwork has been laid for future translation into different languages.
+- The groundwork has been laid for future translations into different languages.
 
 ## Privacy
 
