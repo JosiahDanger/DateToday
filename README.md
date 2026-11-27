@@ -29,3 +29,9 @@ Privacy
 - Absolutely no data-collection whatsoever.
 - The app never even attempts to connect to the internet.
 - This will never change in the future.
+
+Notice of Minimal AI Use
+
+Before performing any commit, I typically ask an AI chatbot to provide a code review. If it suggests changes, I carefully consider them, and implement them myself if I deem them worthwhile. As such, source code for DateToday is never generated directly by AI.
+
+
