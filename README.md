@@ -7,7 +7,7 @@ A [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) desktop ap
 Features
 
 - Extensive date/time format configuration.
-- Customise typeface family, size, weight, alignment, colour, and shadow.
+- Customise typeface family, size, weight, text alignment, colour, and shadow.
 - Choose one of three gorgeous text rendering modes.
 - Drag the widget to any monitor; it will never go off-screen.
 - Anchor to your desktop any one of the widget's four corners. If the widget changes in size, the selected corner will remain fixed in place.
