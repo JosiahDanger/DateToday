@@ -4,7 +4,7 @@ This branch hosts DateToday 2.0, which is currently in development.
 
 ---
 
-A [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) app for people who just want to display the date, time, or day of the week directly on their desktop.
+A [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) app for **people who just want to display the date, time, or day of the week directly on their desktop.**
 
 - Beautiful and lightweight
 - No bullshit anti-features
@@ -53,6 +53,7 @@ I perform Windows builds, test them, and distribute them via GitHub. I want to d
 - Avalonia 12
 - .NET 11
 - NativeAOT
+- Community MVVM Toolkit
 - MVVM architecture
 - XML source code documentation
 
