@@ -35,7 +35,7 @@ A [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) app for pe
 - Do you find it difficult to meet deadlines?
   - DateToday can remind you plainly of the current date, in such a way that it won't slip your mind.
     
-- Does your minimal Linux desktop environment not come with a convenient means of checking the time or date?
+- Does your minimal Linux desktop environment not provide a convenient means of checking the time or date?
   - DateToday only occupies about 65 MB of RAM while running, so you'll have plenty of overhead for watching gay furry porn on your ThinkPad X220.
 
 ---
