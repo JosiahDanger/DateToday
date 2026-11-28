@@ -18,9 +18,9 @@ A [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) app for pe
 - Drag the widget to any monitor; it will never go off-screen.
 - Anchor to your desktop any one of the widget's four corners. If the widget changes in size, the selected corner will remain fixed in place.
 - Settings are saved and restored automatically, including where and on which monitor the widget is displayed.
-- The app's theme adjusts automatically to that of your operating system.
+- The app's theme adjusts to that of your operating system.
 - Supports high-DPI monitors.
-- A [portable application](https://en.wikipedia.org/wiki/Portable_application). Just run the executable; no installation necessary.
+- A [portable application](https://en.wikipedia.org/wiki/Portable_application). Just run the executable. No installation necessary.
 - The executable is only 11 MB in size, and occupies about 65 MB of RAM while running.
 - The groundwork has been laid for future translations into different languages.
 
@@ -35,8 +35,8 @@ A [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) app for pe
 - Do you find it difficult to meet deadlines?
   - DateToday can remind you plainly of the current date, in such a way that it won't slip your mind.
     
-- Does your minimal Linux desktop environment not come with a digital clock?
-  - DateToday may be configured for this purpose.
+- Does your minimal Linux desktop environment not come with a convenient means of checking the time or date?
+  - DateToday only occupies about 65 MB of RAM while running, so you'll have plenty of overhead for watching gay furry porn on your ThinkPad X220.
 
 ---
 
