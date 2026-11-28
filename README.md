@@ -28,13 +28,16 @@ A [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) app for **
 
 - Do you find it inconvenient that you need to click the clock on your taskbar in order to find out what the date is, or what day of the week it is?
   - DateToday makes this information available directly on your desktop.
-    
+
 - Are you into the aesthetic desktop customisation scene? Perhaps you use [Wallpaper Engine](https://www.wallpaperengine.io/en)?
   - DateToday will make a charming addition to your screen.
-    
+
+- Are you a streamer? Would you like your viewers to know what your current local time is?
+  - DateToday can be captured like any other window by software such as [OBS Studio](https://obsproject.com/).
+
 - Do you find it difficult to meet deadlines?
   - DateToday can remind you plainly of the current date, in such a way that it won't slip your mind.
-    
+
 - Does your minimal Linux desktop environment not provide a convenient means of checking the time or date?
   - DateToday only occupies about 65 MB of RAM while running, so you'll have plenty of overhead for watching gay furry porn on your ThinkPad X220.
 
