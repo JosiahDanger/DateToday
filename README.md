@@ -26,7 +26,7 @@ A [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) app for pe
 
 ## Privacy
 
-- Absolutely no data-collection whatsoever. The app never even attempts to connect to the internet.
+- Absolutely no data-collection whatsoever. The app never even connects to the internet.
 - This will never change in the future.
 
 ---
@@ -45,7 +45,7 @@ I perform Windows builds, test them, and distribute them via GitHub. I want to d
 
 ### My Position on AI Use
 
-This is not a [vibe-coded](https://en.wikipedia.org/wiki/Vibe_coding) app. The extent of my AI use is limited to code reviews and bug-fixes. AI was **not** used for source code generation.
+This is not a [vibe-coded](https://en.wikipedia.org/wiki/Vibe_coding) app. The extent of my AI use is limited to code reviews and bug-fixes. AI is **not** used for source code generation.
 
 ### Special Thanks
 
