@@ -30,8 +30,20 @@ A [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) desktop ap
 
 ### Platform Support
 
-I perform Windows builds, test them, and distribute them via GitHub. I want to do the same for Linux builds in the future. I anticipate that macOS and Linux builds will compile successfully, but I haven't tried.
+I perform Windows builds, test them, and distribute them via GitHub. I want to do the same for Linux builds in the future. I anticipate that macOS and Linux builds will compile successfully, but I haven't tried yet.
 
 ### My Position on AI Use
 
 This is not a [vibe-coded](https://en.wikipedia.org/wiki/Vibe_coding) app. The extent of my AI use is limited to code reviews and bug-fixes. AI was **not** used for source code generation.
+
+### Special Thanks
+
+- [PeaceShi](https://github.com/peaceshi)
+
+  - Maintains statically-linked builds of ANGLE and Skia Sharp for Avalonia.
+  - Provides an [example NativeAOT deployment configuration for Avalonia apps on the Windows x64 platform](https://github.com/peaceshi/Avalonia-NativeAOT-SingleFile/blob/main/MinimalAotSample/Directory.Build.props).
+
+- [rosslight GmbH](https://github.com/rosslight)
+
+  - Maintains the [Darp.CommunityToolkit.MvvmValidator](https://github.com/rosslight/Darp.CommunityToolkit.MvvmValidator) package.
+  
