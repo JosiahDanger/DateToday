@@ -22,8 +22,7 @@ A [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) desktop ap
 
 ## Privacy
 
-- Absolutely no data-collection whatsoever.
-- The app never even attempts to connect to the internet.
+- Absolutely no data-collection whatsoever. The app never even attempts to connect to the internet.
 - This will never change in the future.
 
 ---
@@ -31,6 +30,13 @@ A [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) desktop ap
 ### Platform Support
 
 I perform Windows builds, test them, and distribute them via GitHub. I want to do the same for Linux builds in the future. I anticipate that macOS and Linux builds will compile successfully, but I haven't tried yet.
+
+### Under the Hood
+
+- Avalonia 12
+- .NET 11
+- NativeAOT
+- MVVM architecture
 
 ### My Position on AI Use
 
