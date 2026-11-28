@@ -37,6 +37,7 @@ I perform Windows builds, test them, and distribute them via GitHub. I want to d
 - .NET 11
 - NativeAOT
 - MVVM architecture
+- XML source code documentation
 
 ### My Position on AI Use
 
