@@ -4,7 +4,7 @@ This branch hosts DateToday 2.0, which is currently in development.
 
 ---
 
-A [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) app for people who just want to see the current date and/or time directly on their desktop.
+A [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) app for people who just want to display the date, time, or day of the week directly on their desktop.
 
 - Beautiful and lightweight
 - No bullshit anti-features
@@ -24,12 +24,22 @@ A [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) app for pe
 - The executable is only 11 MB in size, and occupies about 65 MB of RAM while running.
 - The groundwork has been laid for future translations into different languages.
 
-## Privacy
+## Use Cases
 
-- Absolutely no data-collection whatsoever. The app never even connects to the internet.
-- This will never change in the future.
+- Do you find it inconvenient that you need to click the clock on your taskbar in order to find out what the date is, or what day of the week it is?
+  - DateToday makes this information available directly on your desktop.
+- Are you into the aesthetic desktop customisation scene? Perhaps you use [Wallpaper Engine](https://www.wallpaperengine.io/en)?
+  - DateToday will make a charming addition to your screen.
+- Do you find it difficult to meet deadlines? You might benefit from being reminded plainly of the current date, in such a way that it won't slip your mind.
+  - DateToday can remind you plainly of the current date, in such a way that it won't slip your mind.
+- Does your minimal Linux desktop environment not come with a digital clock?
+  - DateToday may be configured for this purpose.
 
 ---
+
+### Privacy
+
+The app collects no data whatsoever, nor does it connect to the internet. This will never change in the future.
 
 ### Platform Support
 
