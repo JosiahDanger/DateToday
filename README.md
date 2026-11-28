@@ -38,6 +38,8 @@ This is not a [vibe-coded](https://en.wikipedia.org/wiki/Vibe_coding) app. The e
 
 ### Special Thanks
 
+DateToday 2.0 would not have been possible without the work of these two individuals.
+
 - [PeaceShi](https://github.com/peaceshi)
 
   - Maintains statically-linked builds of ANGLE and Skia Sharp for Avalonia.
