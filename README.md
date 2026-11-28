@@ -12,7 +12,7 @@ A [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) app for **
 
 ## Features
 
-- Extensive date/time format configuration.
+- Extensive date / time format configuration.
 - Customise typeface family, size, weight; text alignment, colour, and shadow.
 - Choose one of three gorgeous text rendering modes.
 - Drag the widget to any monitor; it will never go off-screen.
@@ -21,7 +21,7 @@ A [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) app for **
 - The app's theme adjusts to that of your operating system.
 - Supports high-DPI monitors.
 - A [portable application](https://en.wikipedia.org/wiki/Portable_application). Just run the executable. No installation necessary.
-- The executable is only 11 MB in size, and occupies about 65 MB of RAM while running.
+- The executable is only 11 MB in size.
 - The groundwork has been laid for future translations into different languages.
 
 ## Use Cases
@@ -54,7 +54,7 @@ I perform Windows builds, test them, and distribute them via GitHub. I want to d
 - .NET 11
 - NativeAOT
 - Community MVVM Toolkit
-- MVVM architecture
+- Proper MVVM architecture
 - XML source code documentation
 
 ### My Position on AI Use
@@ -73,4 +73,3 @@ DateToday 2.0 would not have been possible without the work of these two individ
 - [rosslight GmbH](https://github.com/rosslight)
 
   - Maintains the [Darp.CommunityToolkit.MvvmValidator](https://github.com/rosslight/Darp.CommunityToolkit.MvvmValidator) package.
-  
